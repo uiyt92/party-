@@ -2,10 +2,13 @@
 
 from __future__ import annotations
 
+import argparse
 import json
 import os
+import re
 import shutil
 import subprocess
+import sys
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -126,3 +129,94 @@ def build_deliverable(
     shutil.copy2(stage, temporary_target)
     os.replace(temporary_target, item.output)
     return item.output
+
+
+def scaffold_project(slug: str, title: str, root: Path = ROOT) -> Path:
+    """Create a product from the repository starter without overwriting."""
+    if not re.fullmatch(r"[a-z0-9][a-z0-9-]*", slug):
+        raise ProjectError(f"invalid slug: {slug}")
+    starter = root / "templates" / "project-starter"
+    destination = root / "projects" / slug
+    if destination.exists():
+        raise ProjectError(f"project already exists: {destination}")
+    if not starter.is_dir():
+        raise ProjectError(f"starter template is missing: {starter}")
+
+    shutil.copytree(starter, destination)
+    for path in destination.rglob("*"):
+        if path.is_file():
+            try:
+                text = path.read_text(encoding="utf-8")
+            except UnicodeDecodeError:
+                continue
+            path.write_text(
+                text.replace("__SLUG__", slug).replace("__TITLE__", title),
+                encoding="utf-8",
+            )
+    return destination
+
+
+def select_deliverables(
+    items: list[Deliverable], requested: str
+) -> list[Deliverable]:
+    """Select one deliverable or all configured deliverables."""
+    if requested == "all":
+        return items
+    selected = [item for item in items if item.id == requested]
+    if not selected:
+        raise ProjectError(f"unknown deliverable id: {requested}")
+    return selected
+
+
+def main(argv: list[str] | None = None, root: Path = ROOT) -> int:
+    parser = argparse.ArgumentParser(
+        description="Build and manage Typst publishing projects"
+    )
+    subparsers = parser.add_subparsers(dest="command", required=True)
+    subparsers.add_parser("list")
+
+    build_parser = subparsers.add_parser("build")
+    build_parser.add_argument("deliverable")
+
+    verify_parser = subparsers.add_parser("verify")
+    verify_parser.add_argument("deliverable", nargs="?", default="all")
+
+    new_parser = subparsers.add_parser("new")
+    new_parser.add_argument("slug")
+    new_parser.add_argument("--title", required=True)
+
+    args = parser.parse_args(argv)
+    try:
+        if args.command == "new":
+            print(scaffold_project(args.slug, args.title, root))
+            return 0
+
+        items = load_deliverables(root)
+        if args.command == "list":
+            for item in items:
+                print(
+                    f"{item.id}\t{item.source.relative_to(root.resolve())}"
+                    f"\t{item.output.relative_to(root.resolve())}"
+                )
+            return 0
+
+        selected = select_deliverables(items, args.deliverable)
+        for item in selected:
+            if args.command == "build":
+                output = build_deliverable(item, root)
+                pages, chars = verify_pdf(output)
+                print(
+                    f"built {item.id}: {output.relative_to(root.resolve())} "
+                    f"({pages} pages, {chars} sample chars)"
+                )
+            else:
+                pages, chars = verify_pdf(item.output)
+                print(f"verified {item.id}: {pages} pages, {chars} sample chars")
+        return 0
+    except ProjectError as exc:
+        print(f"error: {exc}", file=sys.stderr)
+        return 1
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

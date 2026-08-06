@@ -1,6 +1,8 @@
 import json
+import io
 import tempfile
 import unittest
+from contextlib import redirect_stderr, redirect_stdout
 from pathlib import Path
 from unittest import mock
 
@@ -141,6 +143,105 @@ class BuildTests(unittest.TestCase):
             project.build_deliverable(self.item, self.root, typst="typst")
 
         self.assertEqual(self.item.output.read_bytes(), b"old-good-pdf")
+
+
+class SelectionTests(unittest.TestCase):
+    def setUp(self):
+        source = Path("source.typ")
+        output = Path("output.pdf")
+        self.items = [
+            project.Deliverable("one", "sample", "Sample", source, output),
+            project.Deliverable("two", "sample", "Sample", source, output),
+        ]
+
+    def test_select_all_returns_every_item(self):
+        self.assertEqual(project.select_deliverables(self.items, "all"), self.items)
+
+    def test_unknown_id_is_rejected(self):
+        with self.assertRaisesRegex(project.ProjectError, "unknown deliverable id"):
+            project.select_deliverables(self.items, "missing")
+
+
+class ScaffoldTests(unittest.TestCase):
+    def setUp(self):
+        self.temp = tempfile.TemporaryDirectory()
+        self.root = Path(self.temp.name)
+        starter = self.root / "templates" / "project-starter"
+        (starter / "typst").mkdir(parents=True)
+        (starter / "project.json").write_text(
+            '{"slug":"__SLUG__","title":"__TITLE__","deliverables":[]}',
+            encoding="utf-8",
+        )
+        (starter / "typst" / "book.typ").write_text(
+            "= __TITLE__", encoding="utf-8"
+        )
+
+    def tearDown(self):
+        self.temp.cleanup()
+
+    def test_scaffold_replaces_tokens(self):
+        destination = project.scaffold_project("new-book", "새 책", self.root)
+
+        self.assertEqual(destination.name, "new-book")
+        self.assertIn(
+            "새 책",
+            (destination / "typst" / "book.typ").read_text(encoding="utf-8"),
+        )
+
+    def test_scaffold_refuses_existing_destination(self):
+        (self.root / "projects" / "new-book").mkdir(parents=True)
+
+        with self.assertRaisesRegex(project.ProjectError, "already exists"):
+            project.scaffold_project("new-book", "새 책", self.root)
+
+    def test_scaffold_rejects_unsafe_slug(self):
+        with self.assertRaisesRegex(project.ProjectError, "invalid slug"):
+            project.scaffold_project("../escape", "Bad", self.root)
+
+
+class CliTests(unittest.TestCase):
+    def setUp(self):
+        self.temp = tempfile.TemporaryDirectory()
+        self.root = Path(self.temp.name)
+        product = self.root / "projects" / "sample"
+        (product / "typst").mkdir(parents=True)
+        (product / "typst" / "book.typ").write_text("= Book", encoding="utf-8")
+        manifest = {
+            "slug": "sample",
+            "title": "Sample",
+            "deliverables": [
+                {
+                    "id": "sample-book",
+                    "source": "typst/book.typ",
+                    "output": "sample.pdf",
+                }
+            ],
+        }
+        (product / "project.json").write_text(
+            json.dumps(manifest), encoding="utf-8"
+        )
+
+    def tearDown(self):
+        self.temp.cleanup()
+
+    def test_list_prints_configured_deliverable(self):
+        stdout = io.StringIO()
+
+        with redirect_stdout(stdout):
+            result = project.main(["list"], root=self.root)
+
+        self.assertEqual(result, 0)
+        self.assertIn("sample-book", stdout.getvalue())
+        self.assertIn("dist", stdout.getvalue())
+
+    def test_unknown_build_id_returns_error(self):
+        stderr = io.StringIO()
+
+        with redirect_stderr(stderr):
+            result = project.main(["build", "missing"], root=self.root)
+
+        self.assertEqual(result, 1)
+        self.assertIn("unknown deliverable id", stderr.getvalue())
 
 
 if __name__ == "__main__":

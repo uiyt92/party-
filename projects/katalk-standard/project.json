@@ -1,0 +1,21 @@
+{
+  "slug": "katalk-standard",
+  "title": "카톡의 정석",
+  "deliverables": [
+    {
+      "id": "katalk-basic",
+      "source": "typst/book.typ",
+      "output": "카톡의정석.pdf"
+    },
+    {
+      "id": "katalk-advanced",
+      "source": "typst/advanced.typ",
+      "output": "카톡의정석_심화편.pdf"
+    },
+    {
+      "id": "katalk-summary",
+      "source": "typst/summary.typ",
+      "output": "카톡의정석_요약본.pdf"
+    }
+  ]
+}

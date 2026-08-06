@@ -1,0 +1,11 @@
+{
+  "slug": "cna-night",
+  "title": "CNA NIGHT",
+  "deliverables": [
+    {
+      "id": "cna-night",
+      "source": "typst/book.typ",
+      "output": "CNA_NIGHT.pdf"
+    }
+  ]
+}

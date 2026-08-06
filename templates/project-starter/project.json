@@ -1,0 +1,11 @@
+{
+  "slug": "__SLUG__",
+  "title": "__TITLE__",
+  "deliverables": [
+    {
+      "id": "__SLUG__-book",
+      "source": "typst/book.typ",
+      "output": "__TITLE__.pdf"
+    }
+  ]
+}
