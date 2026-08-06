@@ -1,0 +1,26 @@
+{
+  "product_name": "답장의 기술",
+  "subtitle": "카톡이 막히는 남자를 위한, 25가지 실전 사례와 150가지 카톡 예시",
+  "category": "자기계발/연애",
+  "target_pages": "약 145페이지 (Phase 1 완료, 확장 진행 중)",
+  "features": "완전 초보자도 따라할 수 있는 카톡 연락법",
+  "style_preference": "카톡101(풍부한 예시) + 테레사(심리학적 깊이)",
+  "target": {
+    "level": "완전 초보",
+    "pain_point": "여성과의 카톡이 어색하고 자신감 없음, 어떻게 시작해야 할지 모름",
+    "motivation": "초보 탈출 후 자신감 있는 대화 가능"
+  },
+  "key_message": "이것만 따라하면 초보를 벗어날 수 있다",
+  "goal": "마크다운 → Typst PDF 변환",
+  "design_direction": "전문적",
+  "required_elements": [
+    "다이어그램",
+    "템플릿",
+    "실제 대화 예시"
+  ],
+  "reference_materials": [
+    "테레사_CONTACT.pdf (심리학적 기초)",
+    "카톡101.pdf (풍부한 예시)",
+    "(New)폰게임.pdf (간단한 가이드)"
+  ]
+}

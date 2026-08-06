@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>카톡의 정석 — 사전과제</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+<style>
+:root{--blue:#2563eb;--navy:#1e3a8a;--ink:#1a1a1a;--muted:#6b7280;--line:#cbd5e1;--tint:#f1f5f9}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Pretendard,sans-serif;color:var(--ink);background:#e9eaed;padding:24px 12px;font-size:14px;line-height:1.6}
+.sheet{background:#fff;width:794px;max-width:100%;margin:0 auto;padding:46px 50px 56px}
+@page{size:A4 portrait;margin:15mm 14mm}
+@media print{body{background:#fff;padding:0;font-size:13px;-webkit-print-color-adjust:exact;print-color-adjust:exact}.sheet{width:auto;padding:0}}
+
+.brand{display:flex;justify-content:space-between;align-items:baseline;border-bottom:2.5px solid var(--ink);padding-bottom:10px}
+.brand .b-l{font-family:'Noto Serif KR',serif;font-weight:900;font-size:22px}
+.brand .b-r{font-weight:800;color:var(--blue);font-size:14px;letter-spacing:1px}
+.lead{margin-top:18px;background:var(--tint);border-radius:12px;padding:16px 20px}
+.lead h1{font-size:19px;font-weight:800;margin-bottom:5px}
+.lead p{font-size:13.5px;color:#374151}
+.lead b{color:var(--blue)}
+
+.sec{margin-top:26px}
+.sec-h{display:flex;align-items:center;gap:10px;margin-bottom:13px}
+.sec-n{width:27px;height:27px;border-radius:50%;background:var(--blue);color:#fff;font-weight:800;font-size:15px;display:flex;align-items:center;justify-content:center;flex:none}
+.sec-t{font-size:17px;font-weight:800}
+.sec-d{font-size:12.5px;color:var(--muted);margin:-7px 0 13px 37px}
+
+.field{margin:11px 0}
+.field .lb{font-weight:700;font-size:13.5px;margin-bottom:6px;display:block}
+.line{border-bottom:1.4px solid var(--line);height:30px}
+.line.sm{height:26px}
+.choices{display:flex;flex-wrap:wrap;gap:8px 18px;font-size:13.5px;margin-top:3px}
+.choices span{white-space:nowrap}
+.box{border:1.6px solid var(--line);border-radius:10px;min-height:150px;padding:12px 14px;color:var(--muted);font-size:12.5px;margin-top:6px}
+
+.check{display:flex;flex-direction:column;gap:9px;margin-top:6px}
+.check .it{font-size:13.5px;padding-left:30px;position:relative;line-height:1.45}
+.check .it::before{content:'☐';position:absolute;left:0;top:-1px;font-size:18px;color:var(--blue)}
+.score{margin-top:14px;background:var(--tint);border-radius:10px;padding:12px 16px;font-size:13.5px;font-weight:700;display:flex;justify-content:space-between;align-items:center}
+.score .num{font-size:15px}
+.score .num b{display:inline-block;width:40px;border-bottom:1.8px solid var(--ink);text-align:center}
+
+.tip{margin-top:8px;font-size:12.5px;color:var(--muted);padding-left:37px}
+.foot{margin-top:30px;border-top:1.5px dashed var(--line);padding-top:14px;font-size:12.5px;color:var(--muted);text-align:center}
+.goal{border:2px solid var(--blue);border-radius:12px;padding:14px 18px;margin-top:6px}
+.goal .lb{font-weight:800;color:var(--blue);font-size:14px;margin-bottom:8px}
+</style>
+</head>
+<body>
+<div class="sheet">
+
+  <div class="brand">
+    <span class="b-l">카톡의 정석</span>
+    <span class="b-r">사전과제 · PRE-WORK</span>
+  </div>
+
+  <div class="lead">
+    <h1>강의 시작 전, 딱 10분만 채워오세요</h1>
+    <p>이 강의는 <b>"내 카톡"에 바로 적용</b>하는 실전 강의입니다. 미리 준비해 오면 강의 중 곧바로 적용·교정할 수 있어 <b>효과가 두 배</b>가 됩니다. 안 하면 강의값의 절반만 챙기는 셈이에요.</p>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h"><span class="sec-n">1</span><span class="sec-t">타겟 한 명을 정하세요</span></div>
+    <p class="sec-d">강의 내내 이 한 사람을 기준으로 모든 걸 적용합니다. 막연한 연습이 아니라, 실제 그 사람에게.</p>
+    <div class="field"><span class="lb">누구인가요? (이니셜·별명)</span><div class="line"></div></div>
+    <div class="field"><span class="lb">어떻게 알게 됐나요?</span>
+      <div class="choices"><span>☐ 로드(길·클럽)</span><span>☐ 소개팅 앱</span><span>☐ 지인 소개</span><span>☐ 기타 ____________</span></div>
+    </div>
+    <div class="field"><span class="lb">지금 상태는?</span>
+      <div class="choices"><span>☐ 대화 중</span><span>☐ 읽씹·잠수</span><span>☐ 끊긴 지 오래</span><span>☐ 썸 타는 중</span><span>☐ 기타 ________</span></div>
+    </div>
+    <div class="field"><span class="lb">한 줄 상황 (어디서 막혔나요?)</span><div class="line"></div></div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h"><span class="sec-n">2</span><span class="sec-t">막혔던 카톡을 가져오세요</span></div>
+    <p class="sec-d">가장 답답했거나 끊겨버린 대화. 캡처를 인쇄해 붙이거나, 아래에 그대로 옮겨 적으세요.</p>
+    <div class="box">여기에 막힌 카톡 대화를 붙이거나 옮겨 적기<br>(나 / 상대 구분해서)</div>
+    <div class="field" style="margin-top:13px"><span class="lb">그때 내가 마지막으로 보낸 톡</span><div class="line"></div></div>
+    <div class="field"><span class="lb">그래서 어떻게 됐나요?</span>
+      <div class="choices"><span>☐ 답이 왔다</span><span>☐ 읽씹당했다</span><span>☐ 대화가 흐지부지 끊겼다</span></div>
+    </div>
+  </div>
+
+  <div class="sec" style="page-break-before:always">
+    <div class="sec-h"><span class="sec-n">3</span><span class="sec-t">자가진단 — 지금 내 카톡 습관</span></div>
+    <p class="sec-d">최근 대화를 떠올리며 솔직하게. 찔리는 항목이 곧 강의에서 고칠 지점입니다.</p>
+    <div class="check">
+      <div class="it">답이 오기 전에 톡을 두 번 이상 연달아 보낸 적이 있다</div>
+      <div class="it">할 말이 없어서 질문으로 빈칸을 메운 적이 있다</div>
+      <div class="it">상대 답에 반응 없이 곧장 다음 질문으로 넘어간 적이 있다</div>
+      <div class="it">답장이 늦었다고 재촉하거나 서운함을 내비친 적이 있다</div>
+      <div class="it">"걱정했어요" "기다렸어요"처럼 내 불안을 상대에게 떠넘긴 적이 있다</div>
+      <div class="it">약속을 꺼낼 때 말투가 갑자기 정중하고 무거워졌다</div>
+      <div class="it">잘 보이려고 한 게 나도 느껴질 만큼 애쓴 흔적이 있다</div>
+    </div>
+    <div class="score"><span>✅ 체크한 개수 (Before)</span><span class="num"><b>&nbsp;</b> / 7</span></div>
+    <p class="tip">강의 마지막에 다시 체크해서 변화를 확인합니다. 지금 솔직할수록 끝에 더 크게 와닿아요.</p>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h"><span class="sec-n">4</span><span class="sec-t">이 강의로 얻고 싶은 것 한 가지</span></div>
+    <div class="goal">
+      <span class="lb">강의가 끝났을 때, 나는 ___________ 할 수 있게 되고 싶다.</span>
+      <div class="line sm"></div>
+    </div>
+  </div>
+
+  <div class="foot">
+    <b>보너스</b> — 현재 내 프사 점검 &nbsp; ☐ 얼굴이 또렷이 보인다 &nbsp; ☐ 표정·분위기가 느껴진다 &nbsp; ☐ 단체·풍경 사진만은 아니다<br>
+    준비물: 위 내용을 채운 이 종이 + 타겟과의 카톡 캡처. 강의 당일 워크북과 함께 사용합니다.
+  </div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,838 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>APPROACH BASIC — 실전 매뉴얼</title>
+<style>
+  :root{
+    --bg:#0a0b0d;
+    --panel:#0e0f12;
+    --acc:#c9f24e;          /* brand lime */
+    --acc-soft:#b7e63f;
+    --acc-dim:rgba(201,242,78,.14);
+    --ink:#f5f7f4;
+    --ink-2:#c7ccc6;
+    --ink-3:#83887f;
+    --card-a:#17191d;
+    --card-b:#101216;
+    --brd:#24262b;
+    --hair:#212329;
+    --ok:#5fd487; --hold:#f2c94c; --stop:#f2685e;
+    --mx:78px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:#000;font-family:'Pretendard','Pretendard Variable',-apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo','Malgun Gothic',sans-serif;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+  .deck{display:flex;flex-direction:column;align-items:center;gap:28px;padding:28px 0}
+
+  .slide{
+    position:relative;width:1280px;height:720px;flex:0 0 auto;overflow:hidden;color:var(--ink);
+    background:
+      radial-gradient(120% 90% at 90% -6%, rgba(150,190,80,.11), transparent 42%),
+      radial-gradient(90% 70% at -8% 108%, rgba(120,150,70,.06), transparent 46%),
+      linear-gradient(180deg,#0c0d10,var(--bg));
+  }
+  /* subtle top accent glow line */
+  .slide::before{content:"";position:absolute;top:0;left:0;right:0;height:1px;pointer-events:none;
+    background:linear-gradient(90deg,transparent,rgba(201,242,78,.22),transparent)}
+
+  /* ===== footer furniture ===== */
+  .foot{position:absolute;left:var(--mx);right:var(--mx);bottom:36px;display:flex;align-items:center;justify-content:space-between;
+    font-size:12px;letter-spacing:.18em;color:var(--ink-3);text-transform:uppercase}
+  .foot::before{content:"";position:absolute;left:0;right:0;top:-14px;height:1px;background:linear-gradient(90deg,transparent,#2c2e33 10%,#2c2e33 90%,transparent)}
+  .foot .brand{display:flex;align-items:center;gap:9px}
+  .foot .brand i{width:7px;height:7px;background:var(--acc);border-radius:50%;box-shadow:0 0 8px rgba(201,242,78,.6);display:inline-block}
+  .foot .pg b{color:var(--ink-2);font-weight:600}
+
+  /* ===== content header ===== */
+  .head{position:absolute;top:56px;left:var(--mx);right:var(--mx)}
+  .kick{display:flex;align-items:center;gap:10px;font-size:12.5px;letter-spacing:.26em;text-transform:uppercase;color:var(--ink-3);margin-bottom:14px}
+  .kick i{width:20px;height:2px;background:var(--acc);display:inline-block;border-radius:2px}
+  .head h2{display:flex;align-items:baseline;gap:14px;font-size:34px;font-weight:800;letter-spacing:-.01em;color:#f4f6f2;line-height:1}
+  .head h2 .n{font-size:26px;font-weight:800;color:var(--acc);font-variant-numeric:tabular-nums}
+  .head .sub{margin-top:12px;font-size:15px;color:var(--ink-3);letter-spacing:.01em}
+
+  .body{position:absolute;top:172px;left:var(--mx);right:var(--mx);bottom:72px}
+
+  /* ===== cards ===== */
+  .cards{display:grid;gap:30px;height:100%;align-content:start}
+  .cards.c2{grid-template-columns:1fr 1fr}
+  .cards.c3{grid-template-columns:1fr 1fr 1fr;gap:22px}
+  .card{position:relative;background:linear-gradient(180deg,var(--card-a),var(--card-b));border:1px solid var(--brd);border-radius:16px;padding:30px 32px;box-shadow:0 14px 34px rgba(0,0,0,.42)}
+  .card::before{content:"";position:absolute;left:26px;right:26px;top:0;height:2px;border-radius:2px;background:linear-gradient(90deg,transparent,var(--acc-soft),transparent);opacity:.55}
+  .card .ct{display:flex;align-items:center;gap:11px;font-size:20px;font-weight:700;letter-spacing:.02em;color:#f1f3ee;margin-bottom:18px}
+  .card .ct .dot{width:8px;height:8px;border-radius:50%;background:var(--acc);box-shadow:0 0 8px rgba(201,242,78,.5)}
+  .card .cb{font-size:18px;line-height:1.86;color:var(--ink-2);font-weight:300}
+  .card .cb b{color:#fff;font-weight:600}
+  .card .cb .q{color:var(--ink);font-weight:400}
+  .card.center{display:flex;flex-direction:column;justify-content:center;text-align:center;align-items:center}
+  .card.sm{padding:26px 26px}
+  .card.sm .ct{font-size:18px;margin-bottom:14px}
+  .card.sm .cb{font-size:16px;line-height:1.8}
+
+  /* ===== definition rows ===== */
+  .defs{display:flex;flex-direction:column}
+  .def{position:relative;padding:20px 0 20px 26px;border-bottom:1px solid var(--hair)}
+  .def:last-child{border-bottom:none}
+  .def::before{content:"";position:absolute;left:0;top:26px;width:12px;height:2px;background:var(--acc);border-radius:2px}
+  .def .k{font-size:18px;font-weight:700;color:#fff;margin-right:6px;letter-spacing:.01em}
+  .def .v{font-size:18px;line-height:1.7;color:var(--ink-2);font-weight:300}
+  .def .v.block{display:block;margin-top:8px}
+
+  /* ===== step list ===== */
+  .steps{position:relative;display:flex;flex-direction:column;gap:22px;padding-top:6px}
+  .steps::before{content:"";position:absolute;left:22px;top:16px;bottom:16px;width:1px;background:linear-gradient(180deg,transparent,var(--brd) 12%,var(--brd) 88%,transparent)}
+  .step{position:relative;display:grid;grid-template-columns:46px 1fr;gap:22px;align-items:start}
+  .step .b{width:46px;height:46px;border-radius:50%;background:var(--panel);border:1px solid var(--brd);display:flex;align-items:center;justify-content:center;
+    font-size:17px;font-weight:800;color:var(--acc);font-variant-numeric:tabular-nums;position:relative;z-index:1;box-shadow:0 0 0 5px var(--bg)}
+  .step .st{font-size:19px;font-weight:700;color:#fff;margin-bottom:5px;letter-spacing:.01em}
+  .step .sd{font-size:17px;line-height:1.72;color:var(--ink-2);font-weight:300}
+  .step .sd em{color:var(--acc-soft);font-style:normal;font-weight:500}
+
+  /* ===== checklist ===== */
+  .checklist{display:flex;flex-direction:column;gap:20px;padding-top:8px}
+  .chk{display:flex;gap:15px;align-items:flex-start;font-size:18px;line-height:1.65;color:var(--ink-2);font-weight:300}
+  .chk .ic{flex:0 0 auto;width:22px;height:22px;margin-top:2px;border-radius:6px;background:linear-gradient(180deg,#dcff8e,#a9e24f);display:flex;align-items:center;justify-content:center}
+  .chk .ic svg{width:13px;height:13px}
+  .card .chk{font-size:15px;gap:11px;line-height:1.55}
+  .card .chk .ic{width:19px;height:19px;border-radius:5px}
+
+  /* ===== ng list ===== */
+  .ng{display:flex;flex-direction:column}
+  .ng .row{display:flex;gap:16px;align-items:flex-start;padding:17px 0;border-bottom:1px solid var(--hair);font-size:18px;line-height:1.6;color:var(--ink-2);font-weight:300}
+  .ng .row:last-child{border-bottom:none}
+  .ng .x{flex:0 0 auto;width:22px;height:22px;margin-top:2px;border-radius:6px;border:1px solid rgba(242,104,94,.5);background:rgba(242,104,94,.12);color:var(--stop);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800}
+  .ng .row b{color:#fff;font-weight:600}
+
+  /* ===== callout ===== */
+  .callout{position:relative;margin-top:22px;background:rgba(201,242,78,.06);border:1px solid rgba(201,242,78,.28);border-radius:14px;padding:20px 24px 20px 26px}
+  .callout::before{content:"";position:absolute;left:0;top:16px;bottom:16px;width:4px;background:var(--acc);border-radius:3px}
+  .callout .tag{display:inline-block;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--acc-soft);font-weight:700;margin-bottom:7px}
+  .callout p{font-size:17px;line-height:1.7;color:var(--ink);font-weight:300}
+  .callout p b{color:#fff;font-weight:600}
+
+  /* ===== story ===== */
+  .story{position:relative;background:linear-gradient(180deg,var(--card-a),var(--card-b));border:1px solid var(--brd);border-radius:16px;padding:32px 40px;box-shadow:0 14px 34px rgba(0,0,0,.42)}
+  .story::before{content:"";position:absolute;left:0;top:24px;bottom:24px;width:4px;background:var(--acc);border-radius:3px;box-shadow:0 0 12px rgba(201,242,78,.4)}
+  .story p{font-size:18px;line-height:2.0;color:var(--ink-2);font-weight:300}
+  .story p+p{margin-top:13px}
+  .story p b{color:var(--acc-soft);font-weight:600}
+
+  /* ===== traffic light ===== */
+  .signal{display:flex;flex-direction:column;gap:16px;padding-top:2px}
+  .sig{position:relative;display:grid;grid-template-columns:196px 1fr;gap:26px;align-items:center;background:linear-gradient(180deg,var(--card-a),var(--card-b));border:1px solid var(--brd);border-radius:14px;padding:20px 26px}
+  .sig .lab{display:flex;align-items:center;gap:11px;font-size:19px;font-weight:800;color:#fff;white-space:nowrap}
+  .sig .lab .t{margin-right:2px}
+  .sig .lab .d{width:16px;height:16px;border-radius:50%}
+  .sig .desc{font-size:17px;line-height:1.6;color:var(--ink-2);font-weight:300}
+  .sig .desc b{color:#fff;font-weight:600}
+  .sig.g{border-color:rgba(95,212,135,.32)} .sig.g .d{background:var(--ok);box-shadow:0 0 10px rgba(95,212,135,.6)} .sig.g .lab .t{color:var(--ok)}
+  .sig.y{border-color:rgba(242,201,76,.30)} .sig.y .d{background:var(--hold);box-shadow:0 0 10px rgba(242,201,76,.55)} .sig.y .lab .t{color:var(--hold)}
+  .sig.r{border-color:rgba(242,104,94,.32)} .sig.r .d{background:var(--stop);box-shadow:0 0 10px rgba(242,104,94,.6)} .sig.r .lab .t{color:var(--stop)}
+
+  /* ===== cover ===== */
+  .cover{padding:0}
+  .cover .edge{position:absolute;left:0;top:0;bottom:0;width:6px;background:linear-gradient(180deg,var(--acc),rgba(201,242,78,0))}
+  .cover .cv{position:absolute;left:var(--mx);top:150px}
+  .cover .cvk{display:flex;align-items:center;gap:12px;font-size:13px;letter-spacing:.34em;text-transform:uppercase;color:var(--ink-3);margin-bottom:34px}
+  .cover .cvk i{width:26px;height:2px;background:var(--acc)}
+  .cover .t1{font-size:104px;font-weight:800;letter-spacing:-.02em;line-height:.98;color:#f6f8f4}
+  .cover .t2{font-size:104px;font-weight:800;letter-spacing:-.02em;line-height:1.0;color:var(--acc);text-shadow:0 0 40px rgba(201,242,78,.18)}
+  .cover .rule{width:120px;height:3px;background:var(--acc);margin:40px 0 26px;border-radius:2px}
+  .cover .cs{font-size:22px;color:var(--ink-2);font-weight:300;letter-spacing:.01em}
+  .cover .cf{position:absolute;left:var(--mx);right:var(--mx);bottom:52px;display:flex;justify-content:space-between;align-items:flex-end;
+    font-size:13px;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-3)}
+  .cover .ghost{position:absolute;right:-40px;bottom:-90px;font-size:420px;font-weight:900;color:#fff;opacity:.018;letter-spacing:-.04em;line-height:1;pointer-events:none}
+
+  /* ===== index ===== */
+  .idx-list{position:absolute;left:var(--mx);right:var(--mx);top:172px;display:grid;grid-template-columns:1fr 1fr;gap:0 56px}
+  .idx-row{position:relative;display:flex;align-items:center;gap:22px;padding:19px 6px;border-bottom:1px solid var(--hair)}
+  .idx-row .num{font-size:30px;font-weight:800;color:var(--acc);font-variant-numeric:tabular-nums;min-width:44px;letter-spacing:-.02em}
+  .idx-row .meta{display:flex;flex-direction:column;gap:3px}
+  .idx-row .t{font-size:19px;color:#eef0ea;font-weight:500;letter-spacing:.01em}
+  .idx-row .s{font-size:12.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-3)}
+
+  /* ===== section divider ===== */
+  .divider{padding:0}
+  .divider .dghost{position:absolute;right:40px;top:50%;transform:translateY(-50%);font-size:440px;font-weight:900;color:var(--acc);opacity:.05;line-height:1;letter-spacing:-.05em;font-variant-numeric:tabular-nums}
+  .divider .dc{position:absolute;left:var(--mx);top:50%;transform:translateY(-54%)}
+  .divider .dk{display:flex;align-items:center;gap:13px;font-size:14px;letter-spacing:.3em;text-transform:uppercase;color:var(--acc-soft);font-weight:600;margin-bottom:22px}
+  .divider .dk i{width:30px;height:2px;background:var(--acc)}
+  .divider .dt{font-size:64px;font-weight:800;letter-spacing:-.02em;line-height:1.04;color:#f6f8f4}
+  .divider .dt .hl{color:var(--acc)}
+  .divider .ds{margin-top:20px;font-size:18px;color:var(--ink-3);letter-spacing:.02em}
+  .dots{position:absolute;left:var(--mx);bottom:64px;display:flex;gap:10px;align-items:center}
+  .dots span{width:26px;height:4px;border-radius:3px;background:#2a2c31}
+  .dots span.on{background:var(--acc);box-shadow:0 0 10px rgba(201,242,78,.5)}
+
+  /* ===== closing ===== */
+  .closing{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+  .closing .ck{font-size:13px;letter-spacing:.32em;text-transform:uppercase;color:var(--ink-3);margin-bottom:26px}
+  .closing .cbig{font-size:60px;font-weight:800;letter-spacing:-.02em;line-height:1.12;color:#f6f8f4}
+  .closing .cbig .hl{color:var(--acc)}
+  .closing .cline{margin-top:26px;font-size:19px;color:var(--ink-2);font-weight:300;max-width:720px;line-height:1.7}
+  .closing .cbrand{position:absolute;bottom:52px;font-size:13px;letter-spacing:.24em;text-transform:uppercase;color:var(--ink-3)}
+
+  /* ===== worksheet ===== */
+  .ws{display:flex;flex-direction:column;gap:13px;padding-top:2px}
+  .ws .r{display:grid;grid-template-columns:36px 1fr;gap:16px;align-items:start}
+  .ws .n{width:36px;height:36px;border-radius:50%;background:var(--panel);border:1px solid var(--brd);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;color:var(--acc);font-variant-numeric:tabular-nums}
+  .ws .lab{font-size:17px;font-weight:700;color:#fff;line-height:1.3}
+  .ws .g{font-size:14px;color:var(--ink-3);margin-top:4px;line-height:1.55}
+  .ws .g em{color:var(--acc-soft);font-style:normal}
+  .ws .fill{margin-top:10px;border-bottom:1.7px dashed #41444b;height:22px}
+  .ws .ex{font-size:15.5px;color:var(--ink-2);margin-top:4px;line-height:1.5}
+  .ws .ex b{color:#fff;font-weight:600}
+  .pill{display:inline-block;font-size:11px;letter-spacing:.04em;padding:2px 9px;border-radius:20px;border:1px solid rgba(201,242,78,.35);color:var(--acc-soft);background:rgba(201,242,78,.07);font-weight:600;margin-left:8px;vertical-align:middle}
+
+  @media print{
+    @page{size:1280px 720px;margin:0}
+    html,body{background:#000}
+    .deck{gap:0;padding:0}
+    .slide{page-break-after:always;break-after:page}
+    .slide:last-child{page-break-after:auto}
+  }
+</style>
+</head>
+<body>
+<div class="deck">
+
+  <!-- 01 COVER -->
+  <section class="slide cover">
+    <span class="edge"></span>
+    <div class="ghost">AB</div>
+    <div class="cv">
+      <div class="cvk"><i></i> 실전 매뉴얼 · Field Manual</div>
+      <div class="t1">APPROACH</div>
+      <div class="t2">BASIC</div>
+      <div class="rule"></div>
+      <div class="cs">길거리 · 실내 어프로치 실전 매뉴얼</div>
+    </div>
+    <div class="cf">
+      <span>SUPER NATURAL</span>
+      <span>Basic · Edition 1</span>
+    </div>
+  </section>
+
+  <!-- 02 INDEX -->
+  <section class="slide">
+    <div class="head"><div class="kick"><i></i> Contents</div><h2>목차 <span class="n">INDEX</span></h2></div>
+    <div class="idx-list">
+      <div class="idx-row"><span class="num">01</span><div class="meta"><span class="t">어프로치 마인드셋 : MPO</span><span class="s">Mindset</span></div></div>
+      <div class="idx-row"><span class="num">02</span><div class="meta"><span class="t">어필되는 요소들</span><span class="s">Attraction</span></div></div>
+      <div class="idx-row"><span class="num">03</span><div class="meta"><span class="t">로드 어프로치 템플릿</span><span class="s">Day / Road</span></div></div>
+      <div class="idx-row"><span class="num">04</span><div class="meta"><span class="t">실내 어프로치 템플릿</span><span class="s">Indoor</span></div></div>
+      <div class="idx-row"><span class="num">05</span><div class="meta"><span class="t">거절 다루기</span><span class="s">Objections</span></div></div>
+      <div class="idx-row"><span class="num">06</span><div class="meta"><span class="t">클로징 이후 &amp; 체크리스트</span><span class="s">After Close</span></div></div>
+    </div>
+    <div class="foot"><span class="brand"><i></i> Approach Basic · 실전 매뉴얼</span><span class="pg"><b>02</b> / 35</span></div>
+  </section>
+
+  <!-- 03 DIVIDER 01 -->
+  <section class="slide divider">
+    <div class="dghost">01</div>
+    <div class="dc">
+      <div class="dk"><i></i> Part 01</div>
+      <div class="dt">어프로치 <span class="hl">마인드셋</span></div>
+      <div class="ds">MPO — 목적 · 태도 · 확률 게임</div>
+    </div>
+    <div class="dots"><span class="on"></span><span></span><span></span><span></span><span></span><span></span></div>
+  </section>
+
+  <!-- 04 목적 -->
+  <section class="slide">
+    <div class="head"><div class="kick"><i></i> Part 01 · Mindset</div><h2><span class="n">01</span> 목적 &amp; 태도</h2></div>
+    <div class="body">
+      <div class="cards c2">
+        <div class="card">
+          <div class="ct"><span class="dot"></span>훈련의 목적</div>
+          <div class="cb">난 번호를 따는 것이 목적이 아니다. <b>남자로서의 매력 개발</b>이 목적이다.<br>어떤 부분이 남자로서의 매력인지 정확히 알고, 그 매력을 기르기 위해 훈련에 임한다.<br>내가 평소에 하지 못했던 언행을 해보며 진정한 남자의 면모를 갖추기 위해 훈련할 뿐이다.</div>
+        </div>
+        <div class="card">
+          <div class="ct"><span class="dot"></span>태도</div>
+          <div class="cb">난 제3자들에게 잘 보일 생각이 없다.<br>단, 거절당하더라도 비웃음을 사더라도 <b>최소한 시도는 해본 용기 있는 남자</b>로는 남겠다.</div>
+        </div>
+      </div>
+    </div>
+    <div class="foot"><span class="brand"><i></i> Approach Basic · 실전 매뉴얼</span><span class="pg"><b>04</b> / 35</span></div>
+  </section>
+
+  <!-- 05 이해 -->
+  <section class="slide">
+    <div class="head"><div class="kick"><i></i> Part 01 · Mindset</div><h2><span class="n">01</span> 이해</h2></div>
+    <div class="body">
+      <div class="checklist">
+        <div class="chk"><span class="ic"><svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0a0a0a" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>남자는 쟁취하는 성별이며 여자는 보존·방어하는 성별이다.</div>
+        <div class="chk"><span class="ic"><svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0a0a0a" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>남자가 맘에 드는 여성에게 접근하는 건 당연하며, 여자가 낯선 남자를 거절하는 것 또한 당연하다.</div>
+        <div class="chk"><span class="ic"><svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0a0a0a" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>그래서 남자는 거절을 다루는 능력이 필수적으로 있어야 한다.</div>
+        <div class="chk"><span class="ic"><svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0a0a0a" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>당신을 빡세게 거절하는 여자가 있다면 그건 여자로서의 역할을 잘 수행하는 것이며, 그것을 확신과 신뢰를 전달함으로써 다뤄보고자 노력하는 게 남자인 당신이 할 일이다.</div>
+        <div class="chk"><span class="ic"><svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0a0a0a" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>이런 자연스러운 현상을 보며 수군거리거나 비웃는 자가 있다면, 그것은 원래 대중이 하는 일일 뿐이다.</div>
+      </div>
+    </div>
+    <div class="foot"><span class="brand"><i></i> Approach Basic · 실전 매뉴얼</span><span class="pg"><b>05</b> / 35</span></div>
+  </section>
+
+  <!-- 06 감사 & 미션 -->
+  <section class="slide">
+    <div class="head"><div class="kick"><i></i> Part 01 · Mindset</div><h2><span class="n">01</span> 감사 &amp; 미션</h2></div>
+    <div class="body">
+      <div class="cards c2">
+        <div class="card">
+          <div class="ct"><span class="dot"></span>감사</div>
+          <div class="cb">걸을 수 있음에, 말할 수 있음에, 도전할 수 있음에, 두려울 수 있음에, 쪽팔릴 수 있음에 감사하다. 이 또한 살아있음에 가능한 것 아닌가?<br>내가 말을 걸었을 때 잘 들어주는 건 그 사람의 의무가 아니다. 멈춰서서 들어준 여성에게는 감사를 표한다.</div>
+        </div>
+        <div class="card">
+          <div class="ct"><span class="dot"></span>미션</div>
+          <div class="cb">미션을 부여받았을 때, 스스로에게 미션을 부여했을 땐 <b>내 감정과는 별개로 행동</b>할 것이다.<br>내가 하고자 하는 일, 하려 했던 일을 어떤 감정이 들든 수행한다.<br>난 피곤하다고 헬스장을 안 가고, 지친다고 노동을 안 하는 도태된 남성이 아니기 때문이다.</div>
+        </div>
+      </div>
+    </div>
+    <div class="foot"><span class="brand"><i></i> Approach Basic · 실전 매뉴얼</span><span class="pg"><b>06</b> / 35</span></div>
+  </section>
+
+  <!-- 07 확률 게임 (NEW) -->
+  <section class="slide">
+    <div class="head"><div class="kick"><i></i> Part 01 · Mindset</div><h2><span class="n">01</span> 확률 게임 &amp; 멘탈</h2><div class="sub">거절은 실패가 아니라 데이터다. 시도 횟수에 점수를 준다.</div></div>
+    <div class="body">
+      <div class="cards c2">
+        <div class="card">
+          <div class="ct"><span class="dot"></span>확률로 생각하라</div>
+          <div class="cb">어프로치는 <b>확률 게임</b>이다. 한 번의 거절은 실패가 아니라 데이터다.<br>10명에게 다가가 8명이 거절해도 2명이 남는다. 그 2명은 시도하지 않으면 절대 만나지 못한다.<br>점수판은 '번호 개수'가 아니라 <b>'시도 횟수'</b>다.</div>
+        </div>
+        <div class="card">
+          <div class="ct"><span class="dot"></span>거절 회복 루틴</div>
+          <div class="cb"><b>30초 룰</b> — 거절 직후 감정이 올라와도 30초 안에 다음 타겟을 정한다. 멈추면 그날은 끝난다.<br>되뇐다: "이건 나에 대한 평가가 아니라, 낯선 사람에 대한 반사 반응이다."<br>오늘의 승리 기준 = 시도한 나. 결과가 아니라 <b>실행</b>이다.</div>
+        </div>
+      </div>
+    </div>
+    <div class="foot"><span class="brand"><i></i> Approach Basic · 실전 매뉴얼</span><span class="pg"><b>07</b> / 35</span></div>
+  </section>
+
+  <!-- 심리 3원칙 (NEW) -->
+  <section class="slide">
+    <div class="head"><div class="kick"><i></i> Part 01 · Psychology</div><h2><span class="n">01</span> 왜 통하는가 — 심리 3원칙</h2><div class="sub">기법이 아니라 원리를 알면, 상황이 바뀌어도 응용할 수 있다.</div></div>
+    <div class="body">
+      <div class="cards c3" style="height:auto">
+        <div class="card sm">
+          <div class="ct"><span class="dot"></span>노력의 정당화</div>
+          <div class="cb">사람은 <b>자기가 노력을 쏟은 대상</b>을 좋아한다. 그녀가 대답·웃음·정보를 투자할수록 "이 사람과 대화할 이유가 있다"고 스스로 납득한다.<br><span style="color:var(--acc-soft)">→ 그래서 '투자'를 유도한다.</span></div>
+        </div>
+        <div class="card sm">
+          <div class="ct"><span class="dot"></span>안전감 = 매력의 전제</div>
+          <div class="cb">낯선 남자의 접근, 뇌의 기본값은 <b>'위협 평가'</b>. 당위성·명분·"이상한 사람 아니에요"·내 번호 주기가 <b>위협을 먼저 끈다.</b><br><span style="color:var(--acc-soft)">→ 안전을 못 주면 매력은 시작도 안 된다.</span></div>
+        </div>
+        <div class="card sm">
+          <div class="ct"><span class="dot"></span>손실 회피 + 단계적 승낙</div>
+          <div class="cb"><b>"돌아서면 남남"</b> = 잃는 게 아깝다(손실 회피). <b>"30초만 → 번호"</b> = 작은 yes가 큰 yes를 부른다.<br><span style="color:var(--acc-soft)">→ 크게 한 번에 요구하지 말고 작게 쪼갠다.</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="foot"><span class="brand"><i></i> Approach Basic · 실전 매뉴얼</span><span class="pg"></span></div>
+  </section>
+
+  <!-- 08 상상 -->
+  <section class="slide">
+    <div class="head"><div class="kick"><i></i> Part 01 · Mindset</div><h2><span class="n">01</span> 상상</h2></div>
+    <div class="body">
+      <div class="cards" style="grid-template-columns:1fr">
+        <div class="card center" style="min-height:340px">
+          <div class="cb q" style="font-size:24px;line-height:2.05">“난 매력적인 남자가 되어서<br>수많은 나의 이상형들을 지배하며<br>그녀들과 행복한 시간을 보내는 삶을<br>영위할 것이다.”</div>
+          <div class="cb" style="margin-top:26px;color:var(--ink-3);font-size:17px;max-width:760px">지금은 아닐 수 있다. 내일도 아닐 수 있다. 하지만 그 미래를 향한 걸음을 멈추지만 않는다면 언젠간 당도할 것이다.</div>
+        </div>
+      </div>
+    </div>
+    <div class="foot"><span class="brand"><i></i> Approach Basic · 실전 매뉴얼</span><span class="pg"><b>08</b> / 35</span></div>
+  </section>
+
+  <!-- 09 DIVIDER 02 -->
+  <section class="slide divider">
+    <div class="dghost">02</div>
+    <div class="dc">
+      <div class="dk"><i></i> Part 02</div>
+      <div class="dt">어필되는 <span class="hl">요소들</span></div>
+      <div class="ds">비언어 · 리드 · 당위성 · 진정성 · 가치 투자 · 어둠의 삼원</div>
+    </div>
+    <div class="dots"><span></span><span class="on"></span><span></span><span></span><span></span><span></span></div>
+  </section>
+
+  <!-- 10 비언어 = 상태 (NEW) -->
+  <section class="slide">
+    <div class="head"><div class="kick"><i></i> Part 02 · Attraction</div><h2><span class="n">02</span> 비언어 = 상태 전달</h2><div class="sub">멘트보다 상태가 먼저다. 상태가 살면 어설픈 멘트도 통한다.</div></div>
+    <div class="body">
+      <div class="cards c2" style="gap:22px 30px">
+        <div class="card sm"><div class="ct"><span class="dot"></span>아이컨택</div><div class="cb">눈을 먼저 깔지 않는다. 오픈부터 클로즈까지, 3초 정적도 눈으로 버틴다.</div></div>
+        <div class="card sm"><div class="ct"><span class="dot"></span>자세</div><div class="cb">상체를 열고 어깨를 편다. 급히 다가가지 않고 무게중심을 낮춰 여유 있게.</div></div>
+        <div class="card sm"><div class="ct"><span class="dot"></span>발성</div><div class="cb">크고 단호하게. 끝음을 아래로 내린다. 질문형(X) → 통보형(O). 천천히.</div></div>
+        <div class="card sm"><div class="ct"><span class="dot"></span>표정</div><div class="cb">반가운 사람 만난 듯 미소. 긴장한 무표정(X). 웃되 굽신대지 않는다.</div></div>
+      </div>
+    </div>
+    <div class="foot"><span class="brand"><i></i> Approach Basic · 실전 매뉴얼</span><span class="pg"><b>10</b> / 35</span></div>
+  </section>
+
+  <!-- 11 리드 -->
+  <section class="slide">
+    <div class="head"><div class="kick"><i></i> Part 02 · Attraction</div><h2><span class="n">02</span> 리드 — 남자의 필수 덕목</h2></div>
+    <div class="body">
+      <div class="defs" style="padding-top:14px">
+        <div class="def"><span class="k">관계 리드</span><span class="v">우리 알고지내요 / 커피 한 잔 해요 / 부담스러우시면 온라인 친구부터 해요</span></div>
+        <div class="def"><span class="k">상황 리드</span><span class="v">잠깐만 이쪽으로 오세요 / 잠깐만 대화해요</span></div>
+        <div class="def"><span class="k">감정 리드</span><span class="v">지금은 싫으실 수 있는데 30초 뒤엔 좋게 만들어 줄게요</span></div>
+      </div>
+    </div>
+    <div class="foot"><span class="brand"><i></i> Approach Basic · 실전 매뉴얼</span><span class="pg"><b>11</b> / 35</span></div>
+  </section>
+
+  <!-- 당위성 (NEW) -->
+  <section class="slide">
+    <div class="head"><div class="kick"><i></i> Part 02 · Attraction</div><h2><span class="n">02</span> 당위성 — 왜 왔고, 왜 당신인가</h2><div class="sub">낯선 접근은 '위협'이다. 명분(당위성)을 주면 '무례한 헌팅'이 '의도된 만남'으로 바뀐다.</div></div>
+    <div class="body">
+      <div class="cards c3" style="height:auto">
+        <div class="card sm">
+          <div class="ct"><span class="dot"></span>왜 여기 있는가</div>
+          <div class="cb"><b>상황의 당위</b><br>“난 원래 볼일이 있어 여기 있었다.” 친구랑 카페, 약속, 지나던 길 — <b>'번호 따려 작정하고 온 사람'이 아니라는 프레임.</b> 목적이 나에게 있으니 당당하다.</div>
+        </div>
+        <div class="card sm">
+          <div class="ct"><span class="dot"></span>왜 당신인가</div>
+          <div class="cb"><b>선택의 당위</b><br>수많은 사람 중 하필 당신. 끌린 이유를 <b>구체적으로.</b> “이상형 얘기하다 딱 그런 사람이 지나가서.” 막연한 '예뻐서'(X) → 구체적 트리거(O).</div>
+        </div>
+        <div class="card sm">
+          <div class="ct"><span class="dot"></span>왜 지금인가</div>
+          <div class="cb"><b>타이밍의 당위</b><br>지금 놓치면 다시 못 본다. “돌아서면 남남이잖아요, 커넥션 하나 남겨요.” <b>즉시성 = 행동의 명분.</b></div>
+        </div>
+      </div>
+      <div class="callout"><span class="tag">왜 통할까</span><p>여자가 경계하는 건 '의도를 모르는 접근'이다. <b>당위성은 의도를 먼저 밝혀 경계를 해제한다.</b> 동시에 나에게도 명분이 생겨 당당해진다 — 스스로 납득한 사람은 안 떨린다.</p></div>
+    </div>
+    <div class="foot"><span class="brand"><i></i> Approach Basic · 실전 매뉴얼</span><span class="pg"><b>12</b> / 35</span></div>
+  </section>
+
+  <!-- 12 진정성 -->
+  <section class="slide">
+    <div class="head"><div class="kick"><i></i> Part 02 · Attraction</div><h2><span class="n">02</span> 진정성</h2><div class="sub">요즘 번따남이 너무 많다. 잠깐이라도 스토리텔링으로 진정성을 넣어주자.</div></div>
+    <div class="body">
+      <div class="defs" style="padding-top:8px">
+        <div class="def"><span class="k">왜 꼭 나여야만 하는지</span><span class="v block">남자들끼리 이상형 이야기를 하고 있었는데, 마침 제가 말했던 이상형에 부합한 분이 눈에 들어와서 — 끌려서 대화해 보고 싶어 왔는데 대화도 잘 통하는 것 같아서요.</span></div>
+        <div class="def"><span class="k">왜 꼭 지금이어야 하는지</span><span class="v block">우리 이렇게 대화하다 돌아서면 언제 다시 마주칠지 모르는 남남이잖아요. 그래도 서로 인생에서 귀인이 될지 모르는데, 커넥션 하나라도 남겨놓고 가요.</span></div>
+      </div>
+    </div>
+    <div class="foot"><span class="brand"><i></i> Approach Basic · 실전 매뉴얼</span><span class="pg"><b>12</b> / 35</span></div>
+  </section>
+
+  <!-- 13 가치 투자 의향 -->
+  <section class="slide">
+    <div class="head"><div class="kick"><i></i> Part 02 · Attraction</div><h2><span class="n">02</span> 가치 투자 의향</h2><div class="sub">와꾸로 먹힌 게 아닌 이상, '밑져야 본전'이란 인식이 있어야 연락처를 준다.</div></div>
+    <div class="body">
+      <div class="defs" style="padding-top:20px">
+        <div class="def"><span class="v">그쪽이랑 어울리는 바가 생각났어요. 나중에 데려가 줄게요 / 부담스러우시면 추천해 줄게요.</span></div>
+        <div class="def"><span class="v">느낌 좋은 카페 좋아하실 것 같아요. 제가 몇 개 카톡으로 추천해 줄게요.</span></div>
+        <div class="def"><span class="v">제가 맛집 스페셜리스트여서, 친해지면 데려가 줄게요 / 추천해 줄게요.</span></div>
+      </div>
+    </div>
+    <div class="foot"><span class="brand"><i></i> Approach Basic · 실전 매뉴얼</span><span class="pg"><b>13</b> / 35</span></div>
+  </section>
+
+  <!-- 14 사이코패시즘 & 나르시시즘 -->
+  <section class="slide">
+    <div class="head"><div class="kick"><i></i> Part 02 · Dark Triad</div><h2><span class="n">02</span> 사이코패시즘 &amp; 나르시시즘</h2></div>
+    <div class="body">
+      <div class="cards c2">
+        <div class="card">
+          <div class="ct"><span class="dot"></span>사이코패시즘</div>
+          <div class="cb"><b>감정과는 별개로 행동하라.</b><br><span style="color:var(--ink-3)">ex) 남자 일행 있는데 어프로치, 6인 어프로치 등</span><br>여자 입장에서는 절대 하지 못하는 행위를 함으로써 '이 사람 대단하긴 하다…'란 감정을 남길 수 있다.</div>
+        </div>
+        <div class="card">
+          <div class="ct"><span class="dot"></span>나르시시즘</div>
+          <div class="cb"><b>내가 짱이다.</b><br><span style="color:var(--ink-3)">"연락하는 사람 있어요" → 거절 나왔을 때:</span><br><span class="q">“당연히 그럴 것 같았어요. 워낙 이쁘시니까 여러 명 거느리실 것 같긴 해요. 근데 그중 가장 괜찮은 한 분 만나고 싶으실 텐데, 지금 연락하는 분이 정말 최고인지는 아직 모르시잖아요. 제가 그 기준이 되어 드릴게요.”</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="foot"><span class="brand"><i></i> Approach Basic · 실전 매뉴얼</span><span class="pg"><b>14</b> / 35</span></div>
+  </section>
+
+  <!-- 15 마키아벨리즘 -->
+  <section class="slide">
+    <div class="head"><div class="kick"><i></i> Part 02 · Dark Triad</div><h2><span class="n">02</span> 마키아벨리즘</h2><div class="sub">목적을 위해 수단을 조작하라 — 전략적 어프로치.</div></div>
+    <div class="body">
+      <div class="story" style="margin-top:8px">
+        <p><b>Ex)</b> 일부러 아는 사람인 척 어프로치한다 — “어? 오랜만이에요 ㅎㅎ”</p>
+        <p><b>여 :</b> …저 아세요? (당황)</p>
+        <p><b>남 :</b> 아니요 ㅋㅋ 근데 모르는 사람처럼 말 걸면 바로 거절부터 하실까 봐, 일부러 오버해서 친한 척 좀 해봤어요.</p>
+      </div>
+      <div class="callout"><span class="tag">Key</span><p><b>자신감과 쟁취력</b>은 남자의 필수 덕목이다. 어둠의 삼원은 '태도'로 쓰되, 상대를 해치는 도구가 아니라 나를 여는 도구로만 쓴다.</p></div>
+    </div>
+    <div class="foot"><span class="brand"><i></i> Approach Basic · 실전 매뉴얼</span><span class="pg"><b>15</b> / 35</span></div>
+  </section>
+
+  <!-- 16 DIVIDER 03 -->
+  <section class="slide divider">
+    <div class="dghost">03</div>
+    <div class="dc">
+      <div class="dk"><i></i> Part 03</div>
+      <div class="dt">로드 <span class="hl">어프로치</span></div>
+      <div class="ds">데이 로드 어프로치 기본 템플릿</div>
+    </div>
+    <div class="dots"><span></span><span></span><span class="on"></span><span></span><span></span><span></span></div>
+  </section>
+
+  <!-- 17 인식 -> 오픈 (steps) -->
+  <section class="slide">
+    <div class="head"><div class="kick"><i></i> Part 03 · Road</div><h2><span class="n">03</span> 인식 → 오픈</h2></div>
+    <div class="body">
+      <div class="steps">
+        <div class="step"><div class="b">01</div><div><div class="st">인식</div><div class="sd">상체를 상대 쪽으로 활짝 연 뒤, 아이컨택하며 나란히 걷는다.</div></div></div>
+        <div class="step"><div class="b">02</div><div><div class="st">정적</div><div class="sd">3초간 반가운 표정으로 아이컨택만 한 채 정적을 즐긴다(압력 발생). 압력을 주고 해소하는 주체를 <em>'나'</em>로 인식시키기 위함 → 관계의 주인.</div></div></div>
+        <div class="step"><div class="b">03</div><div><div class="st">오픈</div><div class="sd">“저기요, 잠깐만요!” (지갑 떨군 사람 세우듯 + 반가운 사람 만나듯) “안녕하세요 ㅎㅎ”</div></div></div>
+        <div class="step"><div class="b">04</div><div><div class="st">발성</div><div class="sd">단호하게, 끝음은 아래로 찍는다.</div></div></div>
+      </div>
+    </div>
+    <div class="foot"><span class="brand"><i></i> Approach Basic · 실전 매뉴얼</span><span class="pg"><b>17</b> / 35</span></div>
+  </section>
+
+  <!-- 18 스토리텔링 -->
+  <section class="slide">
+    <div class="head"><div class="kick"><i></i> Part 03 · Road</div><h2><span class="n">03</span> 스토리텔링</h2></div>
+    <div class="body">
+      <div class="story" style="margin-top:22px">
+        <p>제가 중요하게 할 말이 있어서요. 우리 잠깐만 이야기해요.</p>
+        <p>아 다른 건 아니고요 (정적) 저기서 친구들이랑 카페에서 이야기 중이었는데, 남자끼리 있다 보니 이상형 이야기를 좀 하고 있었어요. 근데 전 ○○ (그 사람 맞춤형) 같은 스타일 좋아한다고 이야기하던 와중에, 딱 그런 사람이 창밖으로 지나가는 거예요. 그래서 대화해 보고 싶어서 놀란 가슴 부여잡고 뛰쳐나왔어요 ㅎㅎ</p>
+        <p>근데 저도 얼른 돌아가 봐야 하고 그쪽도 가보셔야 하니까, 우리 일단 카톡으로 마저 이야기해요.</p>
+      </div>
+    </div>
+    <div class="foot"><span class="brand"><i></i> Approach Basic · 실전 매뉴얼</span><span class="pg"><b>18</b> / 35</span></div>
+  </section>
+
+  <!-- 스토리텔링 공식 (NEW) -->
+  <section class="slide">
+    <div class="head"><div class="kick"><i></i> Part 03 · Storytelling</div><h2><span class="n">03</span> 스토리텔링 공식</h2><div class="sub">당위성을 5칸에 끼워 넣으면 대본이 된다. 앞장 예시를 이 뼈대로 분해한 것.</div></div>
+    <div class="body">
+      <div class="ws">
+        <div class="r"><div class="n">01</div><div><div class="lab">훅 · 리드<span class="pill">긴장 완화</span></div><div class="ex">“<b>중요하게 할 말이 있어서요. 우리 잠깐만 이야기해요.</b>”</div></div></div>
+        <div class="r"><div class="n">02</div><div><div class="lab">왜 여기 있는가<span class="pill">상황의 당위</span></div><div class="ex">저기서 <b>친구들이랑 카페에서 이야기 중</b>이었는데,</div></div></div>
+        <div class="r"><div class="n">03</div><div><div class="lab">왜 당신인가<span class="pill">선택의 당위</span></div><div class="ex"><b>이상형 얘기</b>를 하던 와중에, 딱 그런 사람이 <b>창밖으로 지나가는</b> 거예요.</div></div></div>
+        <div class="r"><div class="n">04</div><div><div class="lab">행동 · 감정<span class="pill">진정성</span></div><div class="ex">그래서 <b>놀란 가슴 부여잡고 뛰쳐나왔어요.</b></div></div></div>
+        <div class="r"><div class="n">05</div><div><div class="lab">왜 지금인가 · 클로즈<span class="pill">타이밍의 당위</span></div><div class="ex">저도 가봐야 하고 그쪽도 가셔야 하니까, <b>카톡으로 마저 이야기해요.</b></div></div></div>
+      </div>
+    </div>
+    <div class="foot"><span class="brand"><i></i> Approach Basic · 실전 매뉴얼</span><span class="pg"></span></div>
+  </section>
+
+  <!-- 스토리텔링 직접 짜기 (NEW · WORKSHEET) -->
+  <section class="slide">
+    <div class="head"><div class="kick"><i></i> Part 03 · Workshop</div><h2><span class="n">03</span> 스토리텔링 — 직접 짜보기</h2><div class="sub">너의 상황으로 5칸을 채워라. 이게 곧 네 전용 대본이 된다.</div></div>
+    <div class="body">
+      <div class="ws">
+        <div class="r"><div class="n">01</div><div><div class="lab">훅 · 리드<span class="pill">긴장 완화</span></div><div class="g">예) 중요하게 할 말이 있어서요. 잠깐만 이야기해요.</div><div class="fill"></div></div></div>
+        <div class="r"><div class="n">02</div><div><div class="lab">왜 여기 있는가<span class="pill">상황의 당위</span></div><div class="g">저기 <em>___(장소)</em>에서 <em>___(뭐 하던 중)</em>이었는데,</div><div class="fill"></div></div></div>
+        <div class="r"><div class="n">03</div><div><div class="lab">왜 당신인가<span class="pill">선택의 당위</span></div><div class="g">제가 <em>___(내 취향·이상형)</em>을 좋아하는데, 딱 그쪽이 <em>___(어떻게 눈에 띔)</em></div><div class="fill"></div></div></div>
+        <div class="r"><div class="n">04</div><div><div class="lab">행동 · 감정<span class="pill">진정성</span></div><div class="g">그래서 <em>___(용기 내서 한 행동)</em></div><div class="fill"></div></div></div>
+        <div class="r"><div class="n">05</div><div><div class="lab">왜 지금인가 · 클로즈<span class="pill">타이밍의 당위</span></div><div class="g">저도 가봐야 하고 그쪽도 가셔야 하니까, <em>___(연락처 제안)</em></div><div class="fill"></div></div></div>
+      </div>
+    </div>
+    <div class="foot"><span class="brand"><i></i> 완성했으면 소리 내어 3번 읽어라 — 입에 붙을 때까지가 진짜 대본이다</span><span class="pg"></span></div>
+  </section>
+
+  <!-- 본인의 스토리텔링 · 개념 (NEW) -->
+  <section class="slide">
+    <div class="head"><div class="kick"><i></i> Part 03 · Storytelling</div><h2><span class="n">03</span> 본인의 스토리텔링 — 진실과 엮어라</h2><div class="sub">외운 대본은 티가 난다. 네 진짜 이야기를 섞으면 아무도 못 베끼고, 질문받아도 안 무너진다.</div></div>
+    <div class="body">
+      <div class="cards c3" style="height:auto">
+        <div class="card sm">
+          <div class="ct"><span class="dot"></span>왜 진실인가</div>
+          <div class="cb">외운 티가 안 나고 <b>디테일이 살아있다.</b> 되물어도 술술 나온다 — 진짜니까. 그래서 <b>나도 안 떨린다.</b></div>
+        </div>
+        <div class="card sm">
+          <div class="ct"><span class="dot"></span>90 / 10 원칙</div>
+          <div class="cb"><b>뼈대(장소·상황·취향·감정)는 사실</b>, 표현·각색만 10%. 완전 거짓말은 들키는 순간 끝난다.</div>
+        </div>
+        <div class="card sm">
+          <div class="ct"><span class="dot"></span>재료는 미리</div>
+          <div class="cb">즉석에서는 못 짠다. <b>내 진짜 소재를 재고로 쌓아두고</b>, 상황에 맞게 꺼내 쓴다.</div>
+        </div>
+      </div>
+      <div class="callout"><span class="tag">왜 통할까</span><p>진정성은 '정보의 양'이 아니라 <b>'진짜의 밀도'</b>다. 사소해도 진짜인 디테일 하나가, 화려한 거짓말 열 개를 이긴다.</p></div>
+    </div>
+    <div class="foot"><span class="brand"><i></i> Approach Basic · 실전 매뉴얼</span><span class="pg"></span></div>
+  </section>
+
+  <!-- 내 진짜 소재 재고 · 워크시트 (NEW) -->
+  <section class="slide">
+    <div class="head"><div class="kick"><i></i> Part 03 · Workshop</div><h2><span class="n">03</span> 내 진짜 소재 재고</h2><div class="sub">미리 채워두면 현장에선 꺼내 쓰기만 하면 된다. 전부 <b>진짜</b>로만 채워라.</div></div>
+    <div class="body">
+      <div class="ws">
+        <div class="r"><div class="n">01</div><div><div class="lab">진짜 내 취향 · 이상형<span class="pill">왜 당신</span></div><div class="g">실제로 끌리는 스타일 + <em>그 이유</em>. (막연한 '예쁨' X → 구체적으로)</div><div class="fill"></div></div></div>
+        <div class="r"><div class="n">02</div><div><div class="lab">진짜 오늘의 맥락<span class="pill">왜 여기</span></div><div class="g">실제로 <em>어디 가던 길 / 뭐 하던 중</em>이었나. 거짓말을 최소화한다.</div><div class="fill"></div></div></div>
+        <div class="r"><div class="n">03</div><div><div class="lab">나의 매력 디테일<span class="pill">Self DHV</span></div><div class="g">직업·취미·경험 중 <em>5초 안에 궁금해질 것</em> 하나.</div><div class="fill"></div></div></div>
+        <div class="r"><div class="n">04</div><div><div class="lab">진짜 끌린 순간<span class="pill">진정성</span></div><div class="g">방금 <em>그 사람의 무엇</em>을 보고 끌렸나. 구체적인 한 장면.</div><div class="fill"></div></div></div>
+        <div class="r"><div class="n">05</div><div><div class="lab">나만의 클로징 명분<span class="pill">가치 투자</span></div><div class="g">내가 <em>진짜로 데려갈 수 있는 곳 / 해줄 수 있는 것</em>. (실제 아는 카페·맛집 등)</div><div class="fill"></div></div></div>
+      </div>
+    </div>
+    <div class="foot"><span class="brand"><i></i> 전부 진짜여야 한다 — 지어내면 재고가 아니라 폭탄이다</span><span class="pg"></span></div>
+  </section>
+
+  <!-- 19 죄책감 -->
+  <section class="slide">
+    <div class="head"><div class="kick"><i></i> Part 03 · Road</div><h2><span class="n">03</span> 죄책감 씌우기 <span style="font-size:15px;color:var(--ink-3);font-weight:400;letter-spacing:.1em">OPTIONAL</span></h2></div>
+    <div class="body">
+      <div class="defs" style="padding-top:30px">
+        <div class="def"><span class="v">10년치 용기 끌어다가 그 정도로 큰 용기 내고 왔는데 (지금 손 떨리는 거 보이시죠 ㅜ) 이렇게 대차게 까이면 이불킥할 것 같아요.</span></div>
+        <div class="def"><span class="v">제가 연락처 무조건 받아오겠노라고 호언장담하고 나왔는데, 만약 대차게 까이고 돌아가면 오늘 하루 종일 놀림받을 거예요 ㅜ</span></div>
+      </div>
+    </div>
+    <div class="foot"><span class="brand"><i></i> Approach Basic · 실전 매뉴얼</span><span class="pg"><b>19</b> / 35</span></div>
+  </section>
+
+  <!-- 투자 유도 · 훅 포인트 (NEW) -->
+  <section class="slide">
+    <div class="head"><div class="kick"><i></i> Part 03 · Hook</div><h2><span class="n">03</span> 투자 유도 — 훅 포인트</h2><div class="sub">대본은 '내가 말하기'로 끝나면 안 된다. 그녀가 입을 열어야 독백이 대화가 된다.</div></div>
+    <div class="body">
+      <div class="steps">
+        <div class="step"><div class="b">01</div><div><div class="st">열린 질문으로 넘기기</div><div class="sd">“여긴 어쩐 일이세요? 뭐 하고 계셨어요?” — <em>예/아니오로 끝나는 질문(X)</em>, 말이 길어지는 질문(O).</div></div></div>
+        <div class="step"><div class="b">02</div><div><div class="st">콜드리딩 + 되묻기</div><div class="sd">“뭔가 혼자만의 세계가 확실한 분 같은데, 맞아요?” — 그녀가 <em>맞다·아니다 반응하며</em> 대화에 발을 들인다.</div></div></div>
+        <div class="step"><div class="b">03</div><div><div class="st">작은 역할 · 부탁 주기</div><div class="sd">“둘 중 뭐가 나아 보여요? / 이름만 살짝 알려줄래요?” — <em>작은 투자가 큰 투자를 부른다.</em></div></div></div>
+      </div>
+      <div class="callout"><span class="tag">왜 통할까 · 노력의 정당화</span><p>그녀가 질문을 되던지거나 안 물어본 것까지 말하면 <b>= 투자 시작(초록불)</b>, 그때 클로즈한다. 사람은 시간·말·웃음을 쏟은 상대를 <b>사후에 좋아한다.</b> "내가 왜 이 사람이랑 얘기하지?"의 답을 그녀 스스로 만들게 하라.</p></div>
+    </div>
+    <div class="foot"><span class="brand"><i></i> Approach Basic · 실전 매뉴얼</span><span class="pg"></span></div>
+  </section>
+
+  <!-- 20 스몰토크 & 클로즈 (steps) -->
+  <section class="slide">
+    <div class="head"><div class="kick"><i></i> Part 03 · Road</div><h2><span class="n">03</span> 스몰토크 → 클로즈</h2></div>
+    <div class="body">
+      <div class="steps">
+        <div class="step"><div class="b">01</div><div><div class="st">스몰토크</div><div class="sd">혹시 어디 가시는 길이세요? 주량 좀 약해 보이시는데 ㅎㅎ 어떻게 되세요? 오 그래요? 저랑 비슷하시네요.</div></div></div>
+        <div class="step"><div class="b">02</div><div><div class="st">Self DHV</div><div class="sd">저도 꽤 괜찮은 사람이니까 일단 온라인 친구부터 해봐요 ㅎㅎ 알수록 배울 점 있고 괜찮은 남자일 거예요.</div></div></div>
+        <div class="step"><div class="b">03</div><div><div class="st">클로즈</div><div class="sd">이렇게 이야기 들어줘서 고마워요. 혹시 커피 좋아하세요? 제가 커피 전문가에요, 거의 에티오피아 현지인 ㅎㅎ 다음에 커피 찐맛집 데려가 줄게요. 조심히 들어가세요, 제가 연락할게요.</div></div></div>
+      </div>
+    </div>
+    <div class="foot"><span class="brand"><i></i> Approach Basic · 실전 매뉴얼</span><span class="pg"><b>20</b> / 35</span></div>
+  </section>
+
+  <!-- 21 신호 읽기 (NEW, traffic light) -->
+  <section class="slide">
+    <div class="head"><div class="kick"><i></i> Part 03 · Calibration</div><h2><span class="n">03</span> 신호 읽기 — 초록 · 노랑 · 빨강</h2><div class="sub">밀지 말지는 내 대본이 아니라 '상대 신호'가 결정한다.</div></div>
+    <div class="body">
+      <div class="signal">
+        <div class="sig g"><div class="lab"><span class="d"></span><span class="t">초록불</span> 진행</div><div class="desc">웃는다 · 되받아친다 · 몸을 돌려 마주본다 · 질문한다 → <b>자연스럽게 클로즈로.</b></div></div>
+        <div class="sig y"><div class="lab"><span class="d"></span><span class="t">노란불</span> 속도조절</div><div class="desc">짧게 답한다 · 시선 돌린다 · 폰 본다 · "바빠요" → <b>부담 낮추고 30초만</b>, 선택권을 준다.</div></div>
+        <div class="sig r"><div class="lab"><span class="d"></span><span class="t">빨간불</span> 중단</div><div class="desc">굳은 표정 · 뒷걸음 · "됐어요" 단호 · 무응답 반복 → <b>쿨하게 인정하고 물러난다.</b></div></div>
+      </div>
+      <div class="callout"><span class="tag">원칙</span><p><b>빨간불은 존중한다.</b> 진짜 'No'를 밀어붙이는 건 매력이 아니라 민폐다. 깔끔한 후퇴가 다음 기회를 남긴다. 애매하면 멈춤이 기본값.</p></div>
+    </div>
+    <div class="foot"><span class="brand"><i></i> Approach Basic · 실전 매뉴얼</span><span class="pg"><b>21</b> / 35</span></div>
+  </section>
+
+  <!-- 22 DIVIDER 04 -->
+  <section class="slide divider">
+    <div class="dghost">04</div>
+    <div class="dc">
+      <div class="dk"><i></i> Part 04</div>
+      <div class="dt">실내 <span class="hl">어프로치</span></div>
+      <div class="ds">카페 · 식당 실내 어프로치 기본 템플릿</div>
+    </div>
+    <div class="dots"><span></span><span></span><span></span><span class="on"></span><span></span><span></span></div>
+  </section>
+
+  <!-- 23 실내 오픈 & 정적 (steps) -->
+  <section class="slide">
+    <div class="head"><div class="kick"><i></i> Part 04 · Indoor</div><h2><span class="n">04</span> 오픈 &amp; 정적</h2></div>
+    <div class="body">
+      <div class="steps">
+        <div class="step"><div class="b">01</div><div><div class="st">인식</div><div class="sd">카페(압력을 느끼며 천천히), 식당(거침없이 향함).</div></div></div>
+        <div class="step"><div class="b">02</div><div><div class="st">오픈</div><div class="sd"><em>절대 물어보지 말고</em> 그냥 앉아라. “안녕하세요 ㅎㅎ 잠깐만 앉을게요. 반가워요” (악수 청하기).</div></div></div>
+        <div class="step"><div class="b">03</div><div><div class="st">정적</div><div class="sd">보통 '혹시 저 아시나요..?' 혹은 '무슨 일로 오셨어요?' 라고 물어본다. 관찰하여 스몰토크 재료를 수집.</div></div></div>
+        <div class="step"><div class="b">04</div><div><div class="st">리드</div><div class="sd">제가 꼭 하고 싶은 말이 있어서요. 30초만 이야기하고 갈게요.</div></div></div>
+      </div>
+    </div>
+    <div class="foot"><span class="brand"><i></i> Approach Basic · 실전 매뉴얼</span><span class="pg"><b>23</b> / 35</span></div>
+  </section>
+
+  <!-- 24 실내 스몰토크 & 스토리 -->
+  <section class="slide">
+    <div class="head"><div class="kick"><i></i> Part 04 · Indoor</div><h2><span class="n">04</span> 스몰토크 &amp; 스토리</h2></div>
+    <div class="body">
+      <div class="defs" style="padding-top:14px">
+        <div class="def"><span class="k">스몰토크</span><span class="v">누구 기다리시는 거예요? 달콤한 거 좋아하시나 봐요. 카페인 먹으면 잠 잘 안 오시죠?</span></div>
+        <div class="def"><span class="k">궁금하게 만들기</span><span class="v">근데… 혹시 제가 왜 왔을 것 같으세요? 맞춰보세요, 맞추면 선물.</span></div>
+        <div class="def"><span class="k">스토리텔링</span><span class="v">이상형 이야기 하던 중 창밖에서 지나가는 걸 보거나 앉아 있는 걸 발견했다. 너무 모르는 사람처럼 다가오면 쳐다볼까 봐 오버해서 아는 척하며 앉았다.</span></div>
+      </div>
+    </div>
+    <div class="foot"><span class="brand"><i></i> Approach Basic · 실전 매뉴얼</span><span class="pg"><b>24</b> / 35</span></div>
+  </section>
+
+  <!-- 25 실내 죄책감 & 클로즈 -->
+  <section class="slide">
+    <div class="head"><div class="kick"><i></i> Part 04 · Indoor</div><h2><span class="n">04</span> 죄책감 &amp; 클로즈</h2></div>
+    <div class="body">
+      <div class="defs" style="padding-top:14px">
+        <div class="def"><span class="k">죄책감 씌우기</span><span class="v">호언장담하고 나왔는데 까이고 돌아가면 하루 종일 놀림받을 거예요 ㅜ</span></div>
+        <div class="def"><span class="k">Self DHV</span><span class="v">저도 꽤 괜찮은 사람이니까 온라인 친구부터 해봐요.</span></div>
+        <div class="def"><span class="k">클로즈</span><span class="v">갑자기 왔는데 들어줘서 고마워요. 다음에 디저트 찐맛집 데려가 줄게요. 부담스러우시면 카톡으로 추천해 줄게요. 즐거운 시간 보내시고요, 제가 연락할게요.</span></div>
+      </div>
+    </div>
+    <div class="foot"><span class="brand"><i></i> Approach Basic · 실전 매뉴얼</span><span class="pg"><b>25</b> / 35</span></div>
+  </section>
+
+  <!-- 26 DIVIDER 05 -->
+  <section class="slide divider">
+    <div class="dghost">05</div>
+    <div class="dc">
+      <div class="dk"><i></i> Part 05</div>
+      <div class="dt">거절 <span class="hl">다루기</span></div>
+      <div class="ds">경계 대응 및 상황별 치트키</div>
+    </div>
+    <div class="dots"><span></span><span></span><span></span><span></span><span class="on"></span><span></span></div>
+  </section>
+
+  <!-- 27 경계 대응 & 수진이 -->
+  <section class="slide">
+    <div class="head"><div class="kick"><i></i> Part 05 · Objections</div><h2><span class="n">05</span> 경계 대응 &amp; 수진이</h2></div>
+    <div class="body">
+      <div class="cards c2">
+        <div class="card">
+          <div class="ct"><span class="dot"></span>경계 대응</div>
+          <div class="cb">물론 이렇게 길거리에서 처음 뵙는데 경계가 좀 되실 거예요. 충분히 인지하고 왔어요. 저도 그러니까 성급하게 결정하진 않으셨으면 좋겠어요, 저도 신중한 편이라서요. 그러니까 편하게 연락처 알려주세요.</div>
+        </div>
+        <div class="card">
+          <div class="ct"><span class="dot"></span>수진이가 무례하게 까불 때</div>
+          <div class="cb">잠시만요, 이분이랑 잠깐만 이야기할게요. 친구분 걱정돼서 막으시는 건 이해하는데, 제가 친구분이랑 그쪽한테 귀인이 될 수도 있잖아요. 만약 제가 이분이랑 좋은 사이가 되면, 제 주변에 괜찮은 사람들 꽤 많아서 소개시켜 드릴게요.</div>
+        </div>
+      </div>
+    </div>
+    <div class="foot"><span class="brand"><i></i> Approach Basic · 실전 매뉴얼</span><span class="pg"><b>27</b> / 35</span></div>
+  </section>
+
+  <!-- 28 남친신공 -->
+  <section class="slide">
+    <div class="head"><div class="kick"><i></i> Part 05 · Objections</div><h2><span class="n">05</span> 남친신공 <span style="font-size:15px;color:var(--ink-3);font-weight:400;letter-spacing:.05em">— "남친 있어요"</span></h2></div>
+    <div class="body">
+      <div class="story" style="margin-top:24px">
+        <p>“거기까진 예상했어요. 워낙 매력적이셔서요.</p>
+        <p>근데 저도 두 분 사이 방해하고 싶진 않은데, 사람 일 어떻게 될지 모르니까 6개월 뒤에 연락해 볼게요.</p>
+        <p>저도 경우가 있는 사람이라, 진짜 있으신 거면 연락 절대 안 해요. 그때 솔로시고 제가 기억나신다면 답장 주세요.”</p>
+      </div>
+    </div>
+    <div class="foot"><span class="brand"><i></i> Approach Basic · 실전 매뉴얼</span><span class="pg"><b>28</b> / 35</span></div>
+  </section>
+
+  <!-- 29 바쁘다 & 싫다 -->
+  <section class="slide">
+    <div class="head"><div class="kick"><i></i> Part 05 · Objections</div><h2><span class="n">05</span> 바쁘다 &amp; 싫다</h2></div>
+    <div class="body">
+      <div class="cards c2">
+        <div class="card">
+          <div class="ct"><span class="dot"></span>바쁘다고 할 때</div>
+          <div class="cb">1분이면 돼요. 1분 없으시면 30초에 끝내볼게요. 저희 동네 길냥이도 '기다려줘~' 하면 30초는 기다려 주더라고요.</div>
+        </div>
+        <div class="card">
+          <div class="ct"><span class="dot"></span>원래 이런 거 싫어할 때</div>
+          <div class="cb">솔직히 이렇게 길거리에서 모르는 사이인데 번호 교환하는 거, 사회적으로 좋게 안 보일 거 알아요. 저도 그런 건 원하지 않아요. 근데 촉이 좋으신 분 같다고 느껴져요. 제가 너무 쎄하지만 않았다면, 천천히 연락해 봐요 ㅎㅎ</div>
+        </div>
+      </div>
+    </div>
+    <div class="foot"><span class="brand"><i></i> Approach Basic · 실전 매뉴얼</span><span class="pg"><b>29</b> / 35</span></div>
+  </section>
+
+  <!-- 30 뭘 해도 안될 때 & 마무리 -->
+  <section class="slide">
+    <div class="head"><div class="kick"><i></i> Part 05 · Objections</div><h2><span class="n">05</span> 뭘 해도 안 될 때 &amp; 마무리</h2></div>
+    <div class="body">
+      <div class="defs" style="padding-top:8px">
+        <div class="def"><span class="k">최종 멘트</span><span class="v">그쪽이 저를 알고 지내서 후회할 일은 절대 없을 거예요. 저 이래 봬도 학교 다닐 때 4시간씩 자며 공부했거든요. 나름 성실하다고 생각해요.</span></div>
+        <div class="def"><span class="k">연락처 건네기</span><span class="v">정 부담스러우시면 제 연락처를 알려 드릴 테니, 이상한 사람이라 생각되면 연락 안 하셔도 돼요. 저 상남자라 이런 걸로 안 삐져요.</span></div>
+        <div class="def"><span class="k">마무리 액션</span><span class="v">(찾는 척) 명함을 안 가져왔네요. 대신 제 연락처를 남겨 드릴게요. 찍어준 다음 통화 버튼 누르기 → "아이쿠 실수! 떨려서 손이 미끄러졌네요. 이왕 이렇게 된 거 성함이라도 알려주세요."</span></div>
+      </div>
+    </div>
+    <div class="foot"><span class="brand"><i></i> Approach Basic · 실전 매뉴얼</span><span class="pg"><b>30</b> / 35</span></div>
+  </section>
+
+  <!-- 31 DIVIDER 06 (NEW) -->
+  <section class="slide divider">
+    <div class="dghost">06</div>
+    <div class="dc">
+      <div class="dk"><i></i> Part 06</div>
+      <div class="dt">클로징 <span class="hl">이후</span></div>
+      <div class="ds">첫 카톡 · 현장 체크리스트 · 절대 금지(NG)</div>
+    </div>
+    <div class="dots"><span></span><span></span><span></span><span></span><span></span><span class="on"></span></div>
+  </section>
+
+  <!-- 32 첫 카톡 브릿지 (NEW) -->
+  <section class="slide">
+    <div class="head"><div class="kick"><i></i> Part 06 · After Close</div><h2><span class="n">06</span> 첫 카톡 브릿지</h2><div class="sub">번호는 시작일 뿐이다. 첫 톡에서 관계가 이어지느냐가 갈린다.</div></div>
+    <div class="body">
+      <div class="steps">
+        <div class="step"><div class="b">01</div><div><div class="st">타이밍</div><div class="sd">헤어지고 <em>24시간 안에</em>. 그날 저녁~다음 날 낮. 3일 뒤엔 이미 남남.</div></div></div>
+        <div class="step"><div class="b">02</div><div><div class="st">현장 콜백</div><div class="sd">첫 메시지는 어떻게 만났는지 상기시키는 한 줄. “아까 그 커피 전문가에요 ㅎㅎ”</div></div></div>
+        <div class="step"><div class="b">03</div><div><div class="st">질문으로 끝내기</div><div class="sd">답장할 거리를 준다. “아까 말한 그 카페, ○○ 좋아해요?” — 2~3줄, 과하게 길지 않게.</div></div></div>
+        <div class="step"><div class="b">04</div><div><div class="st">약속은 뒤에</div><div class="sd">첫 톡부터 만나자(X). 3~4번 핑퐁으로 텐션 쌓은 뒤 자연스럽게 제안.</div></div></div>
+      </div>
+    </div>
+    <div class="foot"><span class="brand"><i></i> Approach Basic · 실전 매뉴얼</span><span class="pg"><b>32</b> / 35</span></div>
+  </section>
+
+  <!-- 33 현장 체크리스트 (NEW) -->
+  <section class="slide">
+    <div class="head"><div class="kick"><i></i> Part 06 · Checklist</div><h2><span class="n">06</span> 현장 체크리스트</h2></div>
+    <div class="body">
+      <div class="cards c3">
+        <div class="card sm">
+          <div class="ct"><span class="dot"></span>어프로치 전</div>
+          <div class="chk"><span class="ic"><svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0a0a0a" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>복장 · 냄새 · 표정 점검</div>
+          <div class="chk" style="margin-top:11px"><span class="ic"><svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0a0a0a" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>오늘 시도 목표 개수 정하기</div>
+          <div class="chk" style="margin-top:11px"><span class="ic"><svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0a0a0a" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>첫 타겟 정하고 바로 진입</div>
+        </div>
+        <div class="card sm">
+          <div class="ct"><span class="dot"></span>어프로치 중</div>
+          <div class="chk"><span class="ic"><svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0a0a0a" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>상체 열기 · 아이컨택</div>
+          <div class="chk" style="margin-top:11px"><span class="ic"><svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0a0a0a" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>정적 3초 → 스토리텔링</div>
+          <div class="chk" style="margin-top:11px"><span class="ic"><svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0a0a0a" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>신호 읽기(초록·노랑·빨강)</div>
+        </div>
+        <div class="card sm">
+          <div class="ct"><span class="dot"></span>어프로치 후</div>
+          <div class="chk"><span class="ic"><svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0a0a0a" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>번호 저장 + 이름·장소 메모</div>
+          <div class="chk" style="margin-top:11px"><span class="ic"><svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0a0a0a" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>24h 내 첫 톡</div>
+          <div class="chk" style="margin-top:11px"><span class="ic"><svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0a0a0a" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>시도 횟수 기록 · 거절이면 30초 후 다음</div>
+        </div>
+      </div>
+    </div>
+    <div class="foot"><span class="brand"><i></i> Approach Basic · 실전 매뉴얼</span><span class="pg"><b>33</b> / 35</span></div>
+  </section>
+
+  <!-- 34 NG 리스트 (NEW) -->
+  <section class="slide">
+    <div class="head"><div class="kick"><i></i> Part 06 · Never Do</div><h2><span class="n">06</span> 절대 금지 — NG 리스트</h2></div>
+    <div class="body">
+      <div class="ng">
+        <div class="row"><span class="x">✕</span><span><b>빨간불 무시하고 계속 밀기.</b> 매력이 아니라 민폐·위험. 즉시 중단한다.</span></div>
+        <div class="row"><span class="x">✕</span><span><b>허락 없는 신체 접촉.</b> 어떤 상황에서도 금지.</span></div>
+        <div class="row"><span class="x">✕</span><span><b>외모·몸매 노골적 코멘트로 오픈.</b> 부담·불쾌만 남긴다.</span></div>
+        <div class="row"><span class="x">✕</span><span><b>굽신대기 · 과한 저자세.</b> 가치가 즉시 떨어진다.</span></div>
+        <div class="row"><span class="x">✕</span><span><b>대본 읽듯 기계적으로.</b> 상태·아이컨택이 죽으면 멘트도 소용없다.</span></div>
+        <div class="row"><span class="x">✕</span><span><b>거절에 정색 · 비아냥.</b> 최악. 쿨하게 인정하고 멋있게 빠진다.</span></div>
+      </div>
+    </div>
+    <div class="foot"><span class="brand"><i></i> Approach Basic · 실전 매뉴얼</span><span class="pg"><b>34</b> / 35</span></div>
+  </section>
+
+  <!-- 35 CLOSING (NEW) -->
+  <section class="slide closing">
+    <div class="ck">Approach Basic · Field Manual</div>
+    <div class="cbig">시도하지 않으면 <span class="hl">0%</span>다.</div>
+    <div class="cline">완벽한 멘트를 기다리지 마라. 상태를 만들고, 신호를 읽고, 빨간불은 존중하고, 다음으로 넘어간다. 어프로치는 확률 게임이다 — 시도한 횟수만큼 당신은 강해진다.</div>
+    <div class="cbrand">SUPER NATURAL</div>
+  </section>
+
+</div>
+<script>
+  // 슬라이드 순서 기준 자동 페이지 넘버링 (슬라이드 추가/이동해도 자동 갱신)
+  (function(){
+    var slides=[].slice.call(document.querySelectorAll('.slide'));
+    var total=slides.length;
+    slides.forEach(function(s,i){
+      var pg=s.querySelector('.foot .pg');
+      if(pg){ pg.innerHTML='<b>'+String(i+1).padStart(2,'0')+'</b> / '+total; }
+    });
+  })();
+</script>
+</body>
+</html>

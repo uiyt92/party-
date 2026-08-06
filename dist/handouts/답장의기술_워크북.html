@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>카톡의 정석 — 현강 워크북</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+<style>
+:root{--blue:#2563eb;--navy:#1e3a8a;--purple:#7c3aed;--ink:#1a1a1a;--muted:#6b7280;--line:#cbd5e1;--tint:#f1f5f9}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Pretendard,sans-serif;color:var(--ink);background:#e9eaed;padding:24px 12px;font-size:14px;line-height:1.6}
+.sheet{background:#fff;width:794px;max-width:100%;margin:0 auto;padding:44px 50px 52px}
+@page{size:A4 portrait;margin:14mm 13mm}
+@media print{body{background:#fff;padding:0;font-size:12.5px;-webkit-print-color-adjust:exact;print-color-adjust:exact}.sheet{width:auto;padding:0}}
+
+.bk{display:inline-block;min-width:66px;border-bottom:1.8px solid var(--blue);margin:0 3px;height:1.15em;vertical-align:bottom}
+
+/* 표지 */
+.cover{text-align:center;padding:90px 0 70px;page-break-after:always;border-bottom:none}
+.cover .ct{font-family:'Noto Serif KR',serif;font-weight:900;font-size:46px;letter-spacing:-1px}
+.cover .bar{width:70px;height:3px;background:var(--blue);margin:22px auto}
+.cover .cs{font-size:20px;font-weight:800;color:var(--blue)}
+.cover .cmeta{margin-top:54px;font-size:15px}
+.cover .cnote{margin:46px auto 0;max-width:440px;background:var(--tint);border-radius:12px;padding:16px 20px;font-size:13px;color:#374151;text-align:left;line-height:1.7}
+.cover .cnote b{color:var(--blue)}
+
+/* 강별 */
+.lesson{page-break-inside:avoid;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--line)}
+.les-h{display:flex;align-items:center;gap:9px;margin-bottom:10px}
+.les-no{background:var(--navy);color:#fff;font-weight:800;font-size:12.5px;padding:4px 11px;border-radius:6px;flex:none}
+.les-t{font-size:16.5px;font-weight:800}
+.fill{background:var(--tint);border-radius:8px;padding:9px 14px;font-size:13.5px;margin-bottom:9px}
+.fill .fl{font-weight:700;color:var(--navy);font-size:11.5px;margin-right:6px}
+.pts{margin:0 0 9px 17px;font-size:13px;line-height:1.65;color:#333}
+.pts li{margin:2px 0}
+.prac{font-size:13.5px;font-weight:700;color:var(--blue);margin:9px 0 6px;display:flex;align-items:center;gap:6px}
+.prac .pi{font-size:12px}
+.q{font-size:12.5px;color:var(--muted);font-weight:400;margin-left:4px}
+.ln{border-bottom:1.3px solid var(--line);height:27px}
+.ln+.ln{margin-top:5px}
+.chk{display:flex;flex-wrap:wrap;gap:6px 20px;font-size:13px;margin:4px 0 8px}
+.chk span{white-space:nowrap}
+
+/* 섹션 헤더 (부 구분) */
+.part{margin:6px 0 16px;font-size:13px;font-weight:800;color:var(--blue);letter-spacing:1px;border-left:4px solid var(--blue);padding-left:10px}
+h2.bigsec{font-size:20px;font-weight:800;margin:30px 0 14px;page-break-before:always}
+
+/* 한마디 사전 */
+table{border-collapse:collapse;width:100%;font-size:13px;margin-top:8px}
+th{background:var(--navy);color:#fff;padding:8px 12px;text-align:left;font-size:12.5px}
+td{padding:6px 12px;border:1px solid var(--line);height:34px}
+td.lbl{background:var(--tint);font-weight:700;width:32%;color:var(--navy)}
+
+/* 자가진단 after */
+.check{display:flex;flex-direction:column;gap:8px;margin-top:6px}
+.check .it{font-size:13px;padding-left:28px;position:relative;line-height:1.45}
+.check .it::before{content:'☐';position:absolute;left:0;top:-1px;font-size:17px;color:var(--blue)}
+.score{margin-top:13px;background:var(--tint);border-radius:10px;padding:11px 16px;font-size:13.5px;font-weight:700;display:flex;justify-content:space-between;align-items:center}
+.score .num b{display:inline-block;width:38px;border-bottom:1.8px solid var(--ink);text-align:center}
+.promise{border:2px solid var(--blue);border-radius:12px;padding:16px 20px;margin-top:10px}
+.promise .pl{font-weight:800;color:var(--blue);font-size:15px;margin-bottom:10px}
+</style>
+</head>
+<body>
+<div class="sheet">
+
+  <!-- 표지 -->
+  <div class="cover">
+    <p class="ct">카톡의 정석</p>
+    <div class="bar"></div>
+    <p class="cs">현장 강의 워크북</p>
+    <p class="cmeta">이름 <span class="bk" style="min-width:130px"></span> &nbsp;&nbsp; 날짜 <span class="bk" style="min-width:130px"></span></p>
+    <div class="cnote">빈칸(<span class="bk" style="min-width:30px"></span>)은 강사가 설명할 때 <b>직접 받아 적으세요</b>. 받아쓰면 기억에 남습니다.<br>✍ 실습란은 사전과제에서 정한 <b>'타겟'에게 보낼 실제 멘트</b>를 적는 곳입니다.</div>
+  </div>
+
+  <p class="part">PART 1 · 대화를 여는 법</p>
+
+  <div class="lesson">
+    <div class="les-h"><span class="les-no">1강</span><span class="les-t">마인드셋 — 제일 중요한 3원칙</span></div>
+    <div class="fill"><span class="fl">핵심</span>재촉은 가장 빠른 <span class="bk"></span> · 답장 속도는 <span class="bk"></span>의 척도가 아니다</div>
+    <ul class="pts">
+      <li>① 조급함이 다 망친다 &nbsp; ② 받는 사람이 되어본다 &nbsp; ③ 힘 빼기</li>
+      <li>"내가 여자라면 이 톡, 답하고 싶을까?" — 보내기 전 3초</li>
+    </ul>
+    <div class="prac"><span class="pi">✍ 실습</span> 내 타겟과의 카톡에서 '조급함·힘 들어간 곳' 찾아 적기</div>
+    <div class="ln"></div><div class="ln"></div>
+  </div>
+
+  <div class="lesson">
+    <div class="les-h"><span class="les-no">2강</span><span class="les-t">프로필 사진</span></div>
+    <div class="fill"><span class="fl">핵심</span>프사는 첫 톡보다 <span class="bk"></span> 말한다</div>
+    <div class="chk"><span>☐ 얼굴이 또렷한가</span><span>☐ 표정·분위기가 보이나</span><span>☐ 단체·풍경뿐은 아닌가</span></div>
+    <div class="prac"><span class="pi">✍ 실습</span> 내 프사에서 바꿀 것 하나</div>
+    <div class="ln"></div>
+  </div>
+
+  <div class="lesson">
+    <div class="les-h"><span class="les-no">3강</span><span class="les-t">첫 톡 — 연애의 알파이자 오메가</span></div>
+    <div class="fill"><span class="fl">공식</span>관찰 → <span class="bk"></span> → 가볍게 &nbsp;|&nbsp; 경로별: 로드 · 소개팅 앱 · 지인 소개</div>
+    <ul class="pts"><li>"안녕하세요"는 묻힌다 → 당신을 <b>특별하게</b> 만드는 한마디</li></ul>
+    <div class="prac"><span class="pi">✍ 실습</span> 타겟에게 보낼 첫 톡 한 줄 <span class="q">(단서 하나에서 출발)</span></div>
+    <div class="ln"></div><div class="ln"></div>
+  </div>
+
+  <div class="lesson">
+    <div class="les-h"><span class="les-no">4강</span><span class="les-t">답장이 늦을 때 · 읽씹 대응</span></div>
+    <div class="fill"><span class="fl">핵심</span>늦는 이유는 수십 가지 — "관심 없음"은 그중 <span class="bk"></span>일 뿐</div>
+    <ul class="pts">
+      <li>읽씹 3분류: ① 처음부터 → 며칠 뒤 처음처럼 &nbsp; ② 연락 중 끊김 → 새 얘기 리셋 &nbsp; ③ 자주 씹힘 → 만남으로</li>
+      <li>재연락 명분 5선: 우연히 본 것 · 계절·날씨 · 공통 관심사 · 가벼운 질문 · 그 사람 관련</li>
+    </ul>
+    <div class="prac"><span class="pi">✍ 실습</span> 읽씹·잠수 중인 타겟에게 보낼 한 줄 <span class="q">(지난 침묵 언급 ✕)</span></div>
+    <div class="ln"></div><div class="ln"></div>
+  </div>
+
+  <div class="lesson">
+    <div class="les-h"><span class="les-no">5강</span><span class="les-t">대화 운영 — 답을 받은 뒤가 진짜다</span></div>
+    <div class="fill"><span class="fl">핵심</span>질문만 던지면 <span class="bk"></span>가 된다 · 할 말 말고 <span class="bk"></span>를 던져라</div>
+    <ul class="pts">
+      <li>4기법: 단답 풀기 · 감정 입히기 · 받아칠 포인트 · 텐션 미러링</li>
+      <li>놀 거리 9종: 추측 / 밸런스 / MBTI / 별명 / 릴스 / 짤 / 떡밥 / 미션 / 받아치기</li>
+    </ul>
+    <div class="prac"><span class="pi">✍ 실습</span> 단답("ㅋㅋ")에 놀 거리 하나 만들어 던지기</div>
+    <div class="ln"></div><div class="ln"></div>
+  </div>
+
+  <h2 class="bigsec"><span class="part" style="border:none;padding:0;display:block;margin-bottom:6px">PART 2 · 키우고 만나는 법</span></h2>
+
+  <div class="lesson">
+    <div class="les-h"><span class="les-no">6강</span><span class="les-t">매력적으로 말하기</span></div>
+    <div class="fill"><span class="fl">핵심</span>칭찬은 거리를 두는 말, <span class="bk"></span>은 거리를 좁히는 말</div>
+    <ul class="pts">
+      <li>말투 3요소: 리액션 · 장난 · 드립 &nbsp;|&nbsp; 화술 4원리: 극단값 · 역발상 · 메타인지 · 완급조절</li>
+    </ul>
+    <div class="prac"><span class="pi">✍ 실습</span> 밋밋한 내 멘트("아 그렇구나") → 매력 버전으로</div>
+    <div class="ln"></div><div class="ln"></div>
+  </div>
+
+  <div class="lesson">
+    <div class="les-h"><span class="les-no">7강</span><span class="les-t">호감 신호 · 말 놓기</span></div>
+    <div class="fill"><span class="fl">핵심</span>신호는 하나가 아니라 <span class="bk"></span>으로 읽는다</div>
+    <ul class="pts"><li>되묻기 · 먼저 연락 · 자기 노출 = 호감 / 단답 · 질문 없음 · 늦어짐 = 식음</li></ul>
+    <div class="prac"><span class="pi">✍ 실습</span> 내 타겟의 호감 점수 <span class="q">(되묻나? 먼저 연락 오나?)</span></div>
+    <div class="ln"></div>
+  </div>
+
+  <div class="lesson">
+    <div class="les-h"><span class="les-no">8강</span><span class="les-t">상황별 대응</span></div>
+    <div class="chk"><span>☐ 프사 바꿈</span><span>☐ 음식 사진</span><span>☐ 셀카 평가</span><span>☐ 가족과</span><span>☐ 단답</span><span>☐ 핫플 인증</span><span>☐ 다른 남자</span><span>☐ 피곤 푸념</span><span>☐ "오늘 뭐 했어?"</span></div>
+    <div class="prac"><span class="pi">✍ 실습</span> 내가 자주 마주치는 상황 1개 + 나만의 응용 멘트</div>
+    <div class="ln"></div><div class="ln"></div>
+  </div>
+
+  <div class="lesson">
+    <div class="les-h"><span class="les-no">9강</span><span class="les-t">위기 대응</span></div>
+    <div class="fill"><span class="fl">핵심</span>관통하는 실수 = <span class="bk"></span>가 티 나는 것 · 미룸은 <b>대안</b>과 <b>이유</b>로 읽는다</div>
+    <ul class="pts"><li>단계별 실수 / 죽은 번호 살리기 / 전화 / 미룸 신호 해독</li></ul>
+    <div class="prac"><span class="pi">✍ 실습</span> 내가 가장 자주 하는 실수 1개 → 다음엔 이렇게</div>
+    <div class="ln"></div>
+  </div>
+
+  <div class="lesson">
+    <div class="les-h"><span class="les-no">10강</span><span class="les-t">만남으로</span></div>
+    <div class="fill"><span class="fl">순서</span>좋은 흐름 → 떡밥 → <span class="bk"></span> → 날짜 확정</div>
+    <ul class="pts"><li>"좋죠"가 흩어지기 전에 두 날짜를 던져 직접 고르게 / 미루면 한 발 물러서기</li></ul>
+    <div class="prac"><span class="pi">✍ 실습</span> 타겟에게 보낼 약속 멘트 <span class="q">(떡밥 → "같이 가요" → 두 날짜)</span></div>
+    <div class="ln"></div><div class="ln"></div>
+  </div>
+
+  <div class="lesson">
+    <div class="les-h"><span class="les-no">11강</span><span class="les-t">정리 — 첫 톡부터 약속까지</span></div>
+    <div class="chk"><span>☐ 상황 소환으로 첫 톡</span><span>☐ 키워드 잡아 확장</span><span>☐ 내 얘기로 분위기</span><span>☐ 늦은 답 안 짚기</span><span>☐ 감정형으로 데우기</span><span>☐ 추궁 없이 한 번만</span><span>☐ 한 발 물러서기</span><span>☐ 요일로 좁혀 묻기</span></div>
+  </div>
+
+  <!-- 나의 한마디 사전 -->
+  <h2 class="bigsec">📒 나의 한마디 사전 <span style="font-size:13px;font-weight:600;color:var(--muted)">— 강의 중 만든 내 멘트를 모아두세요</span></h2>
+  <table>
+    <tr><th>상황</th><th>내가 만든 한마디</th></tr>
+    <tr><td class="lbl">첫 톡 (타겟에게)</td><td></td></tr>
+    <tr><td class="lbl">대화가 끊겼을 때</td><td></td></tr>
+    <tr><td class="lbl">읽씹 후 다시</td><td></td></tr>
+    <tr><td class="lbl">단답 데우기</td><td></td></tr>
+    <tr><td class="lbl">약속 꺼내기</td><td></td></tr>
+    <tr><td class="lbl">밤 인사</td><td></td></tr>
+  </table>
+
+  <!-- 자가진단 after -->
+  <h2 class="bigsec">✅ 자가진단 (After) <span style="font-size:13px;font-weight:600;color:var(--muted)">— 사전과제의 Before와 비교해보세요</span></h2>
+  <div class="check">
+    <div class="it">답이 오기 전에 톡을 두 번 이상 연달아 보낸다</div>
+    <div class="it">할 말이 없어서 질문으로 빈칸을 메운다</div>
+    <div class="it">상대 답에 반응 없이 곧장 다음 질문으로 넘어간다</div>
+    <div class="it">답장이 늦었다고 재촉하거나 서운함을 내비친다</div>
+    <div class="it">"걱정했어요"처럼 내 불안을 상대에게 떠넘긴다</div>
+    <div class="it">약속을 꺼낼 때 말투가 갑자기 무거워진다</div>
+    <div class="it">잘 보이려 애쓴 흔적이 있다</div>
+  </div>
+  <div class="score"><span>오늘 체크한 개수 (After)</span><span class="num"><b>&nbsp;</b> / 7 &nbsp;&nbsp;(Before: <b>&nbsp;</b> / 7)</span></div>
+
+  <!-- 실행 약속 -->
+  <h2 class="bigsec">🎯 24시간 실행 약속</h2>
+  <div class="promise">
+    <p class="pl">오늘 배운 것 중 하나를, 24시간 안에 내 타겟에게 직접 써본다.</p>
+    <div style="font-size:13.5px;margin-bottom:8px">무엇을 보낼 건가요?</div>
+    <div class="ln"></div><div class="ln"></div>
+    <div style="font-size:13px;color:var(--muted);margin-top:10px">완벽하지 않아도 된다. 한 번 써보는 것 — 그게 초보를 벗어나는 첫걸음이다.</div>
+  </div>
+
+</div>
+</body>
+</html>

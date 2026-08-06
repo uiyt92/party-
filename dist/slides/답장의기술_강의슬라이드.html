@@ -1,0 +1,2774 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>카톡의 정석 — 강의 슬라이드</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+<style>
+:root{--blue:#2563eb;--navy:#1e3a8a;--purple:#7c3aed;--red:#dc2626;--tint:#f1f5f9;--ink:#1a1a1a;--muted:#6b7280;--line:#e5e7eb}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:Pretendard,sans-serif;background:#111;color:var(--ink);overflow:hidden}
+.serif{font-family:'Noto Serif KR',serif}
+.stage{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
+#deck{position:relative;width:1280px;height:720px;flex:none}
+.slide{position:absolute;inset:0;width:1280px;height:720px;background:#fff;display:none;flex-direction:column;justify-content:center;padding:64px 88px;box-shadow:0 20px 60px rgba(0,0,0,.4)}
+.slide.active{display:flex}
+.kicker{color:var(--blue);font-weight:800;font-size:18px;letter-spacing:1px;margin-bottom:12px}
+h2.head{font-size:46px;font-weight:800;line-height:1.2;margin-bottom:28px}
+h3.sub{font-size:26px;font-weight:700;color:var(--navy);margin:18px 0 10px}
+p,li{font-size:21px;line-height:1.7;color:#333}
+.muted{color:var(--muted)}
+.big{font-size:30px;line-height:1.6}
+.tag{display:inline-block;background:var(--blue);color:#fff;padding:6px 16px;border-radius:6px;font-size:16px;font-weight:800;letter-spacing:3px}
+.chat{background:#f8fafc;border:1px solid var(--line);border-radius:16px;padding:18px 20px;margin:8px 0;display:flex;flex-direction:column;gap:8px}
+.bubble{max-width:74%;padding:11px 17px;border-radius:16px;font-size:19px;width:fit-content}
+.me{background:var(--blue);color:#fff;align-self:flex-end}
+.her{background:var(--tint);color:var(--ink);border:1px solid var(--line);align-self:flex-start}
+.box{border-radius:10px;padding:16px 22px;margin:10px 0;font-size:20px;line-height:1.6}
+.box .lbl{font-weight:800;font-size:15px;display:block;margin-bottom:6px}
+.key{background:var(--tint);border-left:4px solid var(--blue)}
+.psych{background:#f5f3ff;border-left:4px solid var(--purple)}.psych .lbl{color:var(--purple)}
+.bad{background:#fef2f2;border-left:4px solid var(--red)}.bad .lbl{color:var(--red)}
+.good{background:#eff6ff;border-left:4px solid var(--blue)}.good .lbl{color:var(--blue)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.flow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:16px 0}
+.step{background:var(--tint);color:var(--navy);font-weight:700;padding:12px 18px;border-radius:10px;font-size:19px}
+.arr{color:var(--blue);font-weight:800;font-size:22px}
+table{border-collapse:collapse;width:100%;margin-top:12px;font-size:18px}
+th{background:var(--navy);color:#fff;padding:10px 14px;text-align:left}
+td{padding:9px 14px;border-bottom:1px solid var(--line)}
+ul{padding-left:24px}li{margin:6px 0}
+.center{align-items:center;text-align:center}
+.nav{position:fixed;top:14px;right:20px;color:#fff;font-size:15px;z-index:21;font-weight:800;background:rgba(17,17,17,.72);border:1px solid rgba(255,255,255,.18);padding:4px 13px;border-radius:20px}
+.nav #cur{color:#7cc0ff}
+.hint{position:fixed;bottom:18px;left:28px;color:#555;font-size:13px;z-index:10}
+.progress{position:fixed;top:0;left:0;right:0;height:5px;background:rgba(255,255,255,.09);z-index:20}
+.progress__bar{height:100%;width:0;background:linear-gradient(90deg,var(--blue),var(--purple));transition:width .25s ease}
+.cover-title{font-size:80px;font-weight:900}
+.divider-title{font-size:60px;font-weight:900}
+/* 인스타 mockup */
+.ig{width:296px;background:#fff;border:1px solid #dbdbdb;border-radius:14px;overflow:hidden;flex:none;box-shadow:0 6px 24px rgba(0,0,0,.12)}
+.ig-head{display:flex;gap:12px;align-items:center;padding:14px 14px 8px}
+.ig-avatar{width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#f9ce34,#ee2a7b,#6228d7);display:flex;align-items:center;justify-content:center;font-size:26px}
+.ig-id{font-size:16px;font-weight:800}
+.ig-stats{color:#888;font-size:13px;margin-top:2px}
+.ig-bio{padding:0 14px 12px;font-size:15px;line-height:1.55}
+.ig-bio b{font-weight:800}
+.ig-bio .quote{color:var(--blue)}
+.ig-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px}
+.ig-cell{aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:34px}
+.cue{font-size:18px;line-height:1.5}
+.cue b{color:var(--blue)}
+/* 카카오톡 mockup */
+.kt{width:308px;border-radius:16px;overflow:hidden;border:1px solid #d0d0d0;box-shadow:0 6px 24px rgba(0,0,0,.14);flex:none}
+.kt-head{background:#9bb3c7;color:#16202b;font-weight:700;font-size:16px;padding:10px 14px}
+.kt-body{background:#b2c7da;padding:14px 12px;display:flex;flex-direction:column;gap:9px;min-height:280px}
+.kt-row{display:flex;gap:7px;max-width:100%}
+.kt-row.r{justify-content:flex-end}
+.kt-av{width:36px;height:36px;border-radius:13px;background:linear-gradient(135deg,#f9ce34,#ee2a7b);display:flex;align-items:center;justify-content:center;font-size:18px;flex:none}
+.kt-wrap{display:flex;flex-direction:column;gap:3px;max-width:74%}
+.kt-name{font-size:13px;color:#33414f}
+.kt-msg{padding:8px 12px;border-radius:11px;font-size:16px;line-height:1.45;width:fit-content}
+.kt-her .kt-msg{background:#fff;color:#1a1a1a}
+.kt-me .kt-msg{background:#fee500;color:#1a1a1a;margin-left:auto}
+.kt-sep{text-align:center;font-size:13px;color:#4a5a6a;margin:3px 0}
+.kt-read{font-size:12px;color:#5b6b7a;align-self:flex-end;margin-top:-1px}
+.kt3{display:flex;gap:14px;justify-content:center;align-items:flex-start;margin-top:12px}
+.kt3 .col{display:flex;flex-direction:column;gap:7px;align-items:center;width:334px}
+.kt3 .tit{font-weight:700;font-size:17px;color:var(--navy)}
+.kt3 .sit{font-size:14px;color:var(--muted);text-align:center;line-height:1.4}
+.kt3 .kt{width:334px}
+.kt3 .kt-head{font-size:14px;padding:7px 12px}
+.kt3 .kt-body{min-height:auto;padding:11px 10px;gap:6px}
+.kt3 .kt-av{width:30px;height:30px;border-radius:11px;font-size:15px}
+.kt3 .kt-msg{font-size:16px;padding:7px 11px;line-height:1.4}
+.kt3 .key{font-size:14px;color:var(--ink);text-align:center;line-height:1.4}
+.kt3 .key b{color:var(--blue)}
+.kt3 .strike{font-size:13px;color:var(--red);text-align:center;text-decoration:line-through;opacity:.75}
+.kt2{display:flex;gap:30px;justify-content:center;align-items:flex-start;margin-top:14px}
+.kt2 .col{display:flex;flex-direction:column;gap:8px;align-items:center}
+.kt2 .tit{font-weight:700;font-size:16px}
+.kt2 .col.b .tit{color:var(--red)}
+.kt2 .col.g .tit{color:var(--blue)}
+.kt2 .cap{font-size:16px;color:var(--muted);text-align:center;max-width:308px;line-height:1.45}
+.kt2 .cap b{color:var(--ink)}
+.ktc{display:flex;justify-content:center;align-items:flex-start;gap:22px;margin-top:14px}
+.ktc .strike{font-size:13px;color:var(--red);text-decoration:line-through;opacity:.8;align-self:center}
+.agenda{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:22px}
+.agenda .grp{background:var(--tint);border-radius:14px;padding:20px 24px}
+.agenda .ph{font-weight:800;color:var(--blue);font-size:17px;margin-bottom:12px}
+.agenda ol{margin:0;padding-left:22px;line-height:1.95}
+.agenda li{font-size:16px}
+.chk{display:grid;grid-template-columns:1fr 1fr;gap:11px 30px;margin-top:22px}
+.chk div{font-size:16px;line-height:1.5;padding-left:28px;position:relative}
+.chk div::before{content:'✓';position:absolute;left:0;color:var(--blue);font-weight:800}
+.chk b{color:var(--navy)}
+.kt-photo{width:184px;height:138px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:62px;background:radial-gradient(circle at 30% 28%,#fff4e0 0%,#ffce8a 38%,#f59b53 66%,#d9542c 100%);box-shadow:inset 0 0 0 1px rgba(0,0,0,.06);position:relative}
+.kt-photo::after{content:'12:47';position:absolute;right:7px;bottom:6px;font-size:10px;color:rgba(255,255,255,.9);text-shadow:0 1px 2px rgba(0,0,0,.4)}
+.ptpanel{display:flex;flex-direction:column;gap:9px;max-width:330px;align-self:center}
+.ptpanel .lead{font-size:16px;font-weight:700;color:var(--navy)}
+.ptlist{display:flex;flex-direction:column;gap:8px}
+.ptlist .it{font-size:16px;line-height:1.4;padding:9px 13px;background:var(--tint);border-radius:10px;border-left:3px solid var(--blue)}
+.ptlist .it b{color:var(--blue)}
+/* 인스타 DM mockup */
+.igdm{width:300px;border:1px solid #dbdbdb;border-radius:16px;overflow:hidden;background:#fff;flex:none;box-shadow:0 6px 24px rgba(0,0,0,.12)}
+.igdm-head{display:flex;align-items:center;gap:9px;padding:11px 13px;border-bottom:1px solid #efefef;font-weight:700;font-size:15px}
+.igdm-head .av{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#f9ce34,#ee2a7b,#6228d7);flex:none}
+.igdm-body{padding:13px;display:flex;flex-direction:column;gap:8px;min-height:250px;background:#fff}
+.igdm-reply{align-self:flex-end;max-width:80%;border:1px solid #efefef;border-radius:16px;padding:7px;display:flex;gap:8px;align-items:center;margin-bottom:2px}
+.igdm-reply .thumb{width:40px;height:54px;border-radius:8px;background:linear-gradient(160deg,#f58529,#dd2a7b,#8134af);display:flex;align-items:center;justify-content:center;font-size:22px;flex:none}
+.igdm-reply .rt{font-size:13px;color:#8e8e8e;line-height:1.35}
+.igdm-msg{max-width:76%;padding:9px 14px;border-radius:20px;font-size:16px;line-height:1.45}
+.igdm-her{background:#efefef;color:#000;align-self:flex-start;border-bottom-left-radius:6px}
+.igdm-me{background:#3797f0;color:#fff;align-self:flex-end;border-bottom-right-radius:6px}
+/* 인스타 스토리 mockup */
+.igstory{width:236px;height:418px;border-radius:22px;overflow:hidden;position:relative;background:linear-gradient(160deg,#f58529,#dd2a7b,#8134af);flex:none;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+.igstory-bar{position:absolute;top:10px;left:12px;right:12px;height:3px;background:rgba(255,255,255,.35);border-radius:2px}
+.igstory-bar i{display:block;width:60%;height:100%;background:#fff;border-radius:2px}
+.igstory-top{position:absolute;top:22px;left:14px;display:flex;align-items:center;gap:8px;color:#fff;font-weight:600;font-size:13px}
+.igstory-top .av{width:28px;height:28px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;font-size:15px}
+.igstory-mid{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:#fff}
+.igstory-mid .emoji{font-size:74px}
+.igstory-cap{font-size:16px;font-weight:600;text-shadow:0 1px 4px rgba(0,0,0,.3)}
+.igstory-reply{position:absolute;bottom:16px;left:14px;right:14px;display:flex;gap:8px;align-items:center}
+.igstory-reply .inp{flex:1;border:1.5px solid rgba(255,255,255,.7);border-radius:22px;padding:9px 15px;color:#fff;font-size:14px;background:rgba(255,255,255,.12)}
+/* 실습 셀프체크 */
+.selfcheck{margin:30px auto 0;max-width:660px;width:100%;text-align:left}
+.sc-lbl{font-weight:800;color:var(--purple);font-size:18px;margin-bottom:14px;text-align:center}
+.sc-item{font-size:18px;line-height:1.5;padding:13px 18px 13px 48px;position:relative;background:#f5f3ff;border-radius:12px;margin-bottom:10px}
+.sc-item::before{content:'☐';position:absolute;left:18px;top:11px;color:var(--purple);font-weight:800;font-size:20px}
+/* 커리큘럼 4열 세부 목차 */
+.cur{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:18px;text-align:left}
+.cur .c{background:var(--tint);border-radius:12px;padding:14px 13px}
+.cur .pt{font-weight:800;color:var(--blue);font-size:18px;line-height:1.1}
+.cur .pd{font-size:13px;color:var(--navy);font-weight:700;margin:3px 0 12px}
+.cur .pt.pp{color:var(--purple)}
+.cur ul{margin:0;padding-left:15px;display:flex;flex-direction:column;gap:9px}
+.cur li{font-size:14px;line-height:1.45;color:var(--muted)}
+.cur li b{color:var(--ink);font-size:15px}
+/* 포켓몬 턴제 인트로 */
+.pk-screen{position:relative;background:#f7f4e8;border:4px solid #202020;border-radius:12px;overflow:hidden;box-shadow:0 5px 0 #111,0 8px 20px rgba(0,0,0,.3);font-family:ui-monospace,'Courier New',monospace}
+.pk-svg{display:block;width:100%;height:auto;background:linear-gradient(#e9f6ff 0%,#e9f6ff 58%,#f3ecd6 58%,#f3ecd6 100%)}
+.pk-flash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none}
+.pk-flash.go{animation:pkfl 1.7s ease-out forwards}
+@keyframes pkfl{0%,10%{opacity:0}15%{opacity:.85}30%{opacity:0}100%{opacity:0}}
+.pk-wild{opacity:0}
+.pk-wild.go{animation:pkwin .5s ease-out .35s forwards,pkbob 2.6s ease-in-out 1.3s infinite}
+@keyframes pkwin{from{transform:translateX(92px);opacity:0}to{transform:translateX(0);opacity:1}}
+@keyframes pkbob{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+.pk-me{opacity:0}
+.pk-me.go{animation:pkmin .5s ease-out .95s forwards}
+@keyframes pkmin{from{transform:translateX(-92px);opacity:0}to{transform:translateX(0);opacity:1}}
+.pk-heart{transform-box:fill-box;transform-origin:center;animation:pkpp 1.3s ease-in-out 1.6s infinite}
+@keyframes pkpp{0%,100%{transform:scale(.8);opacity:.65}50%{transform:scale(1.15);opacity:1}}
+.pk-spk{animation:pktw 1.1s steps(2) 1.4s infinite}
+@keyframes pktw{0%,100%{opacity:.15}50%{opacity:1}}
+.pk-dbox{position:relative;background:#fff;margin:8px;border:3px solid #384c6b;border-radius:9px;box-shadow:inset 0 0 0 2px #fff,inset 0 0 0 4px #7d93b3;padding:12px 16px 16px}
+.pk-dbox p{margin:0;font-size:21px;line-height:1.6;font-weight:700;color:#1a1a1a;letter-spacing:.3px;min-height:60px}
+.pk-cur{border-right:3px solid #1a1a1a;margin-left:2px}
+.pk-cur.blink{animation:pkcb .6s steps(1) infinite}
+@keyframes pkcb{50%{border-color:transparent}}
+.pk-arw{position:absolute;right:13px;bottom:8px;color:#384c6b;font-size:16px;opacity:0}
+.pk-arw.on{animation:pkbk .8s steps(1) infinite}
+@keyframes pkbk{0%,100%{opacity:1}50%{opacity:0}}
+.pk-badge{position:absolute;top:9px;left:11px;z-index:2;background:#ffe400;color:#3a2e00;font-size:14px;font-weight:800;padding:3px 11px;border-radius:12px;box-shadow:0 2px 0 #b89e00}
+</style>
+</head>
+<body>
+<div class="stage"><div id="deck">
+
+<section class="slide active center">
+  <p class="serif cover-title">카톡의 정석</p>
+  <div style="width:80px;height:3px;background:var(--blue);margin:28px 0"></div>
+  <p class="big muted">카톡의 A to Z</p>
+</section>
+
+<section class="slide">
+  <p class="kicker">강의 소개</p>
+  <h2 class="head">오늘 우리가 할 약속</h2>
+  <div class="box key"><span class="lbl">핵심</span>외울 게 아니라 <b>원리</b>를 가져간다. 상황은 바뀌어도 원리는 그대로다.</div>
+  <div class="flow">
+    <span class="step">원리 이해</span>
+    <span class="arr">→</span>
+    <span class="step">실전 예제</span>
+    <span class="arr">→</span>
+    <span class="step">카톡에 적용</span>
+  </div>
+  <p class="muted">예제로 어떻게 적용해야 하는지 학습한다. 중간에 <b>휴식 2회</b> 있으니 부담 없이.</p>
+</section>
+
+<section class="slide center">
+  <img src="images/gyuri.jpg" alt="실제 첫 카톡 대화" style="height:580px;width:auto;border-radius:20px;box-shadow:0 18px 45px rgba(0,0,0,.28)">
+</section>
+
+<section class="slide center">
+  <div style="display:flex;justify-content:center;gap:12px">
+    <img src="images/chunsik1.png" alt="실제 카톡 대화" style="height:536px;width:auto;border-radius:10px;box-shadow:0 10px 28px rgba(0,0,0,.2)">
+    <img src="images/chunsik2.png" alt="실제 카톡 대화" style="height:536px;width:auto;border-radius:10px;box-shadow:0 10px 28px rgba(0,0,0,.2)">
+    <img src="images/chunsik3.png" alt="실제 카톡 대화" style="height:536px;width:auto;border-radius:10px;box-shadow:0 10px 28px rgba(0,0,0,.2)">
+  </div>
+</section>
+
+<section class="slide center">
+  <p class="kicker" style="color:var(--purple)">시작 전 · 사전과제</p>
+  <h2 class="head">가져온 <b>3가지</b>를 지금 꺼내세요</h2>
+  <div class="selfcheck">
+    <p class="sc-lbl">✍ 오늘 모든 실습은 이 재료로 합니다</p>
+    <div class="sc-item">타겟 1명 — 실제로 잘되고 싶은 그 사람</div>
+    <div class="sc-item">막힌 카톡 — 끊기거나 답답했던 그 대화</div>
+    <div class="sc-item">자가진단 Before 점수 — 강의 끝에 다시 비교</div>
+  </div>
+  <p class="muted" style="margin-top:14px">안 가져왔어도 괜찮습니다. 지금 머릿속에 <b>한 사람</b>만 정하세요.</p>
+</section>
+
+<section class="slide">
+  <p class="kicker">전체 커리큘럼</p>
+  <h2 class="head">1부부터 4부까지, 이렇게 갑니다</h2>
+  <div class="cur">
+    <div class="c">
+      <p class="pt">1부</p><p class="pd">대화를 여는 법</p>
+      <ul>
+        <li><b>마인드셋</b> · 3원칙 + 여유</li>
+        <li><b>프로필 사진</b></li>
+        <li><b>첫 톡</b> · 유형 3종</li>
+        <li><b>답장·읽씹</b> · 명분 5선</li>
+        <li><b>대화 운영</b> · 놀거리 9종</li>
+      </ul>
+    </div>
+    <div class="c">
+      <p class="pt">2부</p><p class="pd">키우고 만나는 법</p>
+      <ul>
+        <li><b>매력 화술</b> · 4원리</li>
+        <li><b>호감 신호·말 놓기</b></li>
+        <li><b>상황별 대응</b> · 9가지 사전</li>
+        <li><b>위기 대응</b></li>
+        <li><b>만남</b> · 첫 만남 공식</li>
+      </ul>
+    </div>
+    <div class="c">
+      <p class="pt pp">3부</p><p class="pd">섹슈얼 토크 · 심화편</p>
+      <ul>
+        <li><b>섹톡의 원리</b> · 뉘앙스·자의식</li>
+        <li><b>안전하게 · 빌드업</b> · 의미부여</li>
+        <li><b>플러팅 · 텐션</b></li>
+        <li><b>수위 사다리</b> · 5단계</li>
+        <li><b>기대치 · 차단/잠수</b></li>
+      </ul>
+    </div>
+    <div class="c">
+      <p class="pt">4부</p><p class="pd">부록</p>
+      <ul>
+        <li><b>한마디 사전</b></li>
+        <li><b>체크리스트</b> · 3종</li>
+        <li><b>NG 블랙리스트</b></li>
+        <li><b>신호 색인</b></li>
+        <li><b>상황별 색인</b></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <p class="kicker">실제 카톡 흐름</p>
+  <svg viewBox="0 0 1160 460" style="width:100%;height:auto;margin-top:14px" font-family="Pretendard,sans-serif" text-anchor="middle">
+    <defs><marker id="ah" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#94a3b8"/></marker></defs>
+    <g stroke="#94a3b8" stroke-width="2" fill="none" marker-end="url(#ah)">
+      <line x1="130" y1="250" x2="171" y2="250"/>
+      <path d="M70,278 C70,332 85,332 85,378"/>
+      <line x1="160" y1="410" x2="183" y2="410"/>
+      <path d="M258,382 C258,332 230,332 230,282"/>
+      <path d="M286,240 C346,198 420,152 420,122"/>
+      <line x1="288" y1="252" x2="348" y2="251"/>
+      <line x1="480" y1="90" x2="508" y2="90"/>
+      <line x1="640" y1="90" x2="668" y2="90"/>
+      <line x1="784" y1="90" x2="808" y2="90"/>
+      <line x1="490" y1="250" x2="518" y2="250"/>
+      <line x1="670" y1="250" x2="698" y2="250"/>
+    </g>
+    <g font-size="17" font-weight="700">
+      <g><rect x="10" y="222" width="120" height="56" rx="12" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="2"/><text x="70" y="256" fill="#1a1a1a">첫 톡 보냄</text></g>
+      <g><rect x="175" y="222" width="110" height="56" rx="12" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/><text x="230" y="256" fill="#2563eb">답장 옴</text></g>
+      <g><rect x="10" y="382" width="150" height="56" rx="12" fill="#fffbeb" stroke="#d97706" stroke-width="2"/><text x="85" y="415" fill="#b45309" font-size="15">안 읽음·읽씹</text></g>
+      <g><rect x="183" y="382" width="146" height="56" rx="12" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2"/><text x="256" y="415" fill="#1a1a1a" font-size="15">명분으로 재연락</text></g>
+      <g><rect x="360" y="62" width="120" height="56" rx="12" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/><text x="420" y="96" fill="#2563eb">호감 있음</text></g>
+      <g><rect x="508" y="62" width="132" height="56" rx="12" fill="#1e3a8a"/><text x="574" y="96" fill="#fff">대화 운영</text></g>
+      <g><rect x="668" y="62" width="116" height="56" rx="12" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2"/><text x="726" y="96" fill="#1a1a1a">말 놓기</text></g>
+      <g><rect x="808" y="62" width="126" height="56" rx="12" fill="#2563eb"/><text x="871" y="96" fill="#fff">약속·만남</text></g>
+      <g><rect x="352" y="222" width="138" height="56" rx="12" fill="#fef2f2" stroke="#dc2626" stroke-width="2"/><text x="421" y="256" fill="#dc2626">호감 없음</text></g>
+      <g><rect x="518" y="222" width="152" height="56" rx="12" fill="#fef2f2" stroke="#dc2626" stroke-width="2"/><text x="594" y="256" fill="#dc2626" font-size="15">답장하다 짤림</text></g>
+      <g><rect x="698" y="222" width="132" height="56" rx="12" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2"/><text x="764" y="256" fill="#1a1a1a" font-size="15">위기로 살리기</text></g>
+    </g>
+    <g font-size="13" font-weight="800">
+      <text x="352" y="168" fill="#2563eb">호감 ↑</text>
+      <text x="316" y="236" fill="#dc2626">호감 ✕</text>
+    </g>
+  </svg>
+  <p class="muted" style="margin-top:12px;text-align:center">번호를 받은 순간부터 만남까지 — 이 강의가 다루는 <b>전 과정</b>이다. 답장이 와도 <b style="color:#dc2626">호감이 없으면 식어서 짤린다.</b></p>
+</section>
+
+<section class="slide center">
+  <span class="tag">1강</span>
+  <p class="serif divider-title" style="margin-top:24px">마인드셋</p>
+  <p class="big muted" style="margin-top:16px">제일 중요한 3원칙</p>
+</section>
+
+<section class="slide">
+  <p class="kicker">왜 막히는가</p>
+  <h2 class="head">왜 <b>카톡</b>을 배워야 하는가?</h2>
+  <p class="big">번호는 받는데, <b>카톡이 잘 안 된다.</b></p>
+  <div class="box key">
+    <span class="lbl">외모·스펙 문제가 아니다</span>
+    번호를 받았다면 최소한 문은 열린 상태다. 진짜 문제는 받은 번호로 카톡을 어떻게 이어가느냐다.
+  </div>
+  <p class="muted">카톡은 타고난 센스가 아니라 배울 수 있는 기술이다. 기술에는 패턴이 있다.</p>
+</section>
+
+<section class="slide">
+  <p class="kicker">대부분의 착각</p>
+  <h2 class="head">"이 정도면 <b>답장 오겠지</b>"</h2>
+  <p class="muted">대부분의 남자가 믿는 세 가지. 전부 착각이다.</p>
+  <div class="flow" style="margin:20px 0;flex-wrap:wrap">
+    <span class="step" style="text-decoration:line-through;opacity:.6">잘생겼으니까</span>
+    <span class="step" style="text-decoration:line-through;opacity:.6">말을 잘하니까</span>
+    <span class="step" style="text-decoration:line-through;opacity:.6">매력 있으니까</span>
+  </div>
+  <div class="box bad"><span class="lbl">현실</span>여자는 <b>대부분의 남자에게</b> 친절할 이유가 없다.</div>
+  <div class="box psych"><span class="lbl">💡 그렇기 때문에</span>답장은 기다리는 게 아니라, <b>만들어내는 것</b>이다. 이 착각을 버리는 순간부터 시작이다.</div>
+</section>
+
+<section class="slide">
+  <p class="kicker">왜 유튜브·연애 강의를 봐도 안 될까</p>
+  <h2 class="head">영상은 <b>멘트만</b> 준다 → 배워야 할 건 <b>원리</b>다</h2>
+  <div class="grid2" style="margin-top:14px">
+    <div class="box bad"><span class="lbl">멘트</span>외운 대사는 상황이 조금만 바뀌어도 안 통한다. 딱 그 상황에만 맞는 답이라 순서가 없다.</div>
+    <div class="box good"><span class="lbl">원리</span>원리는 상황이 바뀌어도 그대로 통한다. 왜 그렇게 말하는지 알면 어디든 써먹는다.</div>
+  </div>
+  <div class="box psych" style="margin-top:12px"><span class="lbl">💡 진짜 문제</span>멘트를 몰라서 막히는 게 아니다. 원리를 모르니 상황이 바뀌면 또 막힌다. 오늘은 그 원리를 가져간다.</div>
+</section>
+
+<section class="slide">
+  <p class="kicker">마인드 ①</p>
+  <h2 class="head">조급함이 다 망친다</h2>
+  <p class="muted">재촉하는 마음은 글자만이 아니라 화면 너머로 같이 전해진다.</p>
+  <div class="kt2">
+    <div class="col b">
+      <p class="tit">✕ 조급함</p>
+      <div class="kt"><div class="kt-head">‹ 그분</div><div class="kt-body">
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">오늘 뭐해요?</div></div></div>
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">자나? ㅎㅎ</div></div></div>
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">바쁜가 보네 ㅠㅠ</div></div></div>
+      </div></div>
+      <p class="cap">답도 오기 전에 혼자 빈칸을 채운다</p>
+    </div>
+    <div class="col g">
+      <p class="tit">✓ 여유</p>
+      <div class="kt"><div class="kt-head">‹ 그분</div><div class="kt-body">
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">오늘 뭐해요?</div></div></div>
+        <div class="kt-sep">30분 뒤</div>
+        <div class="kt-row kt-her"><div class="kt-av">🙂</div><div class="kt-wrap"><div class="kt-msg">헐 미안요 일하느라 ㅋㅋ</div></div></div>
+      </div></div>
+      <p class="cap">한 통 보내고 폰을 내려놓는다</p>
+    </div>
+  </div>
+  <div class="box psych">
+    <span class="lbl">💡 왜 통할까</span>
+    조급함은 화면 너머로 부담으로 전달된다. 답을 재촉할수록 상대는 숨 막혀 멀어지고, 여유를 지킬수록 편하게 다가온다.
+  </div>
+</section>
+
+<section class="slide">
+  <p class="kicker">마인드 ②</p>
+  <h2 class="head">받는 사람이 <b>되어본다</b></h2>
+  <p class="muted">보내기 전 딱 3초 — "내가 여자라면 이 톡, 답하고 싶을까?"</p>
+  <div class="kt2">
+    <div class="col b">
+      <p class="tit">✕ 답할 말이 없는 톡</p>
+      <div class="kt"><div class="kt-head">‹ 그분</div><div class="kt-body">
+        <div class="kt-row kt-her"><div class="kt-av">🙂</div><div class="kt-wrap"><div class="kt-msg">저 99년생이에요 ㅎ</div></div></div>
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">아 99셨구나</div></div></div>
+        <div class="kt-row kt-her"><div class="kt-av">😶</div><div class="kt-wrap"><div class="kt-msg">...</div></div></div>
+      </div></div>
+      <p class="cap">정보만 받고 끝 — 받는 사람은 답할 게 없다</p>
+    </div>
+    <div class="col g">
+      <p class="tit">✓ 답할 거리를 주는 톡</p>
+      <div class="kt"><div class="kt-head">‹ 그분</div><div class="kt-body">
+        <div class="kt-row kt-her"><div class="kt-av">🙂</div><div class="kt-wrap"><div class="kt-msg">저 99년생이에요 ㅎ</div></div></div>
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">오 99요? 24~5살인 줄 알았어요</div></div></div>
+        <div class="kt-row kt-her"><div class="kt-av">😄</div><div class="kt-wrap"><div class="kt-msg">ㅋㅋ 진짜요?</div></div></div>
+      </div></div>
+      <p class="cap">한마디에 대화 거리를 얹으면 답이 이어진다</p>
+    </div>
+  </div>
+  <div class="box psych">
+    <span class="lbl">💡 왜 통할까</span>
+    "99셨구나"처럼 정보만 받으면 받는 사람은 답할 거리가 없다. 내가 받는 사람이라 생각하고, 이어갈 한마디를 얹어야 답이 온다.
+  </div>
+</section>
+
+<section class="slide">
+  <p class="kicker">마인드 ③</p>
+  <h2 class="head">잘 보이려 <b>힘주지 않는다</b></h2>
+  <p class="muted">애쓴 드립은 "나 좀 봐주세요"로 읽힌다. 친구한테 톡 하듯 담백하게.</p>
+  <div class="kt2">
+    <div class="col b">
+      <p class="tit">✕ 힘 잔뜩 — 답장이 숙제가 된다</p>
+      <div class="kt"><div class="kt-head">‹ 그분</div><div class="kt-body">
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">기운 없어 보이는데 햇빛에 녹은 구슬아이스크림 상태? ㅋㅋ</div></div></div>
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">아니면 과제 많아서 아아 수혈이 필요한 상태?</div></div></div>
+        <div class="kt-row kt-her"><div class="kt-av">😐</div><div class="kt-wrap"><div class="kt-msg">그냥 관심 없는 상태입니다 :)</div></div></div>
+      </div></div>
+      <p class="cap">잘 보이려 짜낸 드립일수록 부담이 된다</p>
+    </div>
+    <div class="col g">
+      <p class="tit">✓ 담백하게</p>
+      <div class="kt"><div class="kt-head">‹ 그분</div><div class="kt-body">
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">오늘 좀 피곤해 보이네요 ㅎㅎ 무슨 일 있었어요?</div></div></div>
+        <div class="kt-row kt-her"><div class="kt-av">🙂</div><div class="kt-wrap"><div class="kt-msg">헐 티 났어요? ㅋㅋ</div></div></div>
+      </div></div>
+      <p class="cap">힘 한 끗 빼면 답하기 편해진다</p>
+    </div>
+  </div>
+  <div class="box psych">
+    <span class="lbl">💡 왜 통할까</span>
+    힘준 멘트일수록 안달난 티가 난다. 한 끗 덜어내면 오히려 여유 있어 보이고, 그 여유가 매력이 된다.
+  </div>
+</section>
+
+<section class="slide">
+  <p class="kicker">세 마인드를 관통하는 하나</p>
+  <h2 class="head">카톡엔 보이지 않는 <b>값</b>이 붙는다</h2>
+  <p class="muted">조급함도, 힘주기도 결국 같은 걸 깎아먹는다 — 내 '값'이다.</p>
+  <div class="grid2" style="margin-top:10px">
+    <div class="box bad"><span class="lbl">✕ 매달리면 값이 떨어진다</span>연달아 보내고, 재촉하고, 애쓴 티가 나면 — <b>"쉬운 사람"</b>이 된다.</div>
+    <div class="box good"><span class="lbl">✓ 여유를 지키면 값이 지켜진다</span>한 박자 늦게, 담백하게, 안 와도 그만 — <b>"아쉬울 것 없는 사람"</b>이 된다.</div>
+  </div>
+  <div class="box psych"><span class="lbl">💡 오늘 내내 판정은 하나</span>기법이 달라도 물음은 같다 — <b>"이 톡, 내 값을 올리나 내리나?"</b> 여유가 매력인 이유가 바로 이 값이다.</div>
+</section>
+
+<section class="slide">
+  <p class="kicker">여유의 정체</p>
+  <h2 class="head">여유는 성격이 아니라 <b>숫자</b>에서 나온다</h2>
+  <p class="muted">비울 게 하나뿐이면 절대 안 비워진다. 한 명에 100을 걸지 말고 셋에 나눠 걸어라.</p>
+  <table style="margin-top:10px">
+    <tr><th></th><th>한 명에 집중</th><th>여러 명과 알아가기 (3~4명)</th></tr>
+    <tr><td>답장 안 올 때</td><td>하루가 무너짐</td><td>별일 아님</td></tr>
+    <tr><td>톡의 무게</td><td>무겁고 절박함</td><td>가볍고 여유로움</td></tr>
+    <tr><td>상대가 느끼는 것</td><td>부담</td><td>편안함</td></tr>
+    <tr><td>결과</td><td>매달릴수록 멀어짐</td><td>여유로울수록 끌림</td></tr>
+  </table>
+  <div class="box key" style="margin-top:12px"><span class="lbl">덜 애쓰는 쪽이 우위</span>내 70 : 상대 30 → 끌려다님. 내가 늘 더 많이 보내고 있다면 그게 신호다. 한 박자 쉬어라.</div>
+</section>
+
+<section class="slide center">
+  <span class="tag" style="background:var(--purple)">실습</span>
+  <h2 class="head" style="margin-top:20px">최근 카톡 대화 3개를 열어본다</h2>
+  <p class="big muted">내가 보낸 톡에서 '조급함'과 '힘 들어간 곳'을 직접 찾아 표시해본다.</p>
+  <div class="selfcheck">
+    <p class="sc-lbl">✅ 이렇게 찾아본다 <span style="color:var(--muted);font-weight:600;font-size:14px">· 워크북 PART 1</span></p>
+    <div class="sc-item">답이 오기 전에 연달아 보낸 톡이 있나?</div>
+    <div class="sc-item">물음표로 끝나는 추궁성 문장이 있나?</div>
+    <div class="sc-item">"ㅎㅎ·ㅋㅋ"로 어색함을 메우고 있진 않나?</div>
+  </div>
+</section>
+
+<section class="slide center">
+  <p class="kicker">잠깐, 같이 생각해보기</p>
+  <h2 class="head" style="font-size:40px">마음에 드는 사람 번호를 드디어 받았습니다.<br>카톡 열기 전에, 뭐부터 할까요?</h2>
+  <p class="big muted" style="margin-top:20px">✋ 손 들어보세요</p>
+</section>
+
+<section class="slide center">
+  <span class="tag">2강</span>
+  <p class="serif divider-title" style="margin-top:24px">프로필 사진</p>
+  <p class="big muted" style="margin-top:18px">첫 톡을 보내기 전에, 이미 승부는 시작된다</p>
+</section>
+
+<section class="slide">
+  <p class="kicker">0.5초의 판단</p>
+  <h2 class="head">프사는 첫 톡보다 <b>먼저 말한다</b></h2>
+  <p class="big">모르는 번호로 톡이 오면 다들 똑같이 한다. 말 읽기 전에 <b>프로필부터 누른다.</b></p>
+  <div class="box key"><span class="lbl">핵심</span>표정 · 활동 · 화질, 이 세 가지로 0.5초 안에 절반쯤 판단이 끝난다. 한번 박힌 인상은 잘 안 바뀐다.</div>
+  <div class="box psych"><span class="lbl">💡 왜 통할까</span>정보가 적을수록 사람은 단서 하나로 전체를 판단한다(후광효과). 사진 한 장이 괜찮으면 "괜찮은 사람이겠지" 하는 기대가 첫 톡까지 끌고 간다.</div>
+</section>
+
+<section class="slide">
+  <p class="kicker">내릴 사진 ↔ 걸 사진</p>
+  <h2 class="head">이건 내려라 <span class="muted">↔</span> 이게 통한다</h2>
+  <div class="grid2">
+    <div class="box bad">
+      <span class="lbl">✕ 이렇게 말고</span>
+      <p><b>얼굴이 안 보이는 프사</b></p>
+      <p class="muted">애니·캐릭터 / 풍경 / 단체샷 / 정면 셀카 / 명언·글귀</p>
+      <p class="muted">→ 누군지 모르거나, 흔하거나, 진지충처럼 보임</p>
+    </div>
+    <div class="box good">
+      <span class="lbl">✓ 이렇게</span>
+      <p><b>"이 사람 좀 궁금한데?" 싶은 한 장</b></p>
+      <p class="muted">자연스러운 표정 / 여행·운동·취미 활동샷 / 밝고 또렷한 화질</p>
+      <p class="muted">→ 모델급 아니어도 분위기와 단서면 충분</p>
+    </div>
+  </div>
+  <div class="box key"><span class="lbl">핵심</span>각도·조명·보정, 쓸 수 있는 건 다 써라. 단, 만났을 때 '같은 사람'인 건 알아볼 선까지만.</div>
+</section>
+
+<section class="slide">
+  <p class="kicker">한 수 더</p>
+  <h2 class="head">새로 안 찍어도 된다 — <b>이렇게 바꿔라</b></h2>
+  <table>
+    <tr><th>비포</th><th>애프터</th><th>한 줄 처방</th></tr>
+    <tr><td>정면 셀카</td><td>활동 사진</td><td>뭔가 하는 전신 한 장 — 대화 소재까지 딸려온다</td></tr>
+    <tr><td>어두운 사진</td><td>밝게 보정</td><td>밝기만 올려도 '관리하는 사람'으로 보인다</td></tr>
+    <tr><td>단체 사진</td><td>나만 잘라내기</td><td>잘 나온 단체샷에서 내 부분만 오려내기</td></tr>
+  </table>
+  <div class="box psych"><span class="lbl">💡 왜 통할까</span>여행샷엔 "여행 좋아하세요?", 강아지샷엔 "강아지 키우세요?"가 따라온다. 잘 고른 프사는 상대가 먼저 말 걸 '구실(떡밥)'을 깔아준다.</div>
+</section>
+
+<section class="slide center">
+  <span class="tag" style="background:var(--purple)">실습</span>
+  <h2 class="head" style="margin-top:20px">지금 내 프사를 열고 체크하라</h2>
+  <p class="big muted">하나라도 ✕면 오늘 갈아끼운다 <b style="color:var(--purple)">· ✍ 워크북 PART 1</b></p>
+  <div class="chk" style="margin-top:28px;text-align:left">
+    <div>얼굴이 또렷이 보인다 (단체·풍경·캐릭터 ✕)</div>
+    <div>정색 말고 자연스러운 표정이다</div>
+    <div>여행·운동·취미 등 '활동'이 담겨 있다</div>
+    <div>밝고 화질이 또렷하다</div>
+    <div>실물보다 잘 나왔다 (단, '같은 사람' 선 안에서)</div>
+    <div>말 걸 떡밥이 한 개 이상 보인다</div>
+  </div>
+</section>
+
+<section class="slide center">
+  <p class="kicker">잠깐, 같이 생각해보기</p>
+  <h2 class="head" style="font-size:40px">머릿속에 보낼 첫 메시지를 하나 떠올려보세요.<br>그거 그대로 보내면 어떻게 될까요?</h2>
+  <p class="big muted" style="margin-top:20px">🤔 옆 사람과 한 줄 나눠보기</p>
+</section>
+
+<section class="slide center">
+  <span class="tag">3강</span>
+  <p class="serif divider-title" style="margin-top:24px">첫 톡</p>
+  <p class="big muted" style="margin-top:16px">특별함 부여하기</p>
+</section>
+
+<section class="slide">
+  <p class="kicker">첫 톡이 중요한 이유</p>
+  <h2 class="head">첫인상은 <b>두 번</b> 만들어진다</h2>
+  <p class="muted">만난 자리에서 한 번, 첫 카톡에서 또 한 번. 번호는 입장권일 뿐, 진짜 평가는 첫 톡부터 시작된다.</p>
+  <div class="flow">
+    <span class="step">오프라인 인상</span>
+    <span class="arr">+</span>
+    <span class="step">카톡 첫 톡</span>
+    <span class="arr">=</span>
+    <span class="step">머릿속 최종 이미지</span>
+  </div>
+  <div class="box psych"><span class="lbl">💡 왜 통할까</span>사람은 처음 받은 인상으로 그 뒤를 해석한다. 첫 톡이 좋으면 멀쩡한 말도 좋게 읽히고, 어색하면 무난한 말도 어색하게 읽힌다.</div>
+</section>
+
+<section class="slide">
+  <p class="kicker">묻히는 첫 톡</p>
+  <h2 class="head">"안녕하세요"는 <b>카톡함에서 묻힌다</b></h2>
+  <p class="muted">활발한 사람의 카톡함엔 똑같은 첫 톡이 줄줄이 쌓인다. 그 안에서 "안녕하세요"는 그냥 배경이다.</p>
+  <div class="kt2">
+    <div class="col b">
+      <p class="tit">✕ 뻔한 첫 톡</p>
+      <div class="kt"><div class="kt-head">‹ 카톡함</div><div class="kt-body">
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">안녕하세요</div></div></div>
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">재밌게 놀고 계세요?</div></div></div>
+      </div></div>
+      <p class="cap">남들 다 보내는 말 → 누가 보냈는지 구분도 안 됨</p>
+    </div>
+    <div class="col g">
+      <p class="tit">✓ 그 사람에게만 할 한마디</p>
+      <div class="kt"><div class="kt-head">‹ 그 사람</div><div class="kt-body">
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">어제 보니까 되게 밝아 보이던데 ㅋㅋ</div></div></div>
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">오늘 무슨 기분 좋은 일 있었나봐요~?</div></div></div>
+      </div></div>
+      <p class="cap">슬쩍 넘겨짚기 + 상황 전달 → "나를 봤다"는 신호</p>
+    </div>
+  </div>
+  <div class="box key"><span class="lbl">핵심</span>첫 톡은 멋있을 필요가 없다. 남들과 <b>'다르기만'</b> 하면 절반은 이긴 것이다.</div>
+</section>
+
+<section class="slide">
+  <p class="kicker">첫 톡 공식</p>
+  <h2 class="head">관찰 → 단서 → 가볍게</h2>
+  <div class="flow">
+    <span class="step">관찰<br><span class="muted">프사·상황·상메</span></span>
+    <span class="arr">→</span>
+    <span class="step">단서 하나<br><span class="muted">걸리는 것 하나</span></span>
+    <span class="arr">→</span>
+    <span class="step">가볍게 던지기<br><span class="muted">부담 없이 한 줄</span></span>
+  </div>
+  <div class="box key"><span class="lbl">핵심</span>누구에게나 보낼 수 있는 톡은, <b>누구나 보낼 수 있는 톡</b>이다. 당신을 <b>특별하게 만드는 한마디</b>를 던져라.</div>
+</section>
+
+<section class="slide center">
+  <span class="tag" style="background:var(--purple)">생각해보기</span>
+  <h2 class="head" style="margin-top:16px;font-size:40px">이 사람에게 어떻게<br>카톡을 보내면 좋을까요?</h2>
+  <div style="display:flex;gap:50px;justify-content:center;margin-top:26px">
+    <img src="images/clue_frog.png" alt="프사 예시 1" style="height:300px;width:auto;border-radius:12px;border:1px solid var(--line);box-shadow:0 6px 20px rgba(0,0,0,.14)">
+    <img src="images/clue_snow.png" alt="프사 예시 2" style="height:300px;width:auto;border-radius:12px;border:1px solid var(--line);box-shadow:0 6px 20px rgba(0,0,0,.14)">
+  </div>
+  <p class="big muted" style="margin-top:22px">이 2개의 사진을 보고, 보낼 첫 톡을 떠올려보세요</p>
+</section>
+
+<section class="slide">
+  <p class="kicker">단서가 대화로</p>
+  <h2 class="head">단서 하나가 <b>대화로 굴러간다</b></h2>
+  <p class="muted">"애니 좋아하세요?"가 아니라, 프사 속 캐릭터를 <b>콕 집어</b> 던지니 상대가 신나서 먼저 푼다.</p>
+  <div class="ktc" style="margin-top:14px">
+    <div class="kt"><div class="kt-head">‹ 그 사람</div><div class="kt-body">
+      <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">애니메이션 좋아하나봐용 ㅋㅋ 케로로도 그렇고</div></div></div>
+      <div class="kt-row kt-her"><div class="kt-av">🐸</div><div class="kt-wrap"><div class="kt-msg">어 케로로 어케 알았지 ㅋㅋ 케로로 제일 좋아해요</div></div></div>
+      <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">ㅋㅋ 케로로에서 누가 최애?</div></div></div>
+      <div class="kt-row kt-her"><div class="kt-av">🐸</div><div class="kt-wrap"><div class="kt-msg">케로로 타마마 쿠루루 ㅎㅅㅎ</div></div></div>
+      <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">기로로는 왜 뺐어요 ㅋㅋ</div></div></div>
+    </div></div>
+    <div class="box key"><span class="lbl">핵심</span>관찰(프사) → 단서(케로로) → 콕 집기. 디테일을 집을수록 상대는 "어케 알았지?" 하며 더 푼다.</div>
+  </div>
+</section>
+
+<section class="slide">
+  <p class="kicker">만난 경로부터 다르다</p>
+  <h2 class="head">어디서 만났냐에 따라 <b>첫 톡 재료가 갈린다</b></h2>
+  <p class="muted">공식은 같다. 단서를 어디서 줍느냐가 경로마다 다를 뿐이다.</p>
+  <div class="kt3" style="margin-top:14px">
+    <div class="col">
+      <p class="tit">① 로드 번따</p>
+      <p class="sit">길·클럽서 즉석 번호</p>
+      <div class="kt"><div class="kt-head">‹ 그 사람</div><div class="kt-body">
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">아까 우산 같이 쓰던 사람이에요</div></div></div>
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">바쁘게 가시던데, 도착은 했어요?</div></div></div>
+      </div></div>
+      <p class="key"><b>먼저 누군지 환기 + 그 순간 소환</b></p>
+    </div>
+    <div class="col">
+      <p class="tit">② 소개팅 어플</p>
+      <p class="sit">프로필 소개란이 단서</p>
+      <div class="kt"><div class="kt-head">‹ 그 사람</div><div class="kt-body">
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">롤 되게 좋아하시나봐요 ㅎㅎ</div></div></div>
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">증바람 자주하세요?</div></div></div>
+      </div></div>
+      <p class="key"><b>무작위 인사 ✕ — 소개란·사진서 한 줄 집기</b></p>
+    </div>
+    <div class="col">
+      <p class="tit">③ 지인 소개</p>
+      <p class="sit">공통 지인이 다리</p>
+      <div class="kt"><div class="kt-head">‹ 그 사람</div><div class="kt-body">
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">OO한테 이야기 많이 들었어요 ㅎㅎ</div></div></div>
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">미술 하신다던데, 전시회 저두 좋아해요</div></div></div>
+      </div></div>
+      <p class="key"><b>지인 보증 = 신뢰 기반. 들은 특징을 재료로</b></p>
+    </div>
+  </div>
+  <div class="box key"><span class="lbl">로드 번따는 밤·낮으로 또 갈린다</span><b>밤</b>(클럽·술자리): 술·분위기 텐션이라 다음 날 식기 쉽다 → 가볍게 재시동. <b>낮</b>(길·카페): 맨정신 용기라 또렷이 기억한다 → 그 순간을 진심으로 소환.</div>
+</section>
+
+<section class="slide">
+  <p class="kicker">첫 톡 유형 3종</p>
+  <h2 class="head">단서 하나로 문을 연다</h2>
+  <div class="kt3">
+    <div class="col">
+      <p class="tit">① 그날 상황 소환</p>
+      <p class="sit">번호 딴 직후</p>
+      <div class="kt"><div class="kt-head">‹ 그 사람</div><div class="kt-body">
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">아까 갑자기 말 걸어서 놀랐죠 ㅋㅋ</div></div></div>
+        <div class="kt-row kt-her"><div class="kt-av">🙂</div><div class="kt-wrap"><div class="kt-msg">ㅋㅋㅋ 좀 놀라긴 했어요</div></div></div>
+      </div></div>
+      <p class="key"><b>둘만 아는 순간 → 복붙 톡과 가장 멀다</b></p>
+    </div>
+    <div class="col">
+      <p class="tit">② 프사 추측게임</p>
+      <p class="sit">정보가 적을 때</p>
+      <div class="kt"><div class="kt-head">‹ 그 사람</div><div class="kt-body">
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">왠지 강아지파일 것 같은데</div></div></div>
+        <div class="kt-row kt-her"><div class="kt-av">😏</div><div class="kt-wrap"><div class="kt-msg">저 고양이파예요 ㅋㅋ</div></div></div>
+      </div></div>
+      <p class="key"><b>맞아도 틀려도 답이 따라온다</b></p>
+    </div>
+    <div class="col">
+      <p class="tit">③ 상태메시지 활용</p>
+      <p class="sit">상메에 단서 있을 때</p>
+      <div class="kt"><div class="kt-head">‹ 그 사람</div><div class="kt-body">
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">상메 보니 요즘 그 노래 빠지셨나봐요 ㅋㅋ</div></div></div>
+        <div class="kt-row kt-her"><div class="kt-av">😮</div><div class="kt-wrap"><div class="kt-msg">헐 어떻게 알았지</div></div></div>
+      </div></div>
+      <p class="key"><b>"당신 걸 봤다"는 신호, 늘 새 소재</b></p>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <p class="kicker">인스타로 말 걸기</p>
+  <h2 class="head">인스타는 <b>단서 보물창고</b></h2>
+  <div class="box key"><span class="lbl">핵심</span>프사 한 장과는 비교가 안 된다. 아이디·소개란·피드 수십 장 — 단서가 없는 게 아니라 <b>안 본 것</b>이다.</div>
+  <table>
+    <tr><th>피드 모습</th><th>읽히는 성향</th><th>이렇게 던진다</th></tr>
+    <tr><td>여행·맛집 많음</td><td>활동적·외향</td><td>그 장소·음식을 소재로</td></tr>
+    <tr><td>본인 사진 적음</td><td>내향·신중</td><td>"뭔가 되게 I일 거 같아요 ㅋㅋ"</td></tr>
+    <tr><td>피드 잘 꾸며짐</td><td>부지런·감각</td><td>외모 말고 그 감각을 칭찬</td></tr>
+    <tr><td>운동·취미 꾸준</td><td>자기관리</td><td>"꾸준한 거 멋있다"</td></tr>
+  </table>
+  <div class="box key" style="margin-top:14px"><span class="lbl">아이디도 대화 소재다</span><b>vely · nabi</b> 같은 독특한 아이디 → "아이디 무슨 뜻이에요? ㅎㅎ" 한 줄이면 자연스럽게 열린다.</div>
+</section>
+<section class="slide">
+  <p class="kicker">스토리 → DM</p>
+  <h2 class="head">스토리에 반응하면, 자연스럽게 DM이 열린다</h2>
+  <div style="display:flex;gap:36px;justify-content:center;align-items:center;margin-top:6px">
+    <div class="igstory" style="height:372px">
+      <div class="igstory-bar"><i></i></div>
+      <div class="igstory-top"><span class="av">🙂</span><span>minji_</span><span style="opacity:.7;font-weight:400">2시간</span></div>
+      <div class="igstory-mid"><span class="emoji">☕</span><span class="igstory-cap">성수 카페 발견 🤍</span></div>
+      <div class="igstory-reply"><div class="inp">여기 어디예요? 분위기 좋다 ㅋㅋ</div><span style="color:#fff;font-size:17px">➤</span></div>
+    </div>
+    <span class="arr" style="font-size:32px">→</span>
+    <div class="igdm">
+      <div class="igdm-head"><span class="av"></span><span>minji_</span></div>
+      <div class="igdm-body">
+        <div class="igdm-reply"><div class="thumb">☕</div><div class="rt">내 스토리 답장<br>"여기 어디예요? 분위기 좋다 ㅋㅋ"</div></div>
+        <div class="igdm-her">아 성수동 ○○카페요! ㅎㅎ</div>
+        <div class="igdm-me">오 거기 가보고 싶었는데 ㅋㅋ 커피도 맛있어요?</div>
+        <div class="igdm-her">네 라떼 진짜 맛있어요!</div>
+      </div>
+    </div>
+  </div>
+  <div class="box key" style="margin-top:12px"><span class="lbl">핵심</span>스토리 반응은 부담이 <b>0</b>이다. "그냥 궁금해서" 한 줄이 DM 한 칸을 자연스럽게 연다. 첫 줄부터 약속은 금물.</div>
+</section>
+
+<section class="slide center">
+  <span class="tag" style="background:var(--purple)">실습</span>
+  <h2 class="head" style="margin-top:20px">머릿속 그 사람에게 보낼 첫 톡, 한 줄 써보기</h2>
+  <p class="big muted">프사·인스타·그날 상황에서 <b>단서 하나</b>를 고르고 → 그 사람에게만 할 수 있는 한마디로 가볍게.</p>
+  <div class="selfcheck">
+    <p class="sc-lbl">✅ 보내기 전 셀프체크 <span style="color:var(--muted);font-weight:600;font-size:14px">· 워크북 PART 1</span></p>
+    <div class="sc-item">그 사람'에게만' 할 수 있는 말인가? (누구에게나 OK면 ✕)</div>
+    <div class="sc-item">"안녕하세요"처럼 카톡함에 묻히는 인사는 아닌가?</div>
+    <div class="sc-item">상대가 1초 만에 가볍게 답할 수 있나?</div>
+  </div>
+</section>
+
+<section class="slide center">
+  <p class="kicker">잠깐, 같이 생각해보기</p>
+  <h2 class="head" style="font-size:40px">보낸 톡에 숫자 1이 안 사라집니다.<br>지금 당신은 뭘 하고 있나요?</h2>
+  <p class="big muted" style="margin-top:20px">✋ 솔직하게 손 들어보세요</p>
+</section>
+
+<section class="slide center">
+  <span class="tag">4강</span>
+  <p class="serif divider-title" style="margin-top:24px">답장이 늦을 때 · 읽씹 대응</p>
+  <p class="big muted">답이 안 와도 무너지지 않는 사람이 결국 이긴다</p>
+</section>
+
+<section class="slide">
+  <p class="kicker">왜 무너지나</p>
+  <h2 class="head">답장 속도는 <b>관심의 척도가 아니다</b></h2>
+  <p class="muted">답이 30분째 없으면 초보는 벌써 결론낸다 — "아, 관심 없구나." 그리고 그 하나에 꽂혀 재촉한다.</p>
+  <p class="big" style="margin:18px 0 8px">답장이 늦는 이유는 수십 가지다</p>
+  <div class="flow">
+    <span class="step">일하는 중</span>
+    <span class="step">친구와 있음</span>
+    <span class="step">폰 안 봄</span>
+    <span class="step">깜빡함</span>
+    <span class="step">고민 중</span>
+    <span class="step" style="opacity:.45">…관심 없음</span>
+  </div>
+  <div class="box key"><span class="lbl">핵심</span>"관심 없음"은 그 수많은 이유 중 <b>하나일 뿐</b>이다. 늦었다는 사실 하나로 결론 내릴 수 없다.</div>
+</section>
+
+<section class="slide">
+  <p class="kicker">답장이 늦을 때</p>
+  <h2 class="head">재촉은 가장 빠른 자폭</h2>
+  <p class="muted">늦었다고 짚는 순간, 살아 있던 답장도 끊긴다. 그냥 어제처럼 이어가라.</p>
+  <div class="grid2">
+    <div class="box bad">
+      <span class="lbl">✕ 이렇게 말고</span>
+      <p>여: 헐 이제 봤어요 ㅠㅠ</p>
+      <p>나: 왜 이제 답해요 ㅎㅎ 기다렸잖아요</p>
+      <p class="muted">→ 미안함 + 부담을 동시에 안긴다</p>
+    </div>
+    <div class="box good">
+      <span class="lbl">✓ 이렇게</span>
+      <p>여: 헐 이제 봤어요 ㅠㅠ</p>
+      <p>나: ㅋㅋ 점심은 뭐 드셨어요?</p>
+      <p class="muted">→ 아무 일 없던 듯 = 매력</p>
+    </div>
+  </div>
+  <div class="box psych"><span class="lbl">💡 왜 통할까</span>재촉은 '아쉬운 쪽은 나'라는 신호 — 그 순간 <b>내 값이 떨어진다.</b> 사람은 안달하지 않는 쪽에 더 끌린다.</div>
+</section>
+
+<section class="slide">
+  <p class="kicker">잘 기다리는 법</p>
+  <h2 class="head">정 안 오면, <b>며칠 뒤 딱 한 번</b></h2>
+  <p class="muted">바로 다시 보내면 급해 보인다. 며칠의 간격이 "여유 있는 사람"이라는 인상을 만든다.</p>
+  <div class="flow" style="margin:18px 0">
+    <span class="step">답장 없음</span><span class="arr">→</span>
+    <span class="step">며칠 기다림</span><span class="arr">→</span>
+    <span class="step">가볍게 한 번</span><span class="arr">→</span>
+    <span class="step" style="background:#fef2f2;color:var(--red)">없으면 깔끔하게 정리</span>
+  </div>
+  <div class="grid2">
+    <div class="box good"><span class="lbl">✓ 템포도 맞춘다</span>상대는 2시간 만에 답하는데 나만 1초컷이면 그 불균형이 '매달림'으로 보인다. 느긋하면 나도 느긋하게.</div>
+    <div class="box key"><span class="lbl">핵심</span>답장은 시합이 아니다. 빨리 답하는 쪽이 아니라 <b>여유 있는 쪽</b>이 이긴다.</div>
+  </div>
+</section>
+
+<section class="slide">
+  <p class="kicker">며칠 뒤</p>
+  <h2 class="head">다시 던지는 한마디</h2>
+  <p class="muted">지난 침묵을 한 글자도 건드리지 마라. "오랜만이에요"조차 공백에 도장을 찍는다.</p>
+  <div class="ktc">
+    <div class="kt">
+      <div class="kt-head">‹ 예린</div>
+      <div class="kt-body">
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">예린씨 잘 들어가셨어요? ㅎㅎ</div></div></div>
+        <div class="kt-sep">3일 뒤</div>
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">헐 거기도 첫눈 와요?? 여긴 지금 미친듯이 쏟아져요 ㅋㅋㅋ</div></div></div>
+        <div class="kt-row kt-her"><div class="kt-av">🙂</div><div class="kt-wrap"><div class="kt-msg">헉 진짜요?? 여기도 방금 오기 시작했어요 ㅋㅋ</div></div></div>
+      </div>
+    </div>
+    <div class="box key"><span class="lbl">핵심</span>변명을 안 시키는 명분 한 줄이면, 끊겼던 시간을 의식조차 안 한다.</div>
+  </div>
+</section>
+
+<section class="slide">
+  <p class="kicker">읽씹 대응</p>
+  <h2 class="head">상황별 3분류, 답은 다르다</h2>
+  <p class="muted">공통 원칙은 하나 — 추궁 금지. 며칠 뒤, 아무 일 없던 듯, 딱 한 번.</p>
+  <svg viewBox="0 0 780 330" style="width:100%;height:auto;margin-top:10px" font-family="Pretendard,sans-serif" text-anchor="middle">
+    <defs><marker id="ah3" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#94a3b8"/></marker></defs>
+    <g stroke="#94a3b8" stroke-width="2" fill="none" marker-end="url(#ah3)">
+      <path d="M152,148 C196,104 226,66 226,62"/>
+      <line x1="152" y1="159" x2="222" y2="163"/>
+      <path d="M152,170 C196,224 226,260 226,264"/>
+      <line x1="406" y1="62" x2="492" y2="62"/>
+      <line x1="406" y1="165" x2="492" y2="165"/>
+      <line x1="406" y1="268" x2="492" y2="268"/>
+    </g>
+    <g font-size="15" font-weight="700">
+      <g><rect x="10" y="125" width="142" height="68" rx="12" fill="#fef2f2" stroke="#dc2626" stroke-width="2"/><text x="81" y="156" fill="#dc2626">읽씹·안읽씹</text><text x="81" y="178" fill="#b45309" font-size="12.5">답 없음 · 추궁 ✕</text></g>
+      <g><rect x="226" y="36" width="180" height="52" rx="11" fill="#fffbeb" stroke="#d97706" stroke-width="2"/><text x="316" y="68" fill="#b45309">① 처음부터 읽씹</text></g>
+      <g><rect x="226" y="139" width="180" height="52" rx="11" fill="#fffbeb" stroke="#d97706" stroke-width="2"/><text x="316" y="171" fill="#b45309">② 연락 중 끊김</text></g>
+      <g><rect x="226" y="242" width="180" height="52" rx="11" fill="#fffbeb" stroke="#d97706" stroke-width="2"/><text x="316" y="274" fill="#b45309">③ 자주 씹힘</text></g>
+      <g><rect x="492" y="36" width="214" height="52" rx="11" fill="#1e3a8a"/><text x="599" y="68" fill="#fff">며칠 뒤 처음처럼</text></g>
+      <g><rect x="492" y="139" width="214" height="52" rx="11" fill="#1e3a8a"/><text x="599" y="171" fill="#fff">새 얘기로 리셋</text></g>
+      <g><rect x="492" y="242" width="214" height="52" rx="11" fill="#2563eb"/><text x="599" y="274" fill="#fff">새 얘기 + 빠른 전화</text></g>
+    </g>
+  </svg>
+  <p class="muted" style="margin-top:8px;text-align:center;font-size:14px">예시 — ① "안녕하세요 ㅋㅋ 그날 그분이에요" · ② "어제 그 카페 결국 가봤어요" · ③ 새 소재 던지고 "잠깐 3분만 통화돼요?"</p>
+</section>
+
+<section class="slide">
+  <p class="kicker">다시 거는 명분 5선</p>
+  <h2 class="head">지난 침묵을 <b>건드리지 않는</b> 한마디</h2>
+  <p class="muted">"오랜만이에요" "잘 지냈어요?" 같은 인사조차 공백에 도장을 찍는다. 어제도 대화하던 사이처럼 툭 던진다.</p>
+  <table style="margin-top:14px">
+    <tr><th style="width:34%">명분</th><th>예시 한마디</th></tr>
+    <tr><td><b>① 우연히 본 것</b></td><td>방금 똑같이 생긴 강아지 봤어 ㅋㅋ 지수씨네 멍멍이 생각남</td></tr>
+    <tr><td><b>② 계절·날씨</b></td><td>밖에 비 미친듯이 옴 우산 챙겼어요?? ㅋㅋ</td></tr>
+    <tr><td><b>③ 공통 관심사</b></td><td>저번에 말한 그 카페 우리 동네에 생김 ㅋㅋ</td></tr>
+    <tr><td><b>④ 가벼운 질문</b></td><td>매운 거 좋아하면 떡볶이 vs 마라탕 뭐 추천? ㅋㅋ</td></tr>
+    <tr><td><b>⑤ 그 사람 관련</b></td><td>아 맞다 이번주 그 시험 본다 했죠? 잘 봤어요?</td></tr>
+  </table>
+  <div class="box psych" style="margin-top:14px"><span class="lbl">💡 왜 통할까</span>변명을 떠올려야 하는 순간 대화는 숙제가 된다. 명분은 답할 거리만 주고 해명할 거리는 없앤다.</div>
+</section>
+
+<section class="slide center">
+  <span class="tag" style="background:var(--purple)">실습</span>
+  <h2 class="head" style="margin-top:20px">지금 읽씹·잠수 중인 그 사람에게 보낼 한 줄</h2>
+  <p class="big muted">지난 침묵은 한 글자도 언급 말 것. "왜 답 없었어요" 금지.</p>
+  <div class="box key" style="margin-top:24px;text-align:left">
+    <span class="lbl">명분 5선</span>우연히 본 것 · 계절·날씨 · 공통 관심사 · 가벼운 질문 · 그 사람 관련
+  </div>
+  <p class="muted">방금 떠오른 듯 툭 — 어제도 대화하던 사이처럼. <b style="color:var(--purple)">✍ 워크북 PART 1</b></p>
+</section>
+
+<section class="slide center">
+  <span class="tag" style="background:var(--navy)">휴식</span>
+  <h2 class="head" style="margin-top:20px">쉬는 시간 · 10분</h2>
+  <p class="big muted">물 한 잔 하고 오세요. 곧 이어집니다.</p>
+</section>
+
+
+<section class="slide center">
+  <p class="kicker">잠깐, 같이 생각해보기</p>
+  <h2 class="head" style="font-size:40px">답이 왔는데 '네 ㅋㅋ' 딱 한 줄.<br>다음 톡, 뭐라고 보낼래요?</h2>
+  <p class="big muted" style="margin-top:20px">🤔 머릿속에 한 문장 떠올리기</p>
+</section>
+
+<section class="slide center">
+  <span class="tag">5강</span>
+  <p class="serif divider-title" style="margin-top:24px">대화 운영 — 답을 받은 뒤가 진짜다</p>
+  <p class="big muted" style="margin-top:18px">단답 · 감정 입히기 · 받아치기 · 텐션 · 놀 거리 · 캐치볼</p>
+  <p class="muted" style="margin-top:12px">대화엔 <b>온도</b>가 있다 — 데우거나, 식거나. 이 강은 '데우는 법'이다.</p>
+</section>
+
+<section class="slide center">
+  <p class="kicker">대화 운영</p>
+  <h2 class="head">답을 받은 뒤가 <b>진짜</b>다</h2>
+  <p class="big muted" style="margin-top:14px">답장까지는 다들 온다. 무너지는 건 그 다음.</p>
+  <div class="flow" style="margin-top:34px">
+    <span class="step">첫 톡</span>
+    <span class="arr">→</span>
+    <span class="step">답장 도착</span>
+    <span class="arr">→</span>
+    <span class="step" style="opacity:.55">2~5턴</span>
+  </div>
+  <div class="box key" style="margin-top:30px"><span class="lbl">핵심</span>답 받은 직후 <b>2~5턴</b> — 제일 많은 번호가 죽는 자리다</div>
+</section>
+
+<section class="slide">
+  <p class="kicker">카톡 = 턴제 게임</p>
+  <h2 class="head">카톡은 <b>턴제 게임</b>이다</h2>
+  <div style="display:flex;gap:34px;align-items:center;margin-top:10px">
+    <div style="flex:0 0 588px">
+      <div class="pk-screen" id="pkScreen">
+        <span class="pk-badge">내 턴 ▶</span>
+        <svg class="pk-svg" viewBox="0 0 320 176" role="img" aria-label="야생의 여자가 나타났다">
+          <ellipse cx="238" cy="88" rx="62" ry="14" fill="#cfe3ba"/>
+          <ellipse cx="74" cy="152" rx="72" ry="16" fill="#cfe3ba"/>
+          <g transform="translate(150,40)">
+            <rect x="-6" y="-13" width="96" height="23" rx="6" fill="#fff" stroke="#384c6b" stroke-width="2"/>
+            <text x="2" y="4" font-size="12" font-weight="800" fill="#384c6b" font-family="ui-monospace,monospace">호감</text>
+            <g transform="translate(36,-1)">
+              <circle id="pkg0" cx="0" cy="0" r="4.5" fill="#e5e5e5" stroke="#384c6b" stroke-width="1.4"/>
+              <circle id="pkg1" cx="13" cy="0" r="4.5" fill="#e5e5e5" stroke="#384c6b" stroke-width="1.4"/>
+              <circle id="pkg2" cx="26" cy="0" r="4.5" fill="#e5e5e5" stroke="#384c6b" stroke-width="1.4"/>
+              <circle id="pkg3" cx="39" cy="0" r="4.5" fill="#e5e5e5" stroke="#384c6b" stroke-width="1.4"/>
+              <circle id="pkg4" cx="52" cy="0" r="4.5" fill="#e5e5e5" stroke="#384c6b" stroke-width="1.4"/>
+            </g>
+          </g>
+          <g transform="translate(206,24)"><g class="pk-wild">
+            <g class="pk-spk" fill="#ffd23b">
+              <path d="M-6,6 l2,5 l5,2 l-5,2 l-2,5 l-2,-5 l-5,-2 l5,-2 z"/>
+              <path d="M64,-4 l1.6,4 l4,1.6 l-4,1.6 l-1.6,4 l-1.6,-4 l-4,-1.6 l4,-1.6 z"/>
+            </g>
+            <path d="M8,12 Q6,3 30,3 Q54,3 52,12 L54,52 Q52,60 46,55 L46,27 Q30,21 14,27 L14,55 Q8,60 6,52 Z" fill="#5b3b28"/>
+            <rect x="16" y="9" width="28" height="26" rx="11" fill="#ffdcc2"/>
+            <path d="M14,15 Q16,5 30,5 Q44,5 46,15 Q40,10 30,11 Q20,10 14,15 Z" fill="#6a4530"/>
+            <ellipse cx="24" cy="22" rx="2.6" ry="3.4" fill="#2a2a2a"/>
+            <ellipse cx="36" cy="22" rx="2.6" ry="3.4" fill="#2a2a2a"/>
+            <circle cx="25" cy="21" r="0.9" fill="#fff"/><circle cx="37" cy="21" r="0.9" fill="#fff"/>
+            <rect x="18" y="26" width="5" height="3" rx="1.5" fill="#ff9db0"/>
+            <rect x="37" y="26" width="5" height="3" rx="1.5" fill="#ff9db0"/>
+            <path d="M26,29 Q30,32 34,29" stroke="#c2564f" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+            <path d="M18,35 L42,35 L50,63 L10,63 Z" fill="#ff6a8a"/>
+            <path d="M18,35 L42,35 L44,43 L16,43 Z" fill="#ff85a1"/>
+            <rect x="10" y="37" width="6" height="16" rx="3" fill="#ffdcc2"/>
+            <rect x="44" y="37" width="6" height="16" rx="3" fill="#ffdcc2"/>
+            <g transform="translate(58,18)"><path class="pk-heart" d="M0,3 C0,-2 7,-2 7,3 C7,-2 14,-2 14,3 C14,8 7,12 7,13 C7,12 0,8 0,3 Z" fill="#ff3b5c"/></g>
+          </g></g>
+          <g transform="translate(38,94)"><g class="pk-me">
+            <path d="M6,32 Q10,18 34,18 Q58,18 62,32 L64,60 L4,60 Z" fill="#2f4260"/>
+            <path d="M6,32 Q10,18 34,18 Q58,18 62,32 L62,36 L6,36 Z" fill="#3a5075"/>
+            <rect x="20" y="8" width="28" height="16" rx="7" fill="#3a2a1e"/>
+            <path d="M17,12 Q17,0 34,0 Q51,0 51,12 Q34,8 17,12 Z" fill="#e23b3b"/>
+            <rect x="16" y="11" width="36" height="4" rx="2" fill="#c62f2f"/>
+            <circle cx="34" cy="3" r="2.4" fill="#fff"/>
+            <rect x="52" y="22" width="8" height="20" rx="4" fill="#3a5075" transform="rotate(18 56 32)"/>
+            <g transform="translate(61,7) rotate(12)">
+              <rect x="0" y="0" width="16" height="27" rx="3" fill="#2a2a2a"/>
+              <rect x="1.6" y="1.6" width="12.8" height="23.8" rx="2" fill="#ffe400"/>
+              <rect x="3" y="4.5" width="10" height="3" rx="1.5" fill="#fff"/>
+              <rect x="3" y="10" width="7" height="3" rx="1.5" fill="#fff"/>
+              <rect x="3" y="15.5" width="9" height="3" rx="1.5" fill="#fff"/>
+            </g>
+          </g></g>
+        </svg>
+        <div class="pk-flash"></div>
+        <div class="pk-dbox">
+          <p><span id="pkt1"></span><span id="pkbrk"></span><span id="pkt2"></span><span class="pk-cur blink" id="pkcur"></span></p>
+          <span class="pk-arw" id="pkarw">▼</span>
+        </div>
+      </div>
+    </div>
+    <div style="flex:1">
+      <p class="muted" style="margin-bottom:18px">메시지 하나가 한 '수'. 내 턴에 한 수 두고 넘기면, 상대 턴이 온다.</p>
+      <div class="flow" style="flex-direction:column;align-items:stretch;gap:12px;margin:0">
+        <span class="step" style="text-align:left"><b>① 내 턴</b> — 한 수 두고 바로 넘긴다</span>
+        <span class="step" style="text-align:left"><b>② 상대 턴</b> — 올 때까지 기다린다</span>
+      </div>
+      <div class="box bad" style="margin-top:20px"><span class="lbl">✕ 반칙</span>답 없는데 또, 또 — 연타로 턴을 뺏는 순간 상대는 게임을 끈다. 좋은 수일수록 아껴서 한 번에.</div>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <p class="kicker">차가운 단답</p>
+  <h2 class="head">"네" "ㅋㅋ"가 와도, 끝이 아니다</h2>
+  <p class="muted">단답 = 거절이 아니라 <b>아직 안 데워진 것</b>. 더 들이대거나 사라지지 말고, 순서대로 푼다.</p>
+  <table style="margin-top:18px">
+    <tr><th style="width:170px">단계</th><th>쉽게 말하면</th></tr>
+    <tr><td><b>① 힘 빼기</b></td><td>짧게 온 만큼 나도 가볍게. 장문 금지, 셀프디스로 툭 던진다</td></tr>
+    <tr><td><b>② 화제 선점</b></td><td>"뭐 했어요?"로 떠넘기지 말고, 내 얘기부터 깐다</td></tr>
+    <tr><td><b>③ 궁금증</b></td><td>다 말하지 않고 한 칸 비워서, 상대가 묻고 싶게 만든다</td></tr>
+    <tr><td><b>④ 티키타카</b></td><td>짧게 자주 주고받는 리듬으로 갈아탄다</td></tr>
+  </table>
+  <div class="box psych" style="margin-top:14px"><span class="lbl">💡 왜 통할까</span>단답에 장문으로 답하면 '나는 매여 있다'는 신호 — <b>값이 떨어진다.</b> 가볍게 받으면 여유가 값을 지키고, 데워지는 건 그다음이다.</div>
+</section>
+
+<section class="slide">
+  <p class="kicker">차가운 단답 · 실전</p>
+  <h2 class="head">같은 "ㅋㅋ"가 이렇게 데워진다</h2>
+  <div class="ktc" style="margin-top:14px">
+    <div class="kt"><div class="kt-head">‹ 민지</div><div class="kt-body">
+      <div class="kt-row kt-her"><div class="kt-av">🙂</div><div class="kt-wrap"><div class="kt-msg">ㅋㅋ</div></div></div>
+      <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">나 방금 이 답장 세 번 고쳐 쓴 거 티 안 나죠? ㅋㅋ</div></div></div>
+      <div class="kt-row kt-her"><div class="kt-av">😆</div><div class="kt-wrap"><div class="kt-msg">ㅋㅋㅋㅋ 뭐예요</div></div></div>
+      <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">오늘 회사에서 어이없는 일 있었는데</div></div></div>
+      <div class="kt-row kt-her"><div class="kt-av">🙂</div><div class="kt-wrap"><div class="kt-msg">뭔데요?</div></div></div>
+      <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">부장님이 회의 끝나고 "그 안건이 뭐였죠" 하더라고요 ㅋㅋ</div></div></div>
+      <div class="kt-row kt-her"><div class="kt-av">😂</div><div class="kt-wrap"><div class="kt-msg">ㅋㅋㅋㅋ 미친 진짜요?</div></div></div>
+    </div></div>
+    <div class="ptpanel">
+      <p class="lead">각 줄이 어느 단계?</p>
+      <div class="ptlist">
+        <div class="it"><b>① 힘 빼기</b> — "세 번 고쳐 쓴 거 티 안 나죠?" 셀프디스</div>
+        <div class="it"><b>② 화제 선점</b> — "어이없는 일 있었는데"</div>
+        <div class="it"><b>③ 궁금증</b> — 다 말 안 함 → 상대가 "뭔데요?"</div>
+        <div class="it"><b>④ 티키타카</b> — "미친 진짜요?" 리듬 시작</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <p class="kicker">무엇을 물어볼까</p>
+  <h2 class="head">질문에도 <b>허들</b>이 있다 — 사다리처럼</h2>
+  <p class="muted">낮은 것부터 한 칸씩. 처음 본 사람에게 연애관부터는 부담, 며칠째 이름·나이만 맴돌면 정체.</p>
+  <table style="margin-top:16px">
+    <tr><th style="width:160px">단계</th><th>물어볼 것 (허들 낮음 → 높음)</th></tr>
+    <tr><td><b>1단계</b><br><span style="color:var(--muted);font-size:15px">첫 대화</span></td><td>이름 · 나이 · 사는 곳 <b>"이 근처 자주 와요?"</b> · 하는 일 <b>"요즘 바빠요?"</b></td></tr>
+    <tr><td><b>2단계</b><br><span style="color:var(--muted);font-size:15px">두세 번 뒤</span></td><td>취미·주말 <b>"주말엔 뭐 해요?"</b> · 좋아하는 것 · 요즘 빠진 것 · 만나는 스타일</td></tr>
+    <tr><td><b>3단계</b><br><span style="color:var(--muted);font-size:15px">편해진 뒤</span></td><td>하루 패턴·연락 편한 때 · 연애관(가볍게) · 가족 · 계획·가치관</td></tr>
+  </table>
+  <div class="box key" style="margin-top:16px"><span class="lbl">핵심</span>이름·나이만 대놓고 묻고, 나머지는 <b>대화 소재로 흘러나오게</b>. 한 번에 하나씩, 답엔 <b>리액션 먼저</b>.</div>
+</section>
+
+<section class="slide">
+  <p class="kicker">캐치볼 · 어떻게 물을까</p>
+  <h2 class="head">질문만 던지면 <b>취조</b>가 된다</h2>
+  <div class="kt2" style="margin-top:20px">
+    <div class="col b">
+      <p class="tit">✕ 취조형</p>
+      <div class="kt"><div class="kt-head">‹ 상대</div><div class="kt-body">
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">주말에 뭐 했어요?</div></div></div>
+        <div class="kt-row kt-her"><div class="kt-av">🙂</div><div class="kt-wrap"><div class="kt-msg">그냥 집에 있었어요</div></div></div>
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">아 그렇구나… 평소엔 뭐 하세요?</div></div></div>
+      </div></div>
+      <p class="cap">질문 → 답 → 질문 — 상대만 계속 일한다</p>
+    </div>
+    <div class="col g">
+      <p class="tit">✓ 캐치볼형</p>
+      <div class="kt"><div class="kt-head">‹ 상대</div><div class="kt-body">
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">나 주말에 등산 갔다가 다리 풀려서 고생 ㅋㅋ</div></div></div>
+        <div class="kt-row kt-her"><div class="kt-av">😆</div><div class="kt-wrap"><div class="kt-msg">ㅋㅋㅋ 어디 갔는데요?</div></div></div>
+      </div></div>
+      <p class="cap">내 얘기 먼저 → 상대가 먼저 물어온다 (역할 역전)</p>
+    </div>
+  </div>
+  <div class="box psych" style="margin-top:16px"><span class="lbl">💡 왜 통할까</span>내가 한 겹 열면 상대도 한 겹 연다. 질문만 던지면 이 주고받기가 없어 대화가 굳는다.</div>
+</section>
+
+<section class="slide">
+  <p class="kicker">정보형 → 감정형</p>
+  <h2 class="head">사실 말고 <b>장면</b>을 물어라</h2>
+  <p class="muted">정보만 쌓이는 대화는 설문조사다. 거리를 좁히는 건 사실이 아니라 거기 묻은 감정.</p>
+  <div class="kt2" style="margin-top:22px">
+    <div class="col b">
+      <p class="tit">✕ 정보만 캐기</p>
+      <div class="kt"><div class="kt-head">‹ 상대</div><div class="kt-body">
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">무슨 일 하세요?</div></div></div>
+        <div class="kt-row kt-her"><div class="kt-av">🙂</div><div class="kt-wrap"><div class="kt-msg">간호사예요</div></div></div>
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">아 어느 병원이요?</div></div></div>
+      </div></div>
+      <p class="cap">신상 입력란 채우는 기분 → 답할수록 지친다</p>
+    </div>
+    <div class="col g">
+      <p class="tit">✓ 감정·장면으로</p>
+      <div class="kt"><div class="kt-head">‹ 상대</div><div class="kt-body">
+        <div class="kt-row kt-her"><div class="kt-av">🙂</div><div class="kt-wrap"><div class="kt-msg">간호사예요</div></div></div>
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">헐 밤샘 근무도 해요? 그거 사람 할 짓 아니던데 ㅋㅋ</div></div></div>
+        <div class="kt-row kt-her"><div class="kt-av">😆</div><div class="kt-wrap"><div class="kt-msg">ㅋㅋㅋ 나이트 뛰면 진짜 좀비돼요</div></div></div>
+      </div></div>
+      <p class="cap">"좀비됨" 같은 디테일이 흘러나오며 온도가 생긴다</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <p class="kicker">받아칠 포인트</p>
+  <h2 class="head">초보·고수 차이는 <b>듣는 귀</b>다</h2>
+  <p class="muted">상대는 매 답장마다 받아칠 공을 흘린다. 새 화제를 짜내기 전에, 방금 굴러온 공부터 줍는다.</p>
+  <div class="kt2" style="margin-top:16px">
+    <div class="col b">
+      <p class="tit">✕ 포인트 흘리기</p>
+      <div class="kt"><div class="kt-head">‹ 그분</div><div class="kt-body">
+        <div class="kt-row kt-her"><div class="kt-av">🙂</div><div class="kt-wrap"><div class="kt-msg">어제 3시간 옷 골랐는데 결국 입던 거 입고 나갔어요 ㅋㅋ</div></div></div>
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">아 옷 고르는 거 어렵죠 ㅎㅎ 그래서 어디 갔어요?</div></div></div>
+      </div></div>
+      <p class="cap">자학 개그(멍석)를 영혼 없는 공감으로 뭉갬</p>
+    </div>
+    <div class="col g">
+      <p class="tit">✓ 포인트 잡아 되받기</p>
+      <div class="kt"><div class="kt-head">‹ 그분</div><div class="kt-body">
+        <div class="kt-row kt-her"><div class="kt-av">🙂</div><div class="kt-wrap"><div class="kt-msg">어제 3시간 옷 골랐는데 결국 입던 거 입고 나갔어요 ㅋㅋ</div></div></div>
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">ㅋㅋㅋ 3시간의 결론이 평소 그 옷이라니</div></div></div>
+        <div class="kt-row kt-her"><div class="kt-av">😆</div><div class="kt-wrap"><div class="kt-msg">ㅋㅋㅋ 내 인생 요약이에요</div></div></div>
+      </div></div>
+      <p class="cap">흘린 공을 콕 집으니 둘만의 장난으로 굴러간다</p>
+    </div>
+  </div>
+  <div class="box key"><span class="lbl">잡아야 할 포인트 3종</span><b>과장된 표현</b>("3시간"·"죽을 뻔") · <b>자학 농담</b> · <b>모순 디테일</b>("다이어트 중인데 치킨")</div>
+</section>
+
+<section class="slide">
+  <p class="kicker">텐션 미러링</p>
+  <h2 class="head">에너지를 <b>거울처럼</b> 맞춘다</h2>
+  <p class="muted">같은 "ㅋㅋ"도 온도가 다르다. 상대 텐션과 내 톤이 어긋나는 게 어색함의 정체다.</p>
+  <div class="kt2" style="margin-top:16px">
+    <div class="col b">
+      <p class="tit">✕ 텐션 안 맞음</p>
+      <div class="kt"><div class="kt-head">‹ 그분</div><div class="kt-body">
+        <div class="kt-row kt-her"><div class="kt-av">🤩</div><div class="kt-wrap"><div class="kt-msg">헐 대박!!! 저 그 콘서트 티켓팅 성공했어요!!! ㅠㅠㅠㅠ</div></div></div>
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">아 잘됐네요. 언제 가세요?</div></div></div>
+      </div></div>
+      <p class="cap">느낌표 3개에 마침표 1개 → 김 빠진다</p>
+    </div>
+    <div class="col g">
+      <p class="tit">✓ 텐션 맞추기</p>
+      <div class="kt"><div class="kt-head">‹ 그분</div><div class="kt-body">
+        <div class="kt-row kt-her"><div class="kt-av">🤩</div><div class="kt-wrap"><div class="kt-msg">헐 대박!!! 티켓팅 성공했어요!!! ㅠㅠㅠㅠ</div></div></div>
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">헐 진짜요?? 그거 피켓팅이라던데 손 떨려서 어떻게 잡아요 ㅋㅋ</div></div></div>
+        <div class="kt-row kt-her"><div class="kt-av">😆</div><div class="kt-wrap"><div class="kt-msg">ㅠㅠ 광클했어요 손가락 빠지는 줄</div></div></div>
+      </div></div>
+      <p class="cap">같이 올라타니 "후기 보내줄게요"까지 먼저 꺼낸다</p>
+    </div>
+  </div>
+  <div class="box psych"><span class="lbl">💡 왜 통할까</span>비슷한 리듬으로 반응하는 상대에게 뇌는 "내 편"이라 판단한다. 단, 상대보다 <b>반 박자 낮게</b> — 따라가되 추월하지 않는다.</div>
+</section>
+
+<section class="slide">
+  <p class="kicker">★ 대화의 엔진</p>
+  <h2 class="head">놀 거리를 <b>계속</b> 던져라</h2>
+  <p class="muted">대화는 할 말이 없어서가 아니라 '놀 거리'가 떨어져서 끊긴다. 던질 카드를 많이 쥐고 있어라.</p>
+  <div class="chk" style="margin-top:18px">
+    <div>추측 게임 — "왠지 집순이일 듯"</div>
+    <div>밸런스 게임 — "바다냐 산이냐"</div>
+    <div>MBTI 맞추기 — "딱 봐도 J인데?"</div>
+    <div>별명 붙이기 — "국밥파"</div>
+    <div>릴스·숏츠 공유 — "이거 완전 너 ㅋㅋ"</div>
+    <div>재밌는 사진·짤 — 상황에 맞게 투척</div>
+    <div>떡밥 — "이거 말하면 놀랄 텐데"</div>
+    <div>미션 — "명장면 딱 3개만"</div>
+    <div>받아치기 — 상대 단어 비틀기</div>
+  </div>
+  <div class="ktc" style="margin-top:20px">
+    <div class="kt"><div class="kt-head">‹ 민지</div><div class="kt-body">
+      <div class="kt-row kt-her"><div class="kt-av">😮‍💨</div><div class="kt-wrap"><div class="kt-msg">오늘 야근했어요 ㅠㅠ</div></div></div>
+      <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">야근하는 사람치고 답이 너무 빠른데요 ㅋㅋ 나랑 노는 거 아니죠?</div></div></div>
+      <div class="kt-row kt-her"><div class="kt-av">😏</div><div class="kt-wrap"><div class="kt-msg">ㅋㅋㅋ 들켰네</div></div></div>
+    </div></div>
+  </div>
+</section>
+
+<section class="slide">
+  <p class="kicker">놀 거리 9종 · 실전 (1)</p>
+  <h2 class="head">추측 · 밸런스 · MBTI</h2>
+  <div class="kt3">
+    <div class="col">
+      <p class="tit">① 추측 게임</p>
+      <p class="sit">맞히기로 관심 표현</p>
+      <div class="kt"><div class="kt-body">
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">왠지 강아지파일 것 같은데</div></div></div>
+        <div class="kt-row kt-her"><div class="kt-av">🙂</div><div class="kt-wrap"><div class="kt-msg">헐 어케 알았어요 ㅋㅋ</div></div></div>
+      </div></div>
+      <p class="key"><b>맞든 틀리든 대화가 열린다</b></p>
+    </div>
+    <div class="col">
+      <p class="tit">② 밸런스 게임</p>
+      <p class="sit">답이 무조건 나온다</p>
+      <div class="kt"><div class="kt-body">
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">치킨이냐 피자냐 평생 하나만</div></div></div>
+        <div class="kt-row kt-her"><div class="kt-av">🙂</div><div class="kt-wrap"><div class="kt-msg">무조건 치킨이죠</div></div></div>
+      </div></div>
+      <p class="key"><b>골라야 하니 답이 온다</b></p>
+    </div>
+    <div class="col">
+      <p class="tit">③ MBTI 맞추기</p>
+      <p class="sit">가벼운 분석 놀이</p>
+      <div class="kt"><div class="kt-body">
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">딱 봐도 J인데 맞죠?</div></div></div>
+        <div class="kt-row kt-her"><div class="kt-av">🙂</div><div class="kt-wrap"><div class="kt-msg">헐 J 맞아요 어케 알았지 ㅋㅋ</div></div></div>
+      </div></div>
+      <p class="key"><b>한 발 더 파고들 구실</b></p>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <p class="kicker">놀 거리 9종 · 실전 (2)</p>
+  <h2 class="head">별명 · 릴스/숏츠 · 짤</h2>
+  <div class="kt3">
+    <div class="col">
+      <p class="tit">④ 별명 붙이기</p>
+      <p class="sit">둘만의 호칭</p>
+      <div class="kt"><div class="kt-body">
+        <div class="kt-row kt-her"><div class="kt-av">🙂</div><div class="kt-wrap"><div class="kt-msg">저 마라탕 주 3회 먹어요 ㅋㅋ</div></div></div>
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">오늘부터 마라님이라 부른다 ㅋㅋ</div></div></div>
+      </div></div>
+      <p class="key"><b>호칭이 둘만의 언어가 된다</b></p>
+    </div>
+    <div class="col">
+      <p class="tit">⑤ 릴스·숏츠</p>
+      <p class="sit">"이거 완전 너야"</p>
+      <div class="kt"><div class="kt-body">
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">(영상) 이거 완전 ○○님인데 ㅋㅋ</div></div></div>
+        <div class="kt-row kt-her"><div class="kt-av">😆</div><div class="kt-wrap"><div class="kt-msg">ㅋㅋㅋ 헐 왜 나 같지</div></div></div>
+      </div></div>
+      <p class="key"><b>보다가 생각났다는 신호</b></p>
+    </div>
+    <div class="col">
+      <p class="tit">⑥ 재밌는 짤</p>
+      <p class="sit">말 대신 한 장</p>
+      <div class="kt"><div class="kt-body">
+        <div class="kt-row kt-her"><div class="kt-av">😮‍💨</div><div class="kt-wrap"><div class="kt-msg">오늘 진짜 피곤 ㅠㅠ</div></div></div>
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">(축 처진 강아지 짤) 지금 ○○님</div></div></div>
+      </div></div>
+      <p class="key"><b>긴 위로보다 짤 한 장</b></p>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <p class="kicker">놀 거리 9종 · 실전 (3)</p>
+  <h2 class="head">떡밥 · 미션 · 받아치기</h2>
+  <div class="kt3">
+    <div class="col">
+      <p class="tit">⑦ 떡밥</p>
+      <p class="sit">다 말하지 않는다</p>
+      <div class="kt"><div class="kt-body">
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">아 이거 말해도 되나 ㅋㅋ</div></div></div>
+        <div class="kt-row kt-her"><div class="kt-av">🙂</div><div class="kt-wrap"><div class="kt-msg">뭔데요?? 말해요</div></div></div>
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">음 다음에 ㅋㅋ</div></div></div>
+      </div></div>
+      <p class="key"><b>궁금하게 비워둔다</b></p>
+    </div>
+    <div class="col">
+      <p class="tit">⑧ 미션</p>
+      <p class="sit">상대를 참여시킨다</p>
+      <div class="kt"><div class="kt-body">
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">인생 영화 딱 세 개만 꼽아봐요</div></div></div>
+        <div class="kt-row kt-her"><div class="kt-av">🙂</div><div class="kt-wrap"><div class="kt-msg">음 1위는 인터스텔라!</div></div></div>
+      </div></div>
+      <p class="key"><b>대답할 거리를 만들어준다</b></p>
+    </div>
+    <div class="col">
+      <p class="tit">⑨ 받아치기</p>
+      <p class="sit">상대 단어를 비튼다</p>
+      <div class="kt"><div class="kt-body">
+        <div class="kt-row kt-her"><div class="kt-av">🙂</div><div class="kt-wrap"><div class="kt-msg">저 오늘 좀 예민해요 ㅠㅠ</div></div></div>
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">예민한 게 아니라 섬세한 거죠 ㅋㅋ</div></div></div>
+      </div></div>
+      <p class="key"><b>같은 말도 비틀면 매력</b></p>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <p class="kicker">사진으로 대화</p>
+  <h2 class="head">사진 한 장 = 얘깃거리 <b>열 개</b></h2>
+  <p class="muted">막힐 때 가장 강한 무기. "맛있겠다" 한마디로 끝내지 말고 디테일을 잡는다.</p>
+  <div class="ktc" style="margin-top:20px">
+    <div class="kt"><div class="kt-head">‹ 지수</div><div class="kt-body">
+      <div class="kt-row kt-her"><div class="kt-av">🍜</div><div class="kt-wrap"><div class="kt-msg">[국밥 사진] 오늘 점심 ㅎㅎ</div></div></div>
+      <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">못 참고 벌써 한 입 먹었네 ㅋㅋ 단무지는 어디 갔어요</div></div></div>
+      <div class="kt-row kt-her"><div class="kt-av">😋</div><div class="kt-wrap"><div class="kt-msg">헐 들켰다 ㅋㅋㅋ 단무지 추가 시켰어요</div></div></div>
+    </div></div>
+  </div>
+  <table style="margin-top:18px">
+    <tr><th>관찰 포인트</th><th>던지는 말</th></tr>
+    <tr><td>뭘 시켰나</td><td>"이거 무슨 메뉴예요?"</td></tr>
+    <tr><td>한 입 흔적</td><td>"못 참고 한 입 먹었네 ㅋㅋ"</td></tr>
+    <tr><td>빠진 것</td><td>"근데 단무지 어디 갔어요"</td></tr>
+  </table>
+</section>
+
+<section class="slide">
+  <p class="kicker">★ 4기법 통합 · 7턴 실전</p>
+  <h2 class="head">미지근한 "안녕"이 <b>약속 직전</b>까지</h2>
+  <div class="ktc" style="margin-top:6px">
+    <div class="kt"><div class="kt-head">‹ 그분</div><div class="kt-body">
+      <div class="kt-row kt-her"><div class="kt-av">🙂</div><div class="kt-wrap"><div class="kt-msg">안녕하세요</div></div></div>
+      <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">프로필 등산 사진, 진짜 다니시는 거예요 아니면 그날만 끌려간 거예요 ㅋㅋ</div></div></div>
+      <div class="kt-row kt-her"><div class="kt-av">😆</div><div class="kt-wrap"><div class="kt-msg">ㅋㅋㅋ 한 달에 한 번은 가요</div></div></div>
+      <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">오 의외다 인스타용인 줄 ㅋㅋ 근데 각도가 너무 프로던데</div></div></div>
+      <div class="kt-row kt-her"><div class="kt-av">🙂</div><div class="kt-wrap"><div class="kt-msg">헐 각도는 진심이에요 ㅋㅋ</div></div></div>
+      <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">각도에 진심인 사람… 같이 찍으면 나만 묻히겠는데</div></div></div>
+      <div class="kt-row kt-her"><div class="kt-av">😆</div><div class="kt-wrap"><div class="kt-msg">ㅋㅋㅋ 그건 알아서 잘 찍으세요</div></div></div>
+      <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">나중에 등산 갈 때 각도 좀 전수해줘요 ㅋㅋ</div></div></div>
+    </div></div>
+    <div class="ptpanel">
+      <p class="lead">어느 기법이 작동했나</p>
+      <div class="ptlist">
+        <div class="it"><b>단답 풀기</b> — "진짜냐 끌려갔냐" 선택지로 답 유도</div>
+        <div class="it"><b>정보→감정</b> — "인스타용?" 도발에 자기 농담 꺼냄</div>
+        <div class="it"><b>받아치기</b> — 흘린 "인스타용"을 "각도 프로"로 되받음</div>
+        <div class="it"><b>미러링+여유</b> — ㅋㅋ에 맞춰 셀프디스, 약속 씨앗만 심음</div>
+      </div>
+      <p style="font-size:14px;color:var(--purple);font-weight:800;margin-top:12px;line-height:1.45">💡 멘트가 아니라 <b>균형</b> — 주도(내 화제)+여유(셀프디스)가 값을 지킨다</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide center">
+  <span class="tag" style="background:var(--purple)">실습</span>
+  <h2 class="head" style="margin-top:20px">방금 받은 단답에 '놀 거리' 하나 만들어 던지기</h2>
+  <p class="big muted">최근 받은 단답("ㅋㅋ" "넵")을 떠올리고 — 추측 게임 / 밸런스 게임 / 별명 / 떡밥 중 하나를 골라 답장을 써보세요.</p>
+  <div class="selfcheck">
+    <p class="sc-lbl">✅ 던지기 전 셀프체크 <span style="color:var(--muted);font-weight:600;font-size:14px">· 워크북 PART 1</span></p>
+    <div class="sc-item">단답을 받아 새 '놀 거리'로 화제를 넘겼나? (재질문 ✕)</div>
+    <div class="sc-item">상대가 예/아니오로도 답할 만큼 가벼운가?</div>
+    <div class="sc-item">내 생각·반응이 한 스푼 섞였나? (취조 ✕)</div>
+  </div>
+</section>
+
+<section class="slide center">
+  <p class="kicker">잠깐, 같이 생각해보기</p>
+  <h2 class="head" style="font-size:40px">분명 친절하게 잘해줬는데,<br>'좋은 사람'에서 끝났습니다. 왜일까요?</h2>
+  <p class="big muted" style="margin-top:20px">✋ 겪어본 분?</p>
+</section>
+
+<section class="slide center">
+  <span class="tag">6강</span>
+  <p class="serif divider-title" style="margin-top:24px">매력적으로 말하기</p>
+</section>
+
+<section class="slide">
+  <p class="kicker">왜 '좋은 사람'에서 끝날까</p>
+  <h2 class="head">"좋은 사람인데, 설레진 않아요"</h2>
+  <p class="muted">대화는 안 끊기는데 밋밋하다. 문제는 <b>무슨 말</b>이 아니라 <b>어떻게</b> 말하느냐다.</p>
+  <div class="kt2">
+    <div class="col b">
+      <p class="tit">✕ 밋밋한 버전</p>
+      <div class="kt"><div class="kt-head">‹ 민지</div><div class="kt-body">
+        <div class="kt-row kt-her"><div class="kt-av">🙂</div><div class="kt-wrap"><div class="kt-msg">주말에 뭐 했어요?</div></div></div>
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">그냥 집에 있었어요</div></div></div>
+        <div class="kt-row kt-her"><div class="kt-av">🙂</div><div class="kt-wrap"><div class="kt-msg">아 그렇구나~</div></div></div>
+      </div></div>
+      <p class="cap">받은 공을 받기만 한다. 대화가 어디로도 안 간다.</p>
+    </div>
+    <div class="col g">
+      <p class="tit">✓ 매력 버전</p>
+      <div class="kt"><div class="kt-head">‹ 민지</div><div class="kt-body">
+        <div class="kt-row kt-her"><div class="kt-av">🙂</div><div class="kt-wrap"><div class="kt-msg">주말에 뭐 했어요?</div></div></div>
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">침대랑 한 몸 되는 수련 했어요 ㅋㅋ 거의 도 닦았어요</div></div></div>
+        <div class="kt-row kt-her"><div class="kt-av">🙂</div><div class="kt-wrap"><div class="kt-msg">ㅋㅋㅋㅋ뭐예요 그게</div></div></div>
+      </div></div>
+      <p class="cap">같은 정보에 '온도 한 스푼'을 얹어서 던진다.</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <p class="kicker">말투 · 카톡의 표정</p>
+  <h2 class="head">같은 <b>"네"</b>도 다르게 들린다</h2>
+  <p class="muted">카톡엔 표정도 목소리도 없다. 그 표정을 글자로 대신 그리는 게 말투다.</p>
+  <div class="kt2" style="margin-top:18px">
+    <div class="col b">
+      <p class="tit">✕ 온도 0</p>
+      <div class="kt"><div class="kt-head">‹ 상대</div><div class="kt-body">
+        <div class="kt-row kt-her"><div class="kt-av">🙂</div><div class="kt-wrap"><div class="kt-msg">내일 2시에 볼까요?</div></div></div>
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">네.</div></div></div>
+      </div></div>
+      <p class="cap">마침표 하나에 '화났나?' 싶어진다 — 벽</p>
+    </div>
+    <div class="col g">
+      <p class="tit">✓ 온도 한 방울</p>
+      <div class="kt"><div class="kt-head">‹ 상대</div><div class="kt-body">
+        <div class="kt-row kt-her"><div class="kt-av">🙂</div><div class="kt-wrap"><div class="kt-msg">내일 2시에 볼까요?</div></div></div>
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">넵 좋아요 ㅋㅋ</div></div></div>
+      </div></div>
+      <p class="cap">같은 승낙, 온도만 정반대</p>
+    </div>
+  </div>
+  <div class="box psych" style="margin-top:16px"><span class="lbl">💡 왜 통할까</span>텍스트엔 표정이 없어 뇌가 빈자리를 채운다 — 애매하면 <b>나쁜 쪽으로</b>. 말투 마커가 그 자리를 대신 채워 오해를 지운다.</div>
+</section>
+
+<section class="slide">
+  <p class="kicker">말투 · 온도 조절</p>
+  <h2 class="head">온도를 만드는 <b>작은 것들</b></h2>
+  <p class="muted">거창한 기술이 아니다. 방금 보낸 한 줄이 어떤 표정으로 도착할지 상상해보라.</p>
+  <table style="margin-top:16px">
+    <tr><th style="width:190px">요소</th><th>상대가 받는 느낌</th></tr>
+    <tr><td><b>ㅋㅋ · ㅎㅎ</b></td><td>웃는 표정 — 딱딱함을 녹인다</td></tr>
+    <tr><td><b>마침표 (.)</b></td><td>"네."는 차갑거나 화난 걸로 읽힌다</td></tr>
+    <tr><td><b>물결 (~) · 느낌표 (!)</b></td><td>부드러움 · 반가움 · 에너지</td></tr>
+    <tr><td><b>이모티콘</b></td><td>감정의 자막 — 타이밍·절제가 전부</td></tr>
+  </table>
+  <div class="box key" style="margin-top:16px"><span class="lbl">핵심 · 3원리</span>① 밋밋한 답엔 <b>온도 한 방울</b> · ② <b>상대 말투에 맞춤</b>(담백엔 담백) · ③ <b>과유불급</b> — ㅋㅋㅋㅋ 남발도 마침표 단답도 아닌 그 사이.</div>
+</section>
+
+<section class="slide">
+  <p class="kicker">말투 · 미러링</p>
+  <h2 class="head">상대 말투에 <b>맞춰라</b></h2>
+  <p class="muted">담백한 사람에겐 담백하게. 혼자 텐션 올리면 온도차만 커지고 '애쓰는 티'가 난다.</p>
+  <div class="kt2" style="margin-top:18px">
+    <div class="col b">
+      <p class="tit">✕ 혼자 텐션</p>
+      <div class="kt"><div class="kt-head">‹ 상대</div><div class="kt-body">
+        <div class="kt-row kt-her"><div class="kt-av">🙂</div><div class="kt-wrap"><div class="kt-msg">네 그날 괜찮아요</div></div></div>
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">오오 진짜요?? ㅋㅋㅋㅋ 완전 좋아요!! 기대된다 ㅎㅎ</div></div></div>
+        <div class="kt-row kt-her"><div class="kt-av">🙂</div><div class="kt-wrap"><div class="kt-msg">아 넵ㅎㅎ</div></div></div>
+      </div></div>
+      <p class="cap">온도차가 그대로 드러난다</p>
+    </div>
+    <div class="col g">
+      <p class="tit">✓ 온도 맞추기</p>
+      <div class="kt"><div class="kt-head">‹ 상대</div><div class="kt-body">
+        <div class="kt-row kt-her"><div class="kt-av">🙂</div><div class="kt-wrap"><div class="kt-msg">네 그날 괜찮아요</div></div></div>
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">좋아요 그럼 그날로 ㅋㅋ</div></div></div>
+        <div class="kt-row kt-her"><div class="kt-av">🙂</div><div class="kt-wrap"><div class="kt-msg">넵 그때 봬요</div></div></div>
+      </div></div>
+      <p class="cap">'이 사람 편하다'는 느낌</p>
+    </div>
+  </div>
+  <div class="box key" style="margin-top:16px"><span class="lbl">핵심</span>상대가 쓰는 ㅋㅋ 개수·호흡·길이를 <b>거울처럼</b> 따라가라. 맞추면 편안함이 생긴다.</div>
+</section>
+
+<section class="slide">
+  <p class="kicker">상대 유형별 · 건조한 T형</p>
+  <h2 class="head">단답은 <b>거절이 아니다</b></h2>
+  <p class="muted">논리·담백한 T형은 원래 톡이 건조하다. 감성으로 메우면 유치해 보인다 — 맞추되, 물 걸 던져라.</p>
+  <div class="kt2" style="margin-top:16px">
+    <div class="col b">
+      <p class="tit">✕ 감성 폭격</p>
+      <div class="kt"><div class="kt-head">‹ 상대</div><div class="kt-body">
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">날씨 좋다 ㅋㅋㅋ 커피 국룰인데 ㅎㅎ 커피 좋아해요??</div></div></div>
+        <div class="kt-row kt-her"><div class="kt-av">🙂</div><div class="kt-wrap"><div class="kt-msg">네</div></div></div>
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">헐 저도요!! ㅋㅋ 통하는 듯 ㅎㅎ</div></div></div>
+        <div class="kt-row kt-her"><div class="kt-av">🙂</div><div class="kt-wrap"><div class="kt-msg">ㅇㅇ</div></div></div>
+      </div></div>
+    </div>
+    <div class="col g">
+      <p class="tit">✓ 구체 + 위트 + 직진</p>
+      <div class="kt"><div class="kt-head">‹ 상대</div><div class="kt-body">
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">원두 산미 vs 고소 어느 쪽이에요?</div></div></div>
+        <div class="kt-row kt-her"><div class="kt-av">🙂</div><div class="kt-wrap"><div class="kt-msg">고소요</div></div></div>
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">역시. 산미파는 좀 걸러야 신뢰가 가요 ㅋㅋ</div></div></div>
+        <div class="kt-row kt-her"><div class="kt-av">😆</div><div class="kt-wrap"><div class="kt-msg">ㅋㅋ 편견 심하네</div></div></div>
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">인정. 고소파는 검증됐으니 토요일 갈 자격 있어요</div></div></div>
+      </div></div>
+    </div>
+  </div>
+  <div class="box key" style="margin-top:14px"><span class="lbl">핵심</span>관심은 ㅋㅋ가 아니라 <b>답장 꾸준함·속도</b>로 읽어라. 계속 답한다는 것 자체가 초록불.</div>
+</section>
+
+<section class="slide">
+  <p class="kicker">상대 유형별 · 실전 분석</p>
+  <h2 class="head">진짜 ISTP를 <b>추측</b>으로 뚫다</h2>
+  <p class="muted">단답만 오던 ISTP. "뭐 좋아해요?"(취조) 대신 '추측'을 던지자, 틀렸는데도 상대가 스스로 말하기 시작했다.</p>
+  <div class="ktc" style="margin-top:10px">
+    <div class="kt"><div class="kt-head">‹ 손 흔드는 스카피 (ISTP)</div><div class="kt-body">
+      <div class="kt-row kt-her"><div class="kt-av">🙂</div><div class="kt-wrap"><div class="kt-msg">저 그냥 누워잇거나 넷플</div></div></div>
+      <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">넷플 볼 때 액션이나 스릴러 좋아할 거 같아요 로코보다</div></div></div>
+      <div class="kt-row kt-her"><div class="kt-av">😯</div><div class="kt-wrap"><div class="kt-msg">에? 저 스릴러 안좋아하는뎅</div></div></div>
+      <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">그럼 어떤 장르 좋아해여?</div></div></div>
+      <div class="kt-row kt-her"><div class="kt-av">🙂</div><div class="kt-wrap"><div class="kt-msg">재밌는고 좋아해여</div></div></div>
+      <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">ㅎㅎ 최근에 뭐 봤어용?</div></div></div>
+      <div class="kt-row kt-her"><div class="kt-av">📺</div><div class="kt-wrap"><div class="kt-msg">(드라마 링크를 먼저 보냄)</div></div></div>
+    </div></div>
+    <div class="ptpanel">
+      <p class="lead">줄마다 원리</p>
+      <div class="ptlist">
+        <div class="it"><b>추측 &gt; 질문</b> — "~좋아할 거 같아요"는 맞다/틀리다만 답하면 돼 부담 0</div>
+        <div class="it"><b>틀려도 이득</b> — 빗나가자 "에? 아닌데"로 스스로 정정</div>
+        <div class="it"><b>T형 본능</b> — 감정엔 안 열려도 틀린 팩트는 못 참는다</div>
+        <div class="it"><b>진전 신호</b> — 단답만 하던 상대가 먼저 드라마 링크</div>
+      </div>
+    </div>
+  </div>
+  <div class="box key" style="margin-top:12px"><span class="lbl">핵심</span>건조한 상대일수록 정보를 캐묻지 말고 <b>추측을 던져라</b>. 맞으면 통했고, 틀리면 상대가 정정하며 대화가 열린다.</div>
+</section>
+
+<section class="slide">
+  <p class="kicker">매력적인 말투 3요소</p>
+  <h2 class="head">리액션 · 장난 · 드립</h2>
+  <div class="flow">
+    <span class="step">😮 큰 리액션</span>
+    <span class="arr">→</span>
+    <span class="step">😏 가벼운 장난</span>
+    <span class="arr">→</span>
+    <span class="step">🎭 상황 비틀기</span>
+  </div>
+  <div class="grid2">
+    <div class="box good"><span class="lbl">큰 리액션</span>여: 어제 3시간 줄 서서 빵 샀어요<br><b>나: 헐 3시간요?? ㅋㅋㅋ 빵에 진심이신데</b></div>
+    <div class="box good"><span class="lbl">가벼운 장난</span>여: (강아지 사진)<br><b>나: 강아지 표정이 딱 '우리 집사 또 시작이네' 하는데 ㅋㅋ</b></div>
+  </div>
+  <div class="box key"><span class="lbl">핵심</span>칭찬은 거리를 두는 말, 장난은 거리를 좁히는 말. 빵 터뜨리기보다 "얘랑 얘기하면 재밌다"는 느낌을 쌓아라.</div>
+  <div class="box psych"><span class="lbl">💡 왜 통할까</span>감정은 전염된다 — 내가 크게 웃으면 상대도 물든다. 큰 리액션은 '너랑 얘기하니 즐겁다'는 보상이고, 사람은 즐겁게 해주는 사람을 다시 찾는다.</div>
+</section>
+
+<section class="slide">
+  <p class="kicker">장난에는 선이 있다</p>
+  <h2 class="head">걸어도 되는 장난 ↔ 지뢰밭</h2>
+  <table>
+    <tr><th>걸어도 되는 장난 (안전)</th><th>지뢰밭 (절대 금지)</th></tr>
+    <tr><td>사소한 습관 — 늦잠, 길치, 폰 5%</td><td>외모 — 키, 몸무게, 피부, 얼굴</td></tr>
+    <tr><td>취향 — 민초, 부먹/찍먹, 덕질</td><td>과거 — 전 연애, 흑역사</td></tr>
+    <tr><td>상황 — 또 택배, 또 다이어트 선언</td><td>콤플렉스 — 학벌, 직업, 돈</td></tr>
+    <tr><td>허당기 — 방금 한 오타, 길 잃은 썰</td><td>민감 — 가족, 종교, 정치</td></tr>
+  </table>
+  <div class="box key"><span class="lbl">핵심</span>상대가 <b>같이 웃을 수 있으면</b> 장난, <b>상대만 아프면</b> 공격이다. <b>신체</b>(키·몸무게·피부·얼굴)는 금지, <b>사진의 연출·구도·상황</b>은 허용 — 스스로 바꿀 수 있는 것만 건드려라.</div>
+</section>
+
+<section class="slide">
+  <p class="kicker">드립이 싸해졌을 때</p>
+  <h2 class="head">수습은 <b>3턴</b>이면 끝난다</h2>
+  <p class="muted">초보는 여기서 두 번 죽는다 — 정색하고 길게 사과하거나, 같은 드립을 한 번 더. 둘 다 무겁게 만든다.</p>
+  <div class="ktc" style="margin-top:10px">
+    <div class="kt"><div class="kt-head">‹ 그분</div><div class="kt-body">
+      <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">그거 또 산 거잖아 ㅋㅋ 쇼핑 중독 인정?</div></div></div>
+      <div class="kt-row kt-her"><div class="kt-av">😐</div><div class="kt-wrap"><div class="kt-msg">...아 그건 좀</div></div></div>
+      <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">앗 방금 선 넘었다 미안미안 ㅋㅋ 말을 험하게 했네</div></div></div>
+      <div class="kt-row kt-her"><div class="kt-av">🙂</div><div class="kt-wrap"><div class="kt-msg">ㅋㅋㅋ 아니 됐어</div></div></div>
+      <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">사과의 의미로 그 산 거 구경시켜줘 궁금해졌잖아</div></div></div>
+    </div></div>
+    <div class="ptpanel">
+      <p class="lead">3턴 공식</p>
+      <div class="ptlist">
+        <div class="it"><b>1턴 · 인정</b> — 변명 말고 "선 넘었다" 가볍게</div>
+        <div class="it"><b>2턴 · 받기</b> — 상대 반응을 받아준다</div>
+        <div class="it"><b>3턴 · 전환</b> — 화제를 돌려 분위기 리셋</div>
+      </div>
+    </div>
+  </div>
+  <div class="box psych"><span class="lbl">💡 왜 통할까</span>사람은 실수보다 대처를 본다. 빠르게 인정하고 넘기면 '여유', 길게 빌면 '불안'으로 읽힌다.</div>
+</section>
+
+<section class="slide">
+  <p class="kicker">화술 4원리 · 퀴즈</p>
+  <h2 class="head">이 네 멘트, <b>각각 어느 원리</b>일까?</h2>
+  <p class="muted">극단값 · 역발상 · 메타인지 · 완급조절 — 먼저 맞혀보세요. 답은 다음 장에서.</p>
+  <div class="grid2" style="margin-top:8px">
+    <div class="box key"><span class="lbl">A</span>"3시간요?? 그 빵 먹지 말고 액자에 넣어야죠 ㅋㅋ"</div>
+    <div class="box key"><span class="lbl">B</span>"키는 만나서 직접 재보는 게 정확해요"</div>
+    <div class="box key"><span class="lbl">C</span>"우리 벌써 일주일째 톡만 하는 거 알아요?"</div>
+    <div class="box key"><span class="lbl">D</span>"오늘 좀 예쁘네… 라고 할 뻔 ㅋㅋ"</div>
+  </div>
+  <div class="box psych" style="margin-top:10px"><span class="lbl">💡 힌트</span>넷 다 '예측을 벗어나는 것'. 과하면 독이라, 하나(완급조절)가 나머지를 잡아주는 안전장치다.</div>
+</section>
+
+<section class="slide">
+  <p class="kicker">화술 4원리 · 자세히 (1)</p>
+  <h2 class="head">① 극단값 · ② 역발상</h2>
+  <div class="grid2">
+    <div class="box good">
+      <span class="lbl">① 극단값 — 작게 말하지 않는다</span>
+      평범한 리액션을 과장해 키운다. 작은 일도 크게 받아주면 상대가 신나서 더 푼다.
+      <div style="margin-top:10px;line-height:1.7"><span class="muted">✕ 밋밋</span> 아 오래 기다렸네요<br><span style="color:var(--blue);font-weight:700">✓ 적용</span> 3시간요?? 그 빵 먹지 말고 액자에 넣어야죠 ㅋㅋ</div>
+    </div>
+    <div class="box good">
+      <span class="lbl">② 역발상 — 곧이곧대로 답 안 한다</span>
+      질문에 액면 그대로 답하지 않고 비튼다. 예상 못 한 답이 기억에 남는다.
+      <div style="margin-top:10px;line-height:1.7"><span class="muted">✕ 밋밋</span> 저 키 178이요<br><span style="color:var(--blue);font-weight:700">✓ 적용</span> 키는 만나서 직접 재보는 게 정확해요 ㅋㅋ</div>
+    </div>
+  </div>
+  <div class="box psych" style="margin-top:14px"><span class="lbl">💡 한 줄로</span>둘 다 "예측을 벗어나기". 뻔한 답을 한 번만 비틀면 그게 곧 매력이 된다.</div>
+</section>
+
+<section class="slide">
+  <p class="kicker">화술 4원리 · 자세히 (2)</p>
+  <h2 class="head">③ 메타인지 · ④ 완급조절</h2>
+  <div class="grid2">
+    <div class="box good">
+      <span class="lbl">③ 메타인지 — 상황 자체를 짚는다</span>
+      대화 '내용'이 아니라 '우리 관계·상황'을 한 발 떨어져 언급한다. 둘 사이를 의식하게 만든다.
+      <div style="margin-top:10px;line-height:1.7"><span style="color:var(--blue);font-weight:700">예</span> 우리 벌써 일주일째 톡만 하는 거 알아요? ㅋㅋ</div>
+    </div>
+    <div class="box good">
+      <span class="lbl">④ 완급조절 — 지르고 한 발 뺀다</span>
+      훅 들어간 뒤 바로 가볍게 물러나 부담을 중화한다. 나머지 셋의 '안전장치'.
+      <div style="margin-top:10px;line-height:1.7"><span style="color:var(--blue);font-weight:700">예</span> 오늘 좀 예쁘네… 라고 할 뻔 ㅋㅋ</div>
+    </div>
+  </div>
+  <div class="box psych" style="margin-top:14px"><span class="lbl">💡 왜 완급조절이 안전장치</span>앞의 셋을 세게만 쓰면 느끼해진다. 지른 뒤 빼주는 완급조절이 그 과함을 잡아 '매력'으로 남긴다.</div>
+</section>
+
+<section class="slide">
+  <p class="kicker">원리별 멘트 뱅크</p>
+  <h2 class="head">상황 닥치면 바로 꺼내 쓴다</h2>
+  <div class="grid2">
+    <div class="box good">
+      <span class="lbl">극단값 — 크게</span>
+      <div style="line-height:1.85">· 작은 성취 → "역사에 남을 일인데요"<br>· 음식 사진 → "미술관에 걸어야 됨"<br>· 사소한 취향 → "신념 수준인데 이거"</div>
+    </div>
+    <div class="box good">
+      <span class="lbl">역발상 — 반대로</span>
+      <div style="line-height:1.85">· "키 몇?" → "만나서 직접 재보는 게"<br>· "MBTI?" → "맞히면 한 수 접어드림"<br>· "뭐 했어요?" → "멋있어서 부담될 텐데"</div>
+    </div>
+  </div>
+  <div class="grid2" style="margin-top:14px">
+    <div class="box good">
+      <span class="lbl">메타인지 — 상황을</span>
+      <div style="line-height:1.85">· 답 빨리 옴 → "0.5초 만에 답, 폰 들고 있었죠"<br>· 대화 길어짐 → "이거 거의 회의 수준"<br>· 침묵 → "이 침묵 편하다는 신호 같기도"</div>
+    </div>
+    <div class="box good">
+      <span class="lbl">완급조절 — 지르고 빼기</span>
+      <div style="line-height:1.85">· 칭찬 직후 → "멋있다… 까지만 할게요"<br>· 달아오를 때 → "더 말하면 큰일, 여기까지"<br>· 셀프디스 → "완벽한데… 라면은 못 끓임"</div>
+    </div>
+  </div>
+</section>
+
+<section class="slide center">
+  <span class="tag" style="background:var(--purple)">실습</span>
+  <h2 class="head" style="margin-top:20px">밋밋한 내 멘트 하나를 매력 버전으로 바꾸기</h2>
+  <p class="big muted">최근에 보낸 "아 그렇구나" 같은 멘트 하나를 떠올려, 4원리 중 하나를 얹어 다시 써본다.</p>
+  <div class="selfcheck">
+    <p class="sc-lbl">✅ 고쳐 쓴 뒤 셀프체크 <span style="color:var(--muted);font-weight:600;font-size:14px">· 워크북 PART 2</span></p>
+    <div class="sc-item">리액션·장난·드립 중 하나가 들어갔나?</div>
+    <div class="sc-item">정보형 맞장구("아 그렇구나")에서 벗어났나?</div>
+    <div class="sc-item">외모·과한 반말 등 선 넘는 장난은 아닌가?</div>
+  </div>
+</section>
+
+<section class="slide center">
+  <p class="kicker">잠깐, 같이 생각해보기</p>
+  <h2 class="head" style="font-size:40px">이 사람, 나한테 관심 있는 걸까요 없는 걸까요?<br>카톡만 보고 어떻게 알 수 있을까요?</h2>
+  <p class="big muted" style="margin-top:20px">🤔 같이 생각해보기</p>
+</section>
+
+<section class="slide center">
+  <span class="tag">7강</span>
+  <p class="serif divider-title" style="margin-top:24px">호감 신호 · 말 놓기</p>
+  <p class="big muted" style="margin-top:16px">"이 사람, 나한테 관심 있나?"를 카톡에서 읽어내고<br>관계의 벽을 한 단계 허무는 법</p>
+</section>
+
+<section class="slide">
+  <p class="kicker">호감 신호 읽기</p>
+  <h2 class="head">신호는 하나가 아니라 <b>흐름</b>으로</h2>
+  <p class="muted">답장 한 번 늦었다고 끝난 게 아니고, 한 번 빨랐다고 다 된 것도 아니다. 같은 신호가 두세 번 반복될 때만 의미가 있다.</p>
+  <div class="grid2" style="margin-top:24px">
+    <div class="box good">
+      <span class="lbl">관심 있을 때</span>
+      "○○님은요?" 하고 <b>되묻는다</b><br>
+      안 물어본 자기 얘기를 먼저 꺼낸다<br>
+      답장이 빠르고, 먼저 연락도 온다
+    </div>
+    <div class="box bad">
+      <span class="lbl">식었을 때</span>
+      늘 단답이고 <b>질문을 안 한다</b><br>
+      답장이 갈수록 늦어진다<br>
+      늘 내가 먼저, 내가 마지막
+    </div>
+  </div>
+  <div class="box psych" style="margin-top:20px"><span class="lbl">💡 왜 통할까</span>말은 꾸밀 수 있어도 행동은 정직하다. 입에서 나온 말보다 답장 속도·되묻기·자기 노출 같은 행동 패턴이 진짜 마음에 더 가깝다.</div>
+</section>
+
+<section class="slide">
+  <p class="kicker" style="color:var(--purple)">✋ 실습 · 자가진단</p>
+  <h2 class="head">호감 신호 <b>점수표</b></h2>
+  <p class="muted"><b>지금 연락 중인 1명</b>을 정하고 60초 안에 채점 — <b>두세 번 이상 반복된 패턴만</b>. 마음에 든다고 후하게 매기지 마라.</p>
+  <table style="margin-top:18px">
+    <tr><th>신호</th><th>점수</th></tr>
+    <tr><td>질문을 되묻는다 / 먼저 연락을 시작한다</td><td>+3</td></tr>
+    <tr><td>10분 안에 답이 온다 · 내 지난 말을 기억한다</td><td>+2</td></tr>
+    <tr><td>다음 대화로 이어줄 떡밥을 남긴다</td><td>+2</td></tr>
+    <tr><td>약속·만남 얘기에 발을 뺀다</td><td>−3</td></tr>
+    <tr><td>거의 단답 / 갈수록 답이 느려진다</td><td>−2</td></tr>
+    <tr><td>며칠째 읽씹·안읽씹이 섞인다</td><td>−3</td></tr>
+  </table>
+  <div class="flow" style="margin-top:20px">
+    <span class="step">−1 이하<br>물러나기</span>
+    <span class="arr">→</span>
+    <span class="step">0~+5<br>떡밥 한 번 더</span>
+    <span class="arr">→</span>
+    <span class="step" style="background:#dcfce7;color:#15803d">+6 이상<br>✋ 손! 만남 제안</span>
+  </div>
+</section>
+
+<section class="slide">
+  <p class="kicker">회색지대</p>
+  <h2 class="head">애매한 <b>혼합 신호</b> 읽는 법</h2>
+  <p class="muted">신호는 깔끔하게 한 방향으로만 오지 않는다. 헷갈릴 땐 <b>가장 약한 고리</b>로 읽어라.</p>
+  <div class="kt3" style="margin-top:20px">
+    <div class="col">
+      <p class="tit">① 되묻는데 느림</p>
+      <p class="sit">질문은 꼬박, 답은 몇 시간 뒤</p>
+      <p class="key"><b>관심 있음, 우선순위 아님 — 속도 말고 내용으로 잡아라</b></p>
+    </div>
+    <div class="col">
+      <p class="tit">② 길게 쓰는데 질문 0</p>
+      <p class="sit">정성스러운데 되묻는 말이 없음</p>
+      <p class="key"><b>대개 착한 예의 — 길이 말고 '되묻기'를 봐라</b></p>
+    </div>
+    <div class="col">
+      <p class="tit">③ 빠른데 늘 내가 먼저</p>
+      <p class="sit">답은 1분, 먼저 연락은 0번</p>
+      <p class="key"><b>이틀 멈춰봐라 — 찾으면 호감, 조용하면 그냥 받아주던 것</b></p>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <p class="kicker">식어가는 신호 · 실전</p>
+  <h2 class="head">식는 신호는 <b>한 칸씩</b> 내려온다</h2>
+  <p class="muted">한 번에 뚝 끊기지 않는다. 분기점마다 온도가 한 칸씩 떨어진다 — 두 칸째에서 멈추고 물러나라.</p>
+  <div class="flow" style="margin:16px 0">
+    <span class="step">되묻기 사라짐</span><span class="arr">→</span>
+    <span class="step">질문에 단답</span><span class="arr">→</span>
+    <span class="step" style="background:#fef2f2;color:var(--red)">약속 회피</span>
+  </div>
+  <div class="kt2">
+    <div class="col b">
+      <p class="tit">✕ 식는데 또 밀기</p>
+      <div class="kt"><div class="kt-head">‹ 지수</div><div class="kt-body">
+        <div class="kt-row kt-her"><div class="kt-av">🙂</div><div class="kt-wrap"><div class="kt-msg">아 주말 약속 있어서요 ㅠㅠ 다음에요!</div></div></div>
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">그럼 평일 저녁은 괜찮아요? 시간 맞춰볼게요!</div></div></div>
+      </div></div>
+      <p class="cap">거절 위에 약속을 또 얹는다 → 안읽씹</p>
+    </div>
+    <div class="col g">
+      <p class="tit">✓ 온도 인정하고 빠지기</p>
+      <div class="kt"><div class="kt-head">‹ 지수</div><div class="kt-body">
+        <div class="kt-row kt-her"><div class="kt-av">🙂</div><div class="kt-wrap"><div class="kt-msg">아 주말 약속 있어서요 ㅠㅠ 다음에요!</div></div></div>
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">아 넵 ㅎㅎ 바쁜 시즌인가 보다 여유될 때 봐요!</div></div></div>
+      </div></div>
+      <p class="cap">문 열어둔 채 물러난다 → 남아 있으면 그쪽이 채운다</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <p class="kicker">말 놓기</p>
+  <h2 class="head">존댓말 <b>벽</b> 허무는 타이밍</h2>
+  <p class="muted">너무 빠르면 무례, 너무 늦으면 정체. 상대가 "ㅋㅋ 뭐야~"처럼 <b>반말을 슬쩍 섞으면</b> 가장 강한 신호 중 하나다.</p>
+  <div class="kt2" style="margin-top:20px">
+    <div class="col g">
+      <p class="tit">✓ 자연스럽게 슬쩍</p>
+      <div class="kt"><div class="kt-head">‹ 민지</div><div class="kt-body">
+        <div class="kt-row kt-her"><div class="kt-av">🙂</div><div class="kt-wrap"><div class="kt-msg">저 오늘 회사에서 깨졌어요 ㅠㅠ</div></div></div>
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">헐 누가 힘들게 했어 ㅠㅠ</div></div></div>
+      </div></div>
+      <p class="cap">한두 마디만 슬쩍 반말로 흘린다. 어색하면 다시 돌아오면 그만이라 부담이 적다.</p>
+    </div>
+    <div class="col g">
+      <p class="tit">✓ 장난처럼 던지기</p>
+      <div class="kt"><div class="kt-head">‹ 민지</div><div class="kt-body">
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">우리 존댓말 하니까 좀 간지럽다 ㅋㅋ 말 놓을까요?</div></div></div>
+        <div class="kt-row kt-her"><div class="kt-av">🙂</div><div class="kt-wrap"><div class="kt-msg">ㅋㅋㅋ 그래요 놔요</div></div></div>
+      </div></div>
+      <p class="cap">진지하게 허락받지 말 것. 거절당해도 "천천히 가요"로 1초 만에 물러나면 다음 기회가 남는다.</p>
+    </div>
+  </div>
+  <div class="box key" style="margin-top:18px"><span class="lbl">핵심</span>말 놓기는 적당한 신호가 왔을 때 가볍게. 진지하게 허락받지 말고 장난처럼 던져라.</div>
+</section>
+
+<section class="slide">
+  <p class="kicker">말 놓기 · 거절당하면</p>
+  <h2 class="head">존댓말이어도 <b>전혀 문제없다</b></h2>
+  <p class="muted">"아직 좀 어색해요"엔 쿨하게 물러나 존댓말을 유지하면 그만이다. 무턱대고 말 놓는 게 오히려 이후를 어색하게 만든다.</p>
+  <div class="grid2" style="margin-top:20px">
+    <div class="box good"><span class="lbl">① 프레임상 우위</span>상대가 나를 은근히 <b>위로</b> 본다. 존댓말 쓰는 사람은 함부로 대하기 어렵다.</div>
+    <div class="box good"><span class="lbl">② 여유로 읽힘</span>말 놓기에 목매지 않는 태도 자체가 <b>매력</b>이 된다. 급한 사람으로 안 보인다.</div>
+    <div class="box good"><span class="lbl">③ 설렘 유지</span>적당한 거리감이 <b>긴장과 설렘</b>을 남긴다. 너무 빨리 편해지면 설렘도 같이 식는다.</div>
+    <div class="box good"><span class="lbl">④ 되돌릴 필요 없음</span>무턱대고 놨다 어색해지면 되돌리기 힘들다. 존댓말은 <b>안전한 기본값</b>이다.</div>
+  </div>
+  <div class="box key"><span class="lbl">핵심</span>말 놓기는 목표가 아니다. 거절당하면 존댓말로 — 그마저 쿨하게. 편해지는 건 시간이 알아서 한다.</div>
+</section>
+
+<section class="slide center">
+  <span class="tag" style="background:var(--navy)">휴식</span>
+  <h2 class="head" style="margin-top:20px">쉬는 시간 · 10분</h2>
+  <p class="big muted">물 한 잔 하고 오세요. 곧 이어집니다.</p>
+</section>
+
+
+<section class="slide center">
+  <p class="kicker">잠깐, 같이 생각해보기</p>
+  <h2 class="head" style="font-size:40px">상대가 이런 사진을 보냈습니다.<br>당신이라면 뭐라고 답할래요?</h2>
+  <p class="big muted" style="margin-top:20px">🗣️ 답을 외쳐보세요</p>
+</section>
+
+<section class="slide center">
+  <img src="images/sent_photo.jpg" alt="상대가 보낸 사진" style="height:520px;width:auto;border-radius:14px;border:1px solid var(--line);box-shadow:0 8px 30px rgba(0,0,0,.18)">
+</section>
+
+<section class="slide center">
+  <span class="tag">8강</span>
+  <p class="serif divider-title" style="margin-top:24px">상황별 대응</p>
+  <p class="big muted" style="margin-top:16px">막힐 때 찾아 쓰는 상황 사전</p>
+</section>
+
+<section class="slide">
+  <p class="kicker">상황 사전</p>
+  <h2 class="head">막힐 때 찾아 쓴다</h2>
+  <p class="muted">대화는 늘 같은 자리에서만 일어나지 않는다. 술자리·핫플·운동 다녀온 직후처럼 상황마다 던지기 좋은 한마디가 따로 있다.</p>
+  <div class="box key"><span class="lbl">핵심</span>상황은 제각각이어도 공통점은 하나 — <b>평범하게 받지 않는다</b>. 들어온 패를 한 번 더 비틀어 던진다.</div>
+  <div class="chk">
+    <div>프사 바꿈 → 평가 놀이</div>
+    <div>음식 사진 → 옆 디테일</div>
+    <div>셀카 평가 요청 → 한 컷 더</div>
+    <div>가족과 있을 때 → 호칭 드립</div>
+    <div>단답·영혼 없음 → 격식 깨기</div>
+    <div>핫플 인증 → '같이' 그리기</div>
+    <div>다른 남자 얘기 → 장난 질투</div>
+    <div>피곤 푸념 → 챙김 리액션</div>
+    <div>"오늘 뭐 했어?" → 과장 브리핑</div>
+  </div>
+  <div class="box psych"><span class="lbl">💡 왜 통할까</span>흔한 안부도 한 번 비틀면 둘만의 장난이 된다. 비틀기가 곧 기억에 남는 차별점이다.</div>
+</section>
+
+<section class="slide">
+  <p class="kicker">상황 묶음 1</p>
+  <h2 class="head">반응을 떠보는 신호 받아치기</h2>
+  <div class="kt3">
+    <div class="col">
+      <p class="tit">① 프사 바꿈</p>
+      <p class="sit">"나 프사 바꿨는데 봤어?"</p>
+      <div class="kt"><div class="kt-head">‹ 민지</div><div class="kt-body">
+        <div class="kt-row kt-her"><div class="kt-av">🙂</div><div class="kt-wrap"><div class="kt-msg">나 프사 바꿨는데 봤어?</div></div></div>
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">봤지 ㅋㅋ 지금 심사위원 모드로 감정 중</div></div></div>
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">구도 8점 표정 9점, 근데 누가 골라줬어?</div></div></div>
+      </div></div>
+      <p class="key"><b>칭찬을 공짜로 주지 말고 평가 놀이로 포장</b></p>
+    </div>
+    <div class="col">
+      <p class="tit">② 음식 사진</p>
+      <p class="sit">디저트·먹방 사진이 옴</p>
+      <div class="kt"><div class="kt-head">‹ 민지</div><div class="kt-body">
+        <div class="kt-row kt-her"><div class="kt-av">🍰</div><div class="kt-wrap"><div class="kt-msg">나 오늘 디저트 카페 왔어 (사진)</div></div></div>
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">잠깐, 포크 두 개... 누구랑 온 거야 😏</div></div></div>
+        <div class="kt-row kt-her"><div class="kt-av">🍰</div><div class="kt-wrap"><div class="kt-msg">ㅋㅋㅋ아 친구랑 왔다고</div></div></div>
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">한 입은 내 몫이지? 영통으로 받아먹는 중 ㅋㅋ</div></div></div>
+      </div></div>
+      <p class="key"><b>사진 말고 옆의 사소한 걸 잡아라</b></p>
+    </div>
+    <div class="col">
+      <p class="tit">③ 셀카 평가 요청</p>
+      <p class="sit">"오늘 어때? 화장 잘 됐지?"</p>
+      <div class="kt"><div class="kt-head">‹ 민지</div><div class="kt-body">
+        <div class="kt-row kt-her"><div class="kt-av">📸</div><div class="kt-wrap"><div class="kt-msg">나 어때? (셀카)</div></div></div>
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">어 표정이 좀 새침한데? 웃는 거 한 장 더</div></div></div>
+        <div class="kt-row kt-her"><div class="kt-av">📸</div><div class="kt-wrap"><div class="kt-msg">ㅋㅋㅋ뭔 검증이야</div></div></div>
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">한 장으론 점수 못 줘 ㅋㅋ 자료 더 필요해</div></div></div>
+      </div></div>
+      <p class="key"><b>'예쁘다' 아끼고 한 컷 더 끌어내라</b></p>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <p class="kicker">상황 묶음 2</p>
+  <h2 class="head">근황 보고를 만남·장난으로</h2>
+  <div class="kt3">
+    <div class="col">
+      <p class="tit">④ 가족과 있을 때</p>
+      <p class="sit">"지금 엄마랑 외출 중"</p>
+      <div class="kt"><div class="kt-head">‹ 민지</div><div class="kt-body">
+        <div class="kt-row kt-her"><div class="kt-av">🛍️</div><div class="kt-wrap"><div class="kt-msg">나 지금 엄마랑 백화점 왔어</div></div></div>
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">오 장모님이랑 데이트하시네 난 왜 안 불렀지 ㅋㅋ</div></div></div>
+        <div class="kt-row kt-her"><div class="kt-av">🛍️</div><div class="kt-wrap"><div class="kt-msg">ㅋㅋㅋ장모님이 뭐예요 ㅋㅋ 너무 앞서가시는데</div></div></div>
+      </div></div>
+      <p class="key"><b>호칭 드립으로 미래 한 번 그리고 빠져라</b></p>
+    </div>
+    <div class="col">
+      <p class="tit">⑤ 단답·영혼 없음</p>
+      <p class="sit">"응" "ㅇㅋ"만 돌아옴</p>
+      <div class="kt"><div class="kt-head">‹ 민지</div><div class="kt-body">
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">오늘 뭐 했어?</div></div></div>
+        <div class="kt-row kt-her"><div class="kt-av">😐</div><div class="kt-wrap"><div class="kt-msg">그냥 집에 있었어</div></div></div>
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">혹시 로봇이세요? ㅋㅋ 답이 너무 영혼 없는데</div></div></div>
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">충전됐으면 질문 던진다 짜장이냐 짬뽕이냐</div></div></div>
+      </div></div>
+      <p class="key"><b>격식 깨고 곧장 가벼운 화제로 리드</b></p>
+    </div>
+    <div class="col">
+      <p class="tit">⑥ 핫플 인증</p>
+      <p class="sit">예쁜 카페·맛집 사진</p>
+      <div class="kt"><div class="kt-head">‹ 민지</div><div class="kt-body">
+        <div class="kt-row kt-her"><div class="kt-av">☕</div><div class="kt-wrap"><div class="kt-msg">여기 디저트 미쳤어요 [사진]</div></div></div>
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">헐 비주얼 봐 ㅋㅋ 근데 이런 덴 혼자 가는 거 아니죠</div></div></div>
+        <div class="kt-row kt-her"><div class="kt-av">☕</div><div class="kt-wrap"><div class="kt-msg">ㅋㅋ 왜요</div></div></div>
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">나눠 먹을 사람 있어야지 ㅋㅋ 다음엔 같이 가요</div></div></div>
+      </div></div>
+      <p class="key"><b>'같이 가자'로 절반쯤 잡힌 약속 만들기</b></p>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <p class="kicker">상황 묶음 3</p>
+  <h2 class="head">질투 · 푸념 · 일상 브리핑</h2>
+  <div class="kt3">
+    <div class="col">
+      <p class="tit">⑦ 다른 남자 얘기</p>
+      <p class="sit">"그 배우 멋있지 않아?"</p>
+      <div class="kt"><div class="kt-head">‹ 민지</div><div class="kt-body">
+        <div class="kt-row kt-her"><div class="kt-av">😍</div><div class="kt-wrap"><div class="kt-msg">나 그 배우한테 완전 빠졌잖아 ㅠㅠ</div></div></div>
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">다정함은 내 담당인데 왜 외주를 줘 ㅋㅋ</div></div></div>
+        <div class="kt-row kt-her"><div class="kt-av">😆</div><div class="kt-wrap"><div class="kt-msg">ㅋㅋㅋ 연예인이잖아</div></div></div>
+      </div></div>
+      <p class="key"><b>발끈 말고 장난조 질투로 관심만 흘려라</b></p>
+    </div>
+    <div class="col">
+      <p class="tit">⑧ 피곤·푸념</p>
+      <p class="sit">"아 오늘 너무 피곤해"</p>
+      <div class="kt"><div class="kt-head">‹ 민지</div><div class="kt-body">
+        <div class="kt-row kt-her"><div class="kt-av">😩</div><div class="kt-wrap"><div class="kt-msg">아 오늘 너무 피곤해 ㅠㅠ</div></div></div>
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">야 톡만 봐도 방전됐겠다 누가 또 괴롭혔어</div></div></div>
+        <div class="kt-row kt-her"><div class="kt-av">🥲</div><div class="kt-wrap"><div class="kt-msg">ㅋㅋ 일이 많았어</div></div></div>
+      </div></div>
+      <p class="key"><b>정보(영양제) 말고 챙김 — 알아채주기</b></p>
+    </div>
+    <div class="col">
+      <p class="tit">⑨ "오늘 뭐 했어?"</p>
+      <p class="sit">흔한 안부 질문</p>
+      <div class="kt"><div class="kt-head">‹ 민지</div><div class="kt-body">
+        <div class="kt-row kt-her"><div class="kt-av">🙂</div><div class="kt-wrap"><div class="kt-msg">오늘 뭐 했어요?</div></div></div>
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">동기가 내 마지막 두부 가져갔어요 ㅋㅋ 회의 땐 졸았고요 풀버전 들으실?</div></div></div>
+        <div class="kt-row kt-her"><div class="kt-av">😆</div><div class="kt-wrap"><div class="kt-msg">ㅋㅋㅋ 두부 진짜 너무해요</div></div></div>
+      </div></div>
+      <p class="key"><b>과장 브리핑 — 디테일이 떡밥이 된다</b></p>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <p class="kicker">의심받을 때</p>
+  <h2 class="head">"너 좀 놀지?" — 발끈하면 <b>진짜가 된다</b></h2>
+  <p class="muted">클럽·밤 만남에선 "많이 놀아 보인다·양아치 아니냐"는 의심을 자주 받는다. 변명할수록 오히려 수상해진다.</p>
+  <div class="kt2" style="margin-top:16px">
+    <div class="col b">
+      <p class="tit">✕ 발끈·변명</p>
+      <div class="kt"><div class="kt-head">‹ 그 사람</div><div class="kt-body">
+        <div class="kt-row kt-her"><div class="kt-av">🤨</div><div class="kt-wrap"><div class="kt-msg">오빠 많이 놀지? 딱 봐도 선수 같은데</div></div></div>
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">아니에요 진짜 저 안 놀아요 오해예요</div></div></div>
+      </div></div>
+      <p class="cap">정색·변명할수록 더 수상해 보인다</p>
+    </div>
+    <div class="col g">
+      <p class="tit">✓ 여유 + 인정하듯 비틀기</p>
+      <div class="kt"><div class="kt-head">‹ 그 사람</div><div class="kt-body">
+        <div class="kt-row kt-her"><div class="kt-av">🤨</div><div class="kt-wrap"><div class="kt-msg">오빠 많이 놀지? 딱 봐도 선수 같은데</div></div></div>
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">ㅋㅋ 그렇게 보여요? 완전 집돌이인데 실망이네</div></div></div>
+        <div class="kt-row kt-her"><div class="kt-av">😆</div><div class="kt-wrap"><div class="kt-msg">ㅋㅋㅋ 뭐야</div></div></div>
+      </div></div>
+      <p class="cap">웃으며 받아넘기는 여유가 의심을 푼다</p>
+    </div>
+  </div>
+  <div class="box psych"><span class="lbl">💡 왜 통할까</span>떳떳한 사람은 발끈하지 않는다. 인정하듯 웃어넘기는 여유 자체가 "안전한 사람"이라는 신호다.</div>
+</section>
+
+<section class="slide center">
+  <span class="tag" style="background:var(--purple)">실습</span>
+  <h2 class="head" style="margin-top:20px">내가 자주 마주치는 상황 하나를 골라라</h2>
+  <p class="big muted">①~⑨ 중 하나를 고르고, 그 상황에 쓸 나만의 응용 멘트 한 줄을 직접 써본다 <b style="color:var(--purple)">· ✍ 워크북 PART 2</b></p>
+  <div class="box key" style="margin-top:24px;text-align:left"><span class="lbl">조건</span>'평범한 칭찬·정보형 답'은 금지. 한 번 비틀거나, 만남·장난으로 연결되는 한마디로 끝낼 것.</div>
+</section>
+
+<section class="slide center">
+  <p class="kicker">잠깐, 같이 생각해보기</p>
+  <h2 class="head" style="font-size:40px">잘 되던 대화가 어느 날 갑자기 식었습니다.<br>이거, 끝난 걸까요?</h2>
+  <p class="big muted" style="margin-top:20px">✋ 끝이라고 생각하면 손</p>
+</section>
+
+<section class="slide center">
+  <span class="tag">9강</span>
+  <p class="serif divider-title" style="margin-top:24px">위기 대응</p>
+  <p class="big muted" style="margin-top:16px">실수 막기 · 죽은 번호 살리기 · 전화 · 미룸 해독</p>
+</section>
+
+<section class="slide">
+  <p class="kicker">단계별 피해야 할 실수</p>
+  <h2 class="head">무너지는 자리는 단계마다 따로 있다</h2>
+  <div class="flow" style="margin:14px 0">
+    <span class="step">첫 톡</span>
+    <span class="arr">→</span>
+    <span class="step">대화 유지</span>
+    <span class="arr">→</span>
+    <span class="step">약속 잡기</span>
+  </div>
+  <div class="kt2">
+    <div class="col b">
+      <p class="tit">✕ 흔한 자폭</p>
+      <div class="kt"><div class="kt-head">‹ 민지</div><div class="kt-body">
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">자나요?</div></div></div>
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">바쁜가 보네 ㅎㅎ</div></div></div>
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">답 기다리고 있었어요</div></div></div>
+      </div></div>
+      <p class="cap">답 오기 전에 혼자 빈칸 채우기</p>
+    </div>
+    <div class="col g">
+      <p class="tit">✓ 교정</p>
+      <div class="kt"><div class="kt-head">‹ 민지</div><div class="kt-body">
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">아까 그 카페 이름 뭐였죠 ㅋㅋ 까먹었어요</div></div></div>
+        <div class="kt-sep">다음 날</div>
+        <div class="kt-row kt-her"><div class="kt-av">🙂</div><div class="kt-wrap"><div class="kt-msg">아 ㅇㅇ카페요 ㅋㅋ</div></div></div>
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">맞다 거기 ㅋㅋ 혼자 가긴 좀</div></div></div>
+      </div></div>
+      <p class="cap">한 통, 그리고 멈춤</p>
+    </div>
+  </div>
+  <div class="box psych"><span class="lbl">💡 왜 통할까</span>빈칸을 내가 다 메우면 상대는 할 일이 없다. 멈춤은 차례를 넘기는 행동이다.</div>
+</section>
+
+<section class="slide">
+  <p class="kicker">단계별 피해야 할 실수</p>
+  <h2 class="head">대화는 취조가 아니다</h2>
+  <div class="kt2">
+    <div class="col b">
+      <p class="tit">✕ 질문 폭격</p>
+      <div class="kt"><div class="kt-head">‹ 지수</div><div class="kt-body">
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">무슨 일 하세요?</div></div></div>
+        <div class="kt-row kt-her"><div class="kt-av">🙂</div><div class="kt-wrap"><div class="kt-msg">디자인 쪽이요</div></div></div>
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">어디서 일해요? 사는 데는요?</div></div></div>
+        <div class="kt-row kt-her"><div class="kt-av">😶</div><div class="kt-wrap"><div class="kt-msg">ㅎㅎ...</div></div></div>
+      </div></div>
+      <p class="cap">답 받고도 다음 질문만</p>
+    </div>
+    <div class="col g">
+      <p class="tit">✓ 답에서 한 줄 줍기</p>
+      <div class="kt"><div class="kt-head">‹ 지수</div><div class="kt-body">
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">무슨 일 하세요?</div></div></div>
+        <div class="kt-row kt-her"><div class="kt-av">🙂</div><div class="kt-wrap"><div class="kt-msg">디자인 쪽이요</div></div></div>
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">헐 ㅋㅋ 그럼 카페 폰트 이상하면 막 거슬려요?</div></div></div>
+        <div class="kt-row kt-her"><div class="kt-av">😆</div><div class="kt-wrap"><div class="kt-msg">ㅋㅋㅋ 어케 알았지 진짜</div></div></div>
+      </div></div>
+      <p class="cap">키워드 줍고 내 반응 붙이기</p>
+    </div>
+  </div>
+  <div class="box key"><span class="lbl">핵심</span>질문은 문을 여는 도구지 대화 자체가 아니다. 열었으면 안으로 들어가라.</div>
+</section>
+
+<section class="slide">
+  <p class="kicker">단계별 피해야 할 실수</p>
+  <h2 class="head">답장에 <b>끌려다니지</b> 마라</h2>
+  <div class="kt2">
+    <div class="col b">
+      <p class="tit">✕ 매달리는 톡</p>
+      <div class="kt"><div class="kt-head">‹ 지수</div><div class="kt-body">
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">혹시 내가 뭐 기분 상하게 했나요?</div></div></div>
+        <div class="kt-row kt-her"><div class="kt-av">🙂</div><div class="kt-wrap"><div class="kt-msg">아뇨 그냥 바빴어요</div></div></div>
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">다행이다 ㅠㅠ 답 없어서 걱정했어요</div></div></div>
+      </div></div>
+      <p class="cap">내 불안을 상대에게 떠넘긴다 → 부담</p>
+    </div>
+    <div class="col g">
+      <p class="tit">✓ 사건으로 안 만들기</p>
+      <div class="kt"><div class="kt-head">‹ 지수</div><div class="kt-body">
+        <div class="kt-sep">이틀 뒤</div>
+        <div class="kt-row kt-her"><div class="kt-av">🙂</div><div class="kt-wrap"><div class="kt-msg">헐 미안 톡 이제 봤어요 ㅠㅠ</div></div></div>
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">ㅋㅋㅋ 괜찮아요 나도 정신없었어요 그래서 그 영화 봤어요?</div></div></div>
+      </div></div>
+      <p class="cap">늦은 답 안 따지고 다음 칸으로 바로</p>
+    </div>
+  </div>
+  <div class="box psych"><span class="lbl">💡 왜 통할까</span>작은 일에 흔들리지 않는 모습이 사람을 편하게 만든다. "걱정했어요"는 상대에게 내 감정까지 챙길 짐을 지운다.</div>
+</section>
+
+<section class="slide">
+  <p class="kicker">죽은 번호 살리기</p>
+  <h2 class="head">몇 달 멈춘 번호도 아직 <span class="muted">끝난 게 아니다</span></h2>
+  <div class="ktc" style="margin-top:8px">
+    <div class="kt"><div class="kt-head">‹ 지수</div><div class="kt-body">
+      <div class="kt-sep">넉 달 뒤</div>
+      <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">헐 책장 정리하다 그때 빌려준 펜 나왔어요 ㅋㅋ</div></div></div>
+      <div class="kt-row kt-her"><div class="kt-av">😮</div><div class="kt-wrap"><div class="kt-msg">헉 ㅋㅋ 그거 아직 갖고 계셨어요??</div></div></div>
+      <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">펜 인질로 잡고 커피나 한잔? ㅋㅋ</div></div></div>
+      <div class="kt-row kt-her"><div class="kt-av">😆</div><div class="kt-wrap"><div class="kt-msg">ㅋㅋㅋ 펜 인질극 뭔데</div></div></div>
+    </div></div>
+  </div>
+  <div class="box key"><span class="lbl">핵심</span>우연한 명분으로, 추궁 없이, 딱 한 번. 안 오면 미련 없이.</div>
+  <div class="box psych"><span class="lbl">💡 왜 통할까</span>다시 오면 '낯선 사람'이 아니라 <b>'한 번 스친 아는 사람'</b> — 끝난 번호는 없다, 식은 번호만 있다.</div>
+</section>
+
+<section class="slide">
+  <p class="kicker">전화·보이스톡</p>
+  <h2 class="head">목소리가 <span class="muted">거리를 좁힌다</span></h2>
+  <p class="muted">목소리엔 글자가 못 담는 말투·웃음·머뭇거림이 실린다. 단숨에 거리를 좁힌다.</p>
+  <div class="box key" style="margin:20px 0"><span class="lbl">핵심</span>예고 없이 걸지 말 것. "이거 톡으로 설명 힘든데 ㅋㅋ 잠깐 보이스톡 돼요?" 명분과 함께 가볍게.</div>
+  <h3 class="sub">걸기 좋은 타이밍 3가지</h3>
+  <div class="flow" style="margin-top:16px">
+    <span class="step">충분히 친해졌을 때</span>
+    <span class="step">만남 직전</span>
+    <span class="step">오해가 생기려 할 때</span>
+  </div>
+  <div class="box psych" style="margin-top:20px"><span class="lbl">💡 왜 통할까</span>첫 통화는 짧게. "2분만 통화 돼요? 정하고 바로 끊을게요"로 길이를 못 박으면 상대도 부담 없이 받는다.</div>
+</section>
+
+<section class="slide">
+  <p class="kicker">미룸 신호 해독</p>
+  <h2 class="head">진짜 거절일까, <span class="muted">그냥 바쁜 걸까</span></h2>
+  <p class="muted">판별 기준은 둘. <b>대안을 주는가</b>, 그리고 <b>이유가 구체적인가</b>. 다음 문을 열어뒀으면 받고, 닫았으면 한 번만 물러선다.</p>
+  <table style="margin-top:20px">
+    <tr><th>멘트</th><th>정체</th><th>대응</th></tr>
+    <tr><td>"이번 주는 바쁜데 담주는 괜찮아요"</td><td>단순 바쁨</td><td>담주로 바로 받기</td></tr>
+    <tr><td>"헐 가고 싶은데 그날 약속 있어요 ㅠㅠ"</td><td>단순 바쁨</td><td>"그럼 그 주말은요?"</td></tr>
+    <tr><td>"정신 차리면 연락할게요" (날짜 없음)</td><td>빼는 중</td><td>한 번만 물러서기</td></tr>
+    <tr><td>"음… 생각해볼게요" (이후 무응답)</td><td>빼는 중</td><td>하루 뒤 한 번, 안 오면 끝</td></tr>
+    <tr><td>"그런 거 별로 안 좋아해서요"</td><td>진짜 거절</td><td>화제 전환, 약속 접기</td></tr>
+  </table>
+  <div class="box key" style="margin-top:18px"><span class="lbl">핵심</span>날짜 없는 미룸은 대부분 부드러운 거절. 빼는 상대에게 날짜 캐물으면 도망갈 명분만 준다.</div>
+</section>
+
+<section class="slide">
+  <p class="kicker">최근 내 톡 자가진단</p>
+  <h2 class="head">다음에 고칠 <b>하나</b>를 찾는다</h2>
+  <p class="muted">가장 최근 대화를 떠올리며 솔직하게. 찔리는 항목이 곧 다음에 고칠 지점이다.</p>
+  <div class="selfcheck">
+    <p class="sc-lbl">☑ 최근 내 톡, 몇 개나 해당되나</p>
+    <div class="sc-item">답 오기 전에 톡을 두 번 이상 연달아 보냈다</div>
+    <div class="sc-item">할 말 없어서 질문으로 빈칸을 메웠다</div>
+    <div class="sc-item">답장 늦었다고 재촉·서운함을 내비쳤다</div>
+    <div class="sc-item">"걱정했어요" 식으로 내 불안을 떠넘겼다</div>
+    <div class="sc-item">약속 꺼낼 때 말투가 갑자기 무거워졌다</div>
+  </div>
+  <div class="box key"><span class="lbl">관통하는 실수</span>모든 단계를 망치는 단 하나는 <b>'애쓰는 게 티 나는 것'</b>. 기술로 못 가린다 — 마인드가 잡혀야 안 샌다.</div>
+  <p class="muted" style="margin-top:10px;font-size:16px">혼자 채점하면 늘 후하게 매긴다 — 정확한 진단은 <b>남이 내 카톡을 같이 봐줄 때</b> 나온다.</p>
+</section>
+
+<section class="slide center">
+  <p class="kicker">잠깐, 같이 생각해보기</p>
+  <h2 class="head" style="font-size:40px">이제 진짜 만나고 싶어졌습니다.<br>'만나자'를 어떻게 꺼내야 할까요?</h2>
+  <p class="big muted" style="margin-top:20px">🤔 머릿속에 한마디 만들어보기</p>
+</section>
+
+<section class="slide center">
+  <span class="tag">10강</span>
+  <p class="serif divider-title" style="margin-top:24px">만남으로</p>
+</section>
+
+<section class="slide">
+  <p class="kicker">약속의 타이밍</p>
+  <h2 class="head">좋은 흐름에 얹고<br><b>날짜로 못 박는다</b></h2>
+  <div class="grid2">
+    <div class="box bad"><span class="lbl">✕ 이렇게 말고</span>"시간 되시면 정식으로 식사 한번…" — 갑자기 무겁게 꺼내면 거절당한다.</div>
+    <div class="box good"><span class="lbl">✓ 이렇게</span>"헐 거기 나도 좋아하는데 ㅋㅋ 담에 같이 가요" — 하던 얘기에 슬쩍 얹는다.</div>
+  </div>
+  <div class="box key"><span class="lbl">핵심</span>완벽한 타이밍을 기다리지 마라. <b>대화가 가장 잘 통할 때</b>가 그 타이밍이다.</div>
+  <div class="box psych"><span class="lbl">💡 왜 통할까</span>한번 약속을 잡으면, 시간과 노력을 들이기로 한 상대에게 마음이 더 기운다.</div>
+</section>
+
+<section class="slide">
+  <p class="kicker">약속 잡는 순서</p>
+  <h2 class="head">떡밥 → 양자택일 → 확정</h2>
+  <div class="flow">
+    <span class="step">공통 관심사 발견</span>
+    <span class="arr">→</span>
+    <span class="step">"같이 가요" 떡밥</span>
+    <span class="arr">→</span>
+    <span class="step">두 날짜 중 택일</span>
+    <span class="arr">→</span>
+    <span class="step">날짜 확정</span>
+  </div>
+  <div class="ktc">
+    <div class="kt">
+      <div class="kt-head">‹ 지윤</div>
+      <div class="kt-body">
+        <div class="kt-row kt-her"><div class="kt-av">🙂</div><div class="kt-wrap"><div class="kt-msg">헐 저 그거 저장만 해뒀어요 ㅋㅋ 사진 잘 나온다길래</div></div></div>
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">ㅋㅋ 그럼 같이 가요 나도 궁금했어요</div></div></div>
+        <div class="kt-row kt-her"><div class="kt-av">🙂</div><div class="kt-wrap"><div class="kt-msg">ㅋㅋ 좋죠</div></div></div>
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">이번 달까지래요 금요일이랑 일요일 중 언제 편해요?</div></div></div>
+        <div class="kt-row kt-her"><div class="kt-av">🙂</div><div class="kt-wrap"><div class="kt-msg">일요일이 나을 듯요 ㅎㅎ 기대된다</div></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="box key"><span class="lbl">핵심</span>"좋죠"가 인사치레로 흩어지기 전에 <b>두 날짜</b>를 던져 직접 고르게 한다.</div>
+</section>
+
+<section class="slide">
+  <p class="kicker">첫 만남, 어디서 언제</p>
+  <h2 class="head">장소는 가볍게 · 시간은 짧게</h2>
+  <table>
+    <tr><th>요소</th><th>이렇게</th><th>이유</th></tr>
+    <tr><td>장소</td><td>카페 · 점심 · 가벼운 전시</td><td>격식이 낮아 둘 다 편하다</td></tr>
+    <tr><td>시간대</td><td>주말 낮 · 점심</td><td>밝은 시간이 덜 부담스럽다</td></tr>
+    <tr><td>소요시간</td><td>1시간 반~2시간</td><td>짧아야 아쉬움이 남는다</td></tr>
+    <tr><td>피할 것</td><td>코스요리 · 밤 술자리 · 영화</td><td>길고 무겁고 대화가 끊긴다</td></tr>
+  </table>
+  <div class="box psych"><span class="lbl">💡 왜 통할까</span>살짝 모자란 경험이 더 오래 남는다. 아쉬울 때 일어서면 "다음에 또"가 따라온다.</div>
+</section>
+
+<section class="slide">
+  <p class="kicker">미루면</p>
+  <h2 class="head">한 발 <b>물러섰다</b> 다시</h2>
+  <p class="muted">"요즘 좀 바빠서…" 하고 미룰 때, 매달리면 끝이다. 물러설 줄 아는 여유가 다음 기회를 남긴다.</p>
+  <div class="kt2" style="margin-top:16px">
+    <div class="col b">
+      <p class="tit">✕ 매달리기</p>
+      <div class="kt"><div class="kt-head">‹ 그분</div><div class="kt-body">
+        <div class="kt-row kt-her"><div class="kt-av">🙂</div><div class="kt-wrap"><div class="kt-msg">요즘 좀 바빠서요 ㅠㅠ</div></div></div>
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">그럼 언제 시간 되세요? 다음 주는요? 그 다음 주는요?</div></div></div>
+      </div></div>
+      <p class="cap">날짜 캐물으면 도망갈 명분만 준다</p>
+    </div>
+    <div class="col g">
+      <p class="tit">✓ 가볍게 물러서기</p>
+      <div class="kt"><div class="kt-head">‹ 그분</div><div class="kt-body">
+        <div class="kt-row kt-her"><div class="kt-av">🙂</div><div class="kt-wrap"><div class="kt-msg">요즘 좀 바빠서요 ㅠㅠ</div></div></div>
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">ㅋㅋ 바쁜 시즌인가 보네요 잠잠해지면 얘기해요</div></div></div>
+      </div></div>
+      <p class="cap">문 열어둔 채 빠진다 → 끝 아닌 경우 많다</p>
+    </div>
+  </div>
+  <div class="box key"><span class="lbl">약속 잡은 뒤엔</span>기다림도 텐션 소재다 — "그날까지 먹고 싶은 거 세 개 정해놔요 다 사줄게 ㅋㅋ"</div>
+</section>
+
+<section class="slide center">
+  <span class="tag" style="background:var(--purple)">실습</span>
+  <h2 class="head" style="margin-top:20px">지금 연락 중인 상대에게<br>보낼 <b>약속 멘트</b> 쓰기</h2>
+  <p class="big muted">① 최근 대화에서 떡밥 1개 → ② "같이 가요" → ③ 두 날짜 양자택일까지 한 흐름으로 적어보세요. <b style="color:var(--purple)">✍ 워크북 PART 2</b></p>
+</section>
+
+<section class="slide center">
+  <span class="tag">11강</span>
+  <p class="serif divider-title" style="margin-top:24px">정리 — 첫 톡부터 약속까지, 한 흐름으로</p>
+  <p class="big muted" style="margin-top:16px">배운 조각들이 실전에선 한꺼번에 굴러간다</p>
+</section>
+
+<section class="slide">
+  <p class="kicker">실전 사례</p>
+  <h2 class="head">첫 톡 한 줄이 토요일 약속까지</h2>
+  <div class="ktc">
+    <div class="kt">
+      <div class="kt-head">‹ 카페 그분</div>
+      <div class="kt-body">
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">어제 그 카페 디저트 안 시키고 나와서 아쉬워요 ㅋㅋ</div></div></div>
+        <div class="kt-row kt-her"><div class="kt-av">🙂</div><div class="kt-wrap"><div class="kt-msg">헐 거기 티라미수 진짜 맛있는데!!</div></div></div>
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">그럼 거기 또 가야겠다 ㅋㅋ 담에 같이 가요</div></div></div>
+        <div class="kt-row kt-her"><div class="kt-av">🙂</div><div class="kt-wrap"><div class="kt-msg">ㅋㅋ 좋죠</div></div></div>
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">목요일이랑 토요일 중에 언제가 편해요?</div></div></div>
+        <div class="kt-row kt-her"><div class="kt-av">🙂</div><div class="kt-wrap"><div class="kt-msg">토요일이요!</div></div></div>
+      </div>
+    </div>
+    <div class="flow" style="margin-top:18px">
+      <span class="step">상황 소환</span><span class="arr">→</span>
+      <span class="step">키워드 확장</span><span class="arr">→</span>
+      <span class="step">약속 얹기</span><span class="arr">→</span>
+      <span class="step">날짜 못 박기</span>
+    </div>
+  </div>
+</section>
+
+<section class="slide center">
+  <span class="tag" style="background:var(--purple)">실습 · 마무리</span>
+  <h2 class="head" style="margin-top:20px">가져온 <b>'막힌 카톡'</b>을 다시 설계한다</h2>
+  <p class="big muted">사전과제의 그 대화를 열고, 오늘 배운 걸로 처음부터 다시 짜보세요.</p>
+  <div class="selfcheck">
+    <p class="sc-lbl">✍ 워크북 실습란에 4칸으로</p>
+    <div class="sc-item">① 어디서 죽었나 — 몇 강의 실수였나</div>
+    <div class="sc-item">② 재시동 첫 줄 — 명분 5선 중 하나로</div>
+    <div class="sc-item">③ 이어질 3턴 — 캐치볼로 굴리기</div>
+    <div class="sc-item">④ 약속 멘트 — 날짜 좁혀 묻기</div>
+  </div>
+</section>
+
+<section class="slide center">
+  <p class="kicker" style="color:var(--purple)">잠깐, 같이 생각해보기</p>
+  <h2 class="head" style="font-size:40px">친해졌고, 잘 웃어줍니다.<br>근데 왜 <b>'좋은 오빠'</b>에서 멈출까요?</h2>
+  <p class="big muted" style="margin-top:20px">✋ 짚이는 사람 손 들어보세요</p>
+</section>
+
+<!-- ===================== 3부 · 섹슈얼 토크(심화편) ===================== -->
+
+<section class="slide center">
+  <span class="tag" style="background:var(--purple)">심화편</span>
+  <p class="serif divider-title" style="margin-top:24px">섹슈얼 토크</p>
+  <p class="big muted" style="margin-top:16px">긴장을 다루는 어른의 대화 — <b style="color:var(--purple)">동의 위에서만</b></p>
+</section>
+
+<section class="slide center">
+  <p class="kicker" style="color:var(--purple)">시작 전 안내</p>
+  <h2 class="head" style="font-size:38px">여기부터는 <b>성인 심화편</b>입니다</h2>
+  <div class="box key" style="max-width:760px;margin:14px auto 0;text-align:left;border-left-color:var(--purple)">
+    <span class="lbl" style="color:var(--purple)">편하게 선택하세요</span>
+    성적 긴장·수위를 다루는 파트입니다. 불편하면 <b>편히 쉬었다 다음 정리 파트부터 합류</b>해도 좋습니다. 기본편만으로도 충분합니다.
+  </div>
+</section>
+
+<section class="slide">
+  <p class="kicker" style="color:var(--purple)">섹슈얼 토크 · 오해부터</p>
+  <h2 class="head">섹톡은 <b>야한 말</b>이 아니다</h2>
+  <p class="muted">시작 전에, 흔한 오해 세 가지부터 깨고 간다.</p>
+  <div style="display:flex;flex-direction:column;gap:12px;margin-top:16px">
+    <div style="display:flex;gap:16px">
+      <div class="box bad" style="flex:0 0 330px;margin:0"><span class="lbl">✕ 야한 말을 하는 거다</span>19금 단어를 던지는 것</div>
+      <div class="box good" style="flex:1;margin:0"><span class="lbl">✓ 온도를 다루는 것</span>야한 단어 하나 없이, 스치는 한 줄이면 충분. <b>노골적일수록 싸해진다.</b></div>
+    </div>
+    <div style="display:flex;gap:16px">
+      <div class="box bad" style="flex:0 0 330px;margin:0"><span class="lbl">✕ 꼭 해야 하고, 잘해야 한다</span>안 하면 진도가 안 나간다</div>
+      <div class="box good" style="flex:1;margin:0"><span class="lbl">✓ 필수가 아니라 선택</span>흐름이 있을 때만. <b>집착하면 티가 나서 다 망친다.</b></div>
+    </div>
+    <div style="display:flex;gap:16px">
+      <div class="box bad" style="flex:0 0 330px;margin:0"><span class="lbl">✕ 배우면 바로 되겠지</span>오늘 당장 써먹는다</div>
+      <div class="box good" style="flex:1;margin:0"><span class="lbl">✓ 초보에겐 어렵다</span>타이밍·완급·신호가 다 맞물려야. <b>조급해 말고, 흐름이 왔을 때 안 무너지려고.</b></div>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <p class="kicker" style="color:var(--purple)">섹슈얼 토크 · 왜</p>
+  <h2 class="head">섹톡보다 <b>만남</b>이 먼저다</h2>
+  <p class="muted">카톡으로 호감조차 못 끌어내면 섹톡은 독 — 불씨도 없는데 기름 붓는 격이다. 안 하는 게 낫다.</p>
+  <p class="kicker" style="color:var(--purple);margin-top:20px">그래도 하는 이유 3</p>
+  <div class="grid2" style="grid-template-columns:1fr 1fr 1fr;margin-top:6px">
+    <div class="box key"><span class="lbl">① 재미 (도파민)</span>아슬한 긴장이 대화 온도를 올린다</div>
+    <div class="box key"><span class="lbl">② 시간 절약</span>만나서 0부터 X. 미리 온도를 맞춰둔다</div>
+    <div class="box key"><span class="lbl">③ 상상</span>다 말 안 해도 상대가 스스로 그림을 그린다</div>
+  </div>
+  <div class="box bad" style="margin-top:18px"><span class="lbl">✕ 리스크 — 방어기제</span>준비 안 된 상대에게 훅 들어가면 "이 사람 뭐지?" 경계가 확 선다. 신호 보고 천천히, 한 칸씩.</div>
+</section>
+
+<section class="slide">
+  <p class="kicker" style="color:var(--purple)">섹슈얼 토크 · 핵심</p>
+  <h2 class="head">핵심은 <b>뉘앙스</b> + <b>자의식 해체</b></h2>
+  <p class="muted" style="margin-top:6px"><b>① 뉘앙스</b> — 야한 말 ✕, 암시 ✓ (단어 없이 온도만). &nbsp;&nbsp;<b>② 자의식 해체</b> — 능글맞은 페르소나를 입고 던진다.</p>
+  <div class="kt2" style="margin-top:16px">
+    <div class="col g">
+      <p class="tit">능글맞은 페르소나 — 이렇게</p>
+      <div class="kt"><div class="kt-head">‹ 상대</div><div class="kt-body">
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">너 자꾸 이러면 나 큰일 나 ㅋㅋ 책임질 거야?</div></div></div>
+        <div class="kt-row kt-her"><div class="kt-av">😆</div><div class="kt-wrap"><div class="kt-msg">ㅋㅋㅋ 뭐래 진짜 느끼해</div></div></div>
+      </div></div>
+    </div>
+  </div>
+  <div class="box psych" style="margin-top:12px"><span class="lbl">💡 왜 통할까</span>사람은 내가 어떻게 하느냐에 따라 달라진다. 판의 온도를 정하는 건 언제나 <b>리드하는 쪽</b>이다.</div>
+</section>
+
+<section class="slide">
+  <p class="kicker" style="color:var(--purple)">섹슈얼 토크 · 안전하게</p>
+  <h2 class="head">던지고, <b>빠질 길</b>을 남긴다</h2>
+  <p class="muted">은근하게 던지되, 언제든 무해하게 빠져나갈 길을 함께. 통하면 좋고, 안 통해도 아무 일 없다.</p>
+  <div style="display:flex;gap:30px;align-items:flex-start;margin-top:16px">
+    <div style="flex:0 0 540px">
+      <div class="ktc">
+        <div class="kt"><div class="kt-head">‹ 지연</div><div class="kt-body">
+          <div class="kt-row kt-her"><div class="kt-av">😌</div><div class="kt-wrap"><div class="kt-msg">아 몸이 찌뿌둥해</div></div></div>
+          <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">그럴 땐 마사지가 최곤데</div></div></div>
+          <div class="kt-row kt-her"><div class="kt-av">🙂</div><div class="kt-wrap"><div class="kt-msg">마사지 좋아</div></div></div>
+          <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">오빠 손이 약손이야</div></div></div>
+        </div></div>
+      </div>
+      <p class="cap">야한 단어 0개 — 은근한 뉘앙스만 얹었다</p>
+    </div>
+    <div style="flex:1">
+      <p class="kicker" style="color:var(--purple)">안전장치 — 긴장은 남기고 부담은 던다</p>
+      <div class="box good" style="margin-top:6px"><span class="lbl">"아 나 민망하게 왜 이래~"</span>내가 먼저 민망해하면 상대 부담이 준다</div>
+      <div class="box good"><span class="lbl">"너 이거 감당돼?"</span>던져놓고 공을 상대에게 넘긴다</div>
+      <div class="box good"><span class="lbl">"무슨 생각 하는 거야 ㅋㅋ"</span>야하게 받으면 오히려 상대를 몰아 웃음으로</div>
+    </div>
+  </div>
+  <div class="box psych" style="margin-top:14px"><span class="lbl">💡 왜 안전한가</span>모든 문장이 '해석의 여지'를 남긴다 — 야한 뜻으로도, 농담으로도 읽힌다. 빠질 길이 있어서 편하게 던져진다.</div>
+</section>
+
+<section class="slide">
+  <p class="kicker" style="color:var(--purple)">섹슈얼 토크 · 안전하게</p>
+  <h2 class="head">말보다 <b>이모티콘</b></h2>
+  <p class="muted">텍스트는 무해한데, 슬쩍 얹은 이모티콘 하나가 상상을 대신 그린다. 야한 말 0개, 온도만 +1.</p>
+  <div style="display:flex;justify-content:center;gap:20px;align-items:flex-end;margin-top:24px;flex-wrap:wrap">
+    <img src="images/sextalk/emo1.png" alt="부끄한 척 이모티콘" style="height:152px;width:auto;border-radius:12px;display:block">
+    <img src="images/sextalk/emo2.png" alt="쪼물쪼물 이모티콘" style="height:152px;width:auto;border-radius:12px;display:block">
+    <img src="images/sextalk/emo3.png" alt="어어 이모티콘" style="height:152px;width:auto;border-radius:12px;display:block">
+    <img src="images/sextalk/emo4.png" alt="잘해써요 이모티콘" style="height:152px;width:auto;border-radius:12px;display:block">
+    <img src="images/sextalk/emo5.png" alt="껴안기 이모티콘" style="height:152px;width:auto;border-radius:12px;display:block">
+  </div>
+  <div class="box key" style="margin-top:22px"><span class="lbl">부담 0 — 빠질 길 확보</span>능청·부끄한 척·스킨십 암시를 말로 하면 촌스럽다. 이모티콘이 대신 그려주고, 상대가 "ㅋㅋ 뭐야"로 받으면 그냥 귀여운 짤이 된다.</div>
+</section>
+
+<section class="slide">
+  <p class="kicker" style="color:var(--purple)">섹슈얼 토크 · 빌드업</p>
+  <h2 class="head">빌드업 = <b>의미부여</b></h2>
+  <p class="muted">평범한 말에 의미 한 방울. 받으면 빌드업 시작, 안 받으면 그냥 농담. 많은 여자가 이 장난을 은근히 즐긴다.</p>
+  <div class="kt2" style="margin-top:16px">
+    <div class="col b">
+      <p class="tit">✕ 그냥 정보 확인</p>
+      <div class="kt"><div class="kt-head">‹ 상대</div><div class="kt-body">
+        <div class="kt-row kt-her"><div class="kt-av">🌶️</div><div class="kt-wrap"><div class="kt-msg">나 매운 거 좀 좋아해</div></div></div>
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">오 매운 거 좋아해요?</div></div></div>
+      </div></div>
+      <p class="cap">아무 일도 안 일어난다 — 사실 확인</p>
+    </div>
+    <div class="col g">
+      <p class="tit">✓ 의미부여 · 떡볶이 루틴</p>
+      <div class="kt"><div class="kt-head">‹ 상대</div><div class="kt-body">
+        <div class="kt-row kt-her"><div class="kt-av">🌶️</div><div class="kt-wrap"><div class="kt-msg">나 매운 거 좀 좋아해</div></div></div>
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">오… 자극적인 거 좋아하는 스타일이구나</div></div></div>
+        <div class="kt-row r kt-me"><div class="kt-wrap" style="align-items:flex-end"><img src="images/blush.png" alt="수줍 이모티콘" style="width:104px;height:auto;border-radius:10px;display:block"></div></div>
+        <div class="kt-row kt-her"><div class="kt-av">😆</div><div class="kt-wrap"><div class="kt-msg">ㅋㅋㅋ뭐래</div></div></div>
+      </div></div>
+      <p class="cap">"자극적인" 한 겹에 공기가 달라진다</p>
+    </div>
+  </div>
+  <div class="box key" style="margin-top:14px"><span class="lbl">소재는 뭐든 — 음식·술·이지선다</span>평범한 소재에 의미 한 겹만 얹으면 온도가 오른다. 다음 장에서 술·이지선다 루틴을 실제 카톡으로 본다. 야한 말 0개.</div>
+</section>
+
+<section class="slide">
+  <p class="kicker" style="color:var(--purple)">섹슈얼 토크 · 빌드업 실전</p>
+  <h2 class="head">소재는 <b>뭐든</b> 된다</h2>
+  <p class="muted">술도, 이지선다도 빌드업이 된다. 받으면 온도가 오르고, 안 받으면 그냥 농담 — 빠질 길은 늘 남는다.</p>
+  <div class="kt2" style="margin-top:14px">
+    <div class="col g">
+      <p class="tit">🍶 복분자 술 루틴</p>
+      <div class="kt"><div class="kt-head">‹ 상대</div><div class="kt-body">
+        <div class="kt-row kt-her"><div class="kt-av">🍶</div><div class="kt-wrap"><div class="kt-msg">오빠는 술 잘 마셔?</div></div></div>
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">나는 마시는 것만 마셔 ㅎㅎ</div></div></div>
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">맛있는 술만 ㅋㅋ 복분자 같은 거</div></div></div>
+        <div class="kt-row kt-her"><div class="kt-av">🍶</div><div class="kt-wrap"><div class="kt-msg">복분자 시러 너무 쎄</div></div></div>
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">왜 시러 ㅋㅋ 나만 먹어도 돼</div></div></div>
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">네 몫까지 내가 힘쓸게 💪</div></div></div>
+        <div class="kt-row kt-her"><div class="kt-av">😆</div><div class="kt-wrap"><div class="kt-msg">ㅋㅋㅋㅋ 뭐래 헤헤</div></div></div>
+      </div></div>
+      <p class="cap">'복분자'에 <b>"네 몫까지 힘쓸게"</b> 한 겹 — 은근한 뜻만 실린다.</p>
+    </div>
+    <div class="col g">
+      <p class="tit">🍜 닭백숙 이지선다</p>
+      <div class="kt"><div class="kt-head">‹ 상대</div><div class="kt-body">
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">너는 닭백숙 같은 남자가 좋아, 불닭볶음면 같은 남자가 좋아?</div></div></div>
+        <div class="kt-row kt-her"><div class="kt-av">🍜</div><div class="kt-wrap"><div class="kt-msg">ㅋㅋㅋ 그게 뭔데</div></div></div>
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">순하고 편한 사람 vs 자극적이고 위험한 사람 그거지</div></div></div>
+        <div class="kt-row kt-her"><div class="kt-av">😏</div><div class="kt-wrap"><div class="kt-msg">ㅋㅋㅋㅋ 뭐래</div></div></div>
+      </div></div>
+      <p class="cap">웃으며 답하는 사이 <b>'자극·위험'</b>이 자연스럽게 오간다.</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <p class="kicker" style="color:var(--purple)">섹슈얼 토크 · 빌드업</p>
+  <h2 class="head">평범한 답도 <b>이중의미</b>로</h2>
+  <p class="muted">"대화 잘 통해"·"듬직한 거" 같은 평범한 답에 한 겹만 얹는다. 답을 부정하지 않고 되받는 게 포인트.</p>
+  <div style="display:flex;justify-content:center;gap:32px;align-items:flex-start;margin-top:16px">
+    <div class="kt">
+      <div class="kt-head">‹ 상대</div>
+      <div class="kt-body">
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">넌 남자 볼 때 뭐가 제일 중요해?</div></div></div>
+        <div class="kt-row kt-her"><div class="kt-av">🙂</div><div class="kt-wrap"><div class="kt-msg">대화 잘 통하고 듬직한 거 ㅎㅎ 너는?</div></div></div>
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">내가 구멍에 잘 끼워맞출게 ㅋㅋ</div></div></div>
+        <div class="kt-row kt-her"><div class="kt-av">😆</div><div class="kt-wrap"><img src="images/niang.png" alt="니앙=내앙 스티커" style="width:176px;height:auto;border-radius:10px;display:block"></div></div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:14px;max-width:380px">
+      <div class="box good"><span class="lbl">✓ 원리 — 의미부여</span>'듬직한 거'를 물리적 뉘앙스로 되받는다. 상대 답을 부정하지 않고 <b>한 겹만 얹는 것</b>이 핵심.</div>
+      <div class="box key"><span class="lbl">은근하게 가려면</span>수위가 부담되면 <b>"우리 은근 잘 통하지 않냐"</b> — 같은 원리, 낮은 수위. 받으면 빌드업, 안 받으면 그냥 농담.</div>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <p class="kicker" style="color:var(--purple)">섹슈얼 토크 · 실전 (진짜 대화)</p>
+  <h2 class="head">되치면, 상대가 <b>스스로 올라온다</b></h2>
+  <div style="display:flex;justify-content:center;gap:12px;margin-top:14px">
+    <img src="images/sextalk/jiyeon1.png" alt="지연 대화 1" style="height:456px;width:auto;border-radius:8px;border:1px solid var(--line)">
+    <img src="images/sextalk/jiyeon2.png" alt="지연 대화 2" style="height:456px;width:auto;border-radius:8px;border:1px solid var(--line)">
+    <img src="images/sextalk/jiyeon3.png" alt="지연 대화 3" style="height:456px;width:auto;border-radius:8px;border:1px solid var(--line)">
+    <img src="images/sextalk/jiyeon4.png" alt="지연 대화 4" style="height:456px;width:auto;border-radius:8px;border:1px solid var(--line)">
+  </div>
+</section>
+
+<section class="slide">
+  <p class="kicker" style="color:var(--purple)">플러팅 · 텐션 빌드업</p>
+  <h2 class="head">긴장은 <b>신뢰 위에서만</b> 매력이 된다</h2>
+  <p class="muted">같은 말도 서먹한 사이에선 불쾌함, 편한 사이에선 설렘이다. 순서를 헷갈리지 마라.</p>
+  <div class="kt2">
+    <div class="col b">
+      <p class="tit">✕ 친해지기 전에 수위부터</p>
+      <div class="kt"><div class="kt-head">‹ 그분</div><div class="kt-body">
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">누나 몸매 진짜 좋을 것 같은데</div></div></div>
+        <div class="kt-row kt-her"><div class="kt-av">😶</div><div class="kt-wrap"><div class="kt-msg">...네?</div></div></div>
+      </div></div>
+      <p class="cap">신뢰 없이 던지면 그냥 불쾌함</p>
+    </div>
+    <div class="col g">
+      <p class="tit">✓ 충분히 편해진 뒤 가볍게</p>
+      <div class="kt"><div class="kt-head">‹ 그분</div><div class="kt-body">
+        <div class="kt-row kt-her"><div class="kt-av">🙂</div><div class="kt-wrap"><div class="kt-msg">나 오늘 필라테스 등록했어 ㅋㅋ</div></div></div>
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">이미 충분한 것 같은데 굳이..? ㅋㅋ</div></div></div>
+        <div class="kt-row kt-her"><div class="kt-av">😄</div><div class="kt-wrap"><div class="kt-msg">ㅋㅋㅋ뭐야</div></div></div>
+      </div></div>
+      <p class="cap">바닥에 신뢰가 깔리면 같은 말도 설렘</p>
+    </div>
+  </div>
+  <div class="box key" style="margin-top:6px"><span class="lbl">타이밍 신호등</span>🟢 대화 무르익음 · 장난 오감 · 약속 잡힘 &nbsp;|&nbsp; 🔴 단답 · 기분 다운 · 진지한 주제</div>
+</section>
+
+<section class="slide">
+  <p class="kicker" style="color:var(--purple)">수위는 사다리처럼</p>
+  <h2 class="head">점프하지 말고 <b>한 칸씩</b> 밟아라</h2>
+  <p class="muted">사람은 큰 부탁엔 방어하고, 작은 동의 뒤엔 다음 동의가 쉬워진다. 수위도 똑같다.</p>
+  <div class="kt2">
+    <div class="col b">
+      <p class="tit">✕ 두세 칸 점프</p>
+      <div class="kt"><div class="kt-head">‹ 그분</div><div class="kt-body">
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">솔직히 너 보면 자꾸 딴생각 들어 오늘 밤 시간 돼?</div></div></div>
+        <div class="kt-row kt-her"><div class="kt-av">😐</div><div class="kt-wrap"><div class="kt-msg">ㅋㅋ갑자기 왜 그래</div></div></div>
+      </div></div>
+      <p class="cap">상대를 멈춰 세운다</p>
+    </div>
+    <div class="col g">
+      <p class="tit">✓ 한 칸씩 밟기</p>
+      <div class="kt"><div class="kt-head">‹ 그분</div><div class="kt-body">
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">넌 사람 볼 때 뭐가 제일 중요해?</div></div></div>
+        <div class="kt-row kt-her"><div class="kt-av">🙂</div><div class="kt-wrap"><div class="kt-msg">대화 잘 통하는 거? 너는?</div></div></div>
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">나도 ㅋㅋ 근데 우리 은근 잘 통하지 않냐</div></div></div>
+      </div></div>
+      <p class="cap">상대를 끌어들인다</p>
+    </div>
+  </div>
+  <div class="box psych" style="margin-top:6px"><span class="lbl">💡 왜 통할까</span>한 칸씩 오르면 "끌려왔다"가 아니라 "함께 왔다"가 된다. 사다리는 압박이 아니라 동행이다.</div>
+</section>
+
+<section class="slide">
+  <p class="kicker" style="color:var(--purple)">수위는 사다리처럼</p>
+  <h2 class="head">한 칸의 크기 — <b>5단계</b></h2>
+  <table style="margin-top:10px">
+    <tr><th>칸</th><th>단계</th><th>성격</th><th>빠져나갈 출구</th></tr>
+    <tr><td>1칸</td><td>가벼운 칭찬</td><td>분위기 일반론</td><td>누구한테나 할 수 있는 말</td></tr>
+    <tr><td>2칸</td><td>사적인 관심</td><td>'너'에 대한 호기심</td><td>농담의 외피</td></tr>
+    <tr><td>3칸</td><td>우리 사이 암시</td><td>'우리'를 슬쩍</td><td>두 갈래 뜻</td></tr>
+    <tr><td>4칸</td><td>온도 있는 고백성</td><td>감정을 비침</td><td>명분(밤·콘텐츠)</td></tr>
+    <tr><td>5칸</td><td>만남으로 넘기기</td><td>다음을 약속</td><td>"글보다 직접"</td></tr>
+  </table>
+  <div class="grid2" style="margin-top:12px">
+    <div class="box key"><span class="lbl">출구를 남겨라</span>진한 해석·순한 해석을 둘 다 살린다. "자꾸 보게 되잖아"는 받으면 호감, 흘리면 농담이다.</div>
+    <div class="box psych"><span class="lbl">💡 미지근하면 내려온다</span>"갑자기?" "진지하네"는 그만 올리라는 신호. 변명 없이 농담으로 덮고 화제를 돌린다.</div>
+  </div>
+</section>
+
+<section class="slide">
+  <p class="kicker" style="color:var(--purple)">수위는 사다리처럼 · 퀴즈</p>
+  <h2 class="head">이 멘트는 <b>몇 칸</b>일까?</h2>
+  <p class="muted">사고는 대개 '칸 점프'에서 난다. 각 멘트가 몇 칸인지, 지금 온도에서 던져도 되는지 판정해보세요.</p>
+  <div class="grid2" style="margin-top:8px">
+    <div class="box key"><span class="lbl">A</span>"오늘 프사 분위기 좋다 ㅋㅋ"</div>
+    <div class="box key"><span class="lbl">B</span>"우리 은근 코드 잘 맞지 않냐"</div>
+    <div class="box key"><span class="lbl">C</span>"밤이라 그런가 너랑 떠드는 거 좋다"</div>
+    <div class="box bad"><span class="lbl">함정</span>상대가 방금 단답이었다면? <b>몇 칸이든 지금은 멈춤</b></div>
+  </div>
+  <div class="box psych" style="margin-top:10px"><span class="lbl">💡 판정 순서</span>먼저 신호등(초록·빨강)으로 <b>던질 때인지</b>부터 본다. 초록일 때만 칸을 센다. <b>A=1칸 · B=3칸 · C=4칸.</b></div>
+</section>
+
+<section class="slide">
+  <p class="kicker" style="color:var(--purple)">만나기 전, 기대치 관리</p>
+  <h2 class="head">사람마다, <b>만난 경로마다</b> 속도가 다르다</h2>
+  <p class="muted">한 번 통한 방식을 모두에게 똑같이 쓰지 마라. 상대를 읽고 속도를 맞춘다.</p>
+  <table style="margin-top:10px">
+    <tr><th>만난 경로</th><th>초기 개방도</th><th>접근 속도</th></tr>
+    <tr><td>가벼운 만남 목적의 앱</td><td>비교적 높음</td><td>빠르게 가도 무방</td></tr>
+    <tr><td>소개팅 · 지인 소개</td><td>중간</td><td>천천히, 신뢰 위주</td></tr>
+    <tr><td>취미 · 모임에서 알게 됨</td><td>낮음</td><td>아주 천천히</td></tr>
+  </table>
+  <div class="box psych" style="margin-top:12px"><span class="lbl">💡 잠수는 당신 잘못이 아닐 때가 많다</span>원래 여러 명과 톡하던 사람, 다른 사람이 생김, 그날 기분 — 내가 뭘 보냈든 똑같이 일어났을 일이다. 회복 속도가 곧 실력이다.</div>
+</section>
+
+<section class="slide">
+  <p class="kicker" style="color:var(--purple)">차단 · 잠수 대처</p>
+  <h2 class="head">마지막 한 통은 <b>답을 받으려는 게 아니다</b></h2>
+  <p class="muted">채널이 열려 있다면 딱 한 통. 추궁도 매달림도 없는, 나를 정리하는 인사다.</p>
+  <div class="kt2">
+    <div class="col b">
+      <p class="tit">✕ 추궁하고 매달리는 톡</p>
+      <div class="kt"><div class="kt-head">‹ 그분</div><div class="kt-body">
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">왜 답이 없어? 내가 뭐 잘못했어?</div></div></div>
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">최소한 이유는 말해줘야지</div></div></div>
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">답 좀 해줘 제발</div></div></div>
+      </div></div>
+      <p class="cap">마무리가 아니라 상대의 부담을 키운다</p>
+    </div>
+    <div class="col g">
+      <p class="tit">✓ 추궁 없는 진정성 한 통</p>
+      <div class="kt"><div class="kt-head">‹ 그분</div><div class="kt-body">
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">연락 뜸한 거 보면 마음이 좀 멀어진 것 같더라</div></div></div>
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">캐묻고 싶진 않아 그건 네 마음이니까</div></div></div>
+        <div class="kt-row r kt-me"><div class="kt-wrap"><div class="kt-msg">짧았지만 좋았어 잘 지내</div></div></div>
+      </div></div>
+      <p class="cap">아무것도 요구하지 않고 담백하게 둔다</p>
+    </div>
+  </div>
+  <div class="box bad" style="margin-top:6px"><span class="lbl">단, 차단이면 이 한 통조차 없다</span>차단은 그 자체로 가장 분명한 답. 새 번호·다른 계정으로 우회하는 건 기술이 아니라 침범이다.</div>
+</section>
+
+<section class="slide">
+  <p class="kicker" style="color:var(--purple)">차단 · 잠수 대처</p>
+  <h2 class="head"><b>식은 번호</b>와 <b>닫힌 문</b>은 다르다</h2>
+  <p class="muted">다시 데워볼 여지가 있는 관계와, 떠나는 게 유일한 답인 관계를 구분하라.</p>
+  <table style="margin-top:10px">
+    <tr><th>구분</th><th>식은 번호 (다시 시도 가능)</th><th>닫힌 문 (절대 금지)</th></tr>
+    <tr><td>마지막 대화</td><td>나쁘지 않게, 흐지부지</td><td>거절 · 다툼 · 잠수로 끝남</td></tr>
+    <tr><td>차단 여부</td><td>채널 열림</td><td>차단됨</td></tr>
+    <tr><td>상대 의사</td><td>거부 표현 없었음</td><td>명확히 거부함</td></tr>
+    <tr><td>대응</td><td>가벼운 안부로 시도</td><td>떠나는 것이 답</td></tr>
+  </table>
+  <div class="box psych" style="margin-top:12px"><span class="lbl">💡 손절은 패배가 아니라 자기 보호</span>거절을 존중하고 물러서는 사람이 "나는 내 가치를 안다"고 말하는 것이다. 매달릴수록 매력은 사라진다.</div>
+</section>
+
+<section class="slide center">
+  <p class="kicker" style="color:var(--purple)">심화편을 닫으며</p>
+  <h2 class="head">모든 기술의 바닥엔 <b>단 하나</b>가 있다</h2>
+  <div class="box psych" style="max-width:820px;margin:6px auto 0;text-align:left">
+    <span class="lbl">💡 이게 빠지면 어떤 기술도 무너진다</span>
+    긴장을 만들고, 수위를 조절하고, 끝을 받아들이고, 멘탈을 지키는 법 — 그 바닥엔 <b>상대를 사람으로 존중하는 것</b>이 있다. "이 한 명이 내 전부가 아니다"가 깔리면 톡 전체의 온도가 바뀐다.
+  </div>
+  <p class="big muted" style="margin-top:20px">급할수록 천천히. 그게 어른의 속도다.</p>
+</section>
+
+<!-- ===================== 전체 정리 ===================== -->
+
+<section class="slide">
+  <p class="kicker">오늘 배운 것</p>
+  <h2 class="head">첫 톡부터 심화까지, <b>이걸 가져갑니다</b></h2>
+  <div class="chk">
+    <div>1강 마인드 3원칙 — 조급함·받는 사람·힘 빼기</div>
+    <div>2강 프사는 첫 톡보다 먼저 말한다</div>
+    <div>3강 첫 톡 = 관찰 → 단서 → 가볍게</div>
+    <div>4강 재촉은 자폭 · 읽씹엔 명분 5선</div>
+    <div>5강 감정형으로 데우고 미러링·캐치볼로 굴린다</div>
+    <div>6강 화술 4원리 — 극단·역발상·메타·완급</div>
+    <div>7강 호감은 점수로 읽고, 말은 신호 올 때 놓는다</div>
+    <div>8강 상황마다 정해진 한 수가 있다</div>
+    <div>9강 위기는 추궁 대신 명분으로 되살린다</div>
+    <div>10강 만남은 명분 깔고 날짜 좁혀 못 박는다</div>
+  </div>
+  <div class="box psych" style="margin-top:12px"><span class="lbl" style="color:var(--purple)">심화편 · 한 줄 리캡</span>수위는 <b>사다리처럼 한 칸씩</b> · 던질 땐 <b>출구</b>를 남기고 · <b>미지근하면 내려온다</b></div>
+  <div class="box key" style="margin-top:10px"><span class="lbl">결국 오늘의 전부</span>① 여유로 <b>값</b>을 지키고 · ② <b>받는 사람</b>이 되어보고 · ③ 대화를 <b>잇는다</b></div>
+</section>
+
+<section class="slide center">
+  <p class="kicker" style="color:var(--purple)">솔직히 말하면</p>
+  <h2 class="head">원리는 다 드렸습니다. 근데 <b>하나</b>가 남아요</h2>
+  <div class="box psych" style="max-width:820px;margin:6px auto 0;text-align:left">
+    <span class="lbl">💡 오늘 강의가 못 해주는 것</span>
+    원리는 누구에게나 같지만, <b>무너지는 지점은 사람마다 다릅니다.</b> 그건 당신의 실제 카톡 화면을 같이 봐야 잡힙니다. 그래서 강의 후 <b>소수만 따로</b> 1:3으로 봅니다.
+  </div>
+  <p class="big muted" style="margin-top:18px">궁금하면 나갈 때 안내받아 가세요. 강요는 없습니다.</p>
+</section>
+
+<!-- ===================== 4부 · 부록 ===================== -->
+
+<section class="slide center">
+  <p class="kicker">부록 안내</p>
+  <h2 class="head">이 뒤는 <b>외우는 게 아니라 찾아 쓰는 것</b></h2>
+  <p class="big muted">한마디 사전 · NG 리스트 · 신호 색인 · 체크리스트. 오늘은 목차만 훑고, <b>전체 버전은 PDF 책</b>에 담겨 있습니다.</p>
+</section>
+
+<section class="slide">
+  <p class="kicker">바로 쓰는 한마디 사전</p>
+  <h2 class="head">막히면 이 표를 펴라</h2>
+  <table>
+    <tr><th>상황</th><th>한마디</th></tr>
+    <tr><td>첫 톡 말문 열기</td><td>프사 그거 어디예요? 분위기 좋아서 저장해둠ㅋㅋ</td></tr>
+    <tr><td>대화가 끊겼을 때</td><td>아 맞다 이거 물어본다는 걸 깜빡함</td></tr>
+    <tr><td>읽씹 후 다시</td><td>방금 이거 보다가 생각나서 ㅋㅋ</td></tr>
+    <tr><td>약속 꺼내기</td><td>이번 주말이랑 다음 주 중에 언제가 편해요?</td></tr>
+    <tr><td>확답 받을 때</td><td>그럼 토요일 2시로 박아둘게요. 바뀌면 말해주고</td></tr>
+    <tr><td>밤 인사</td><td>내일 또 할 얘기 남겨둠ㅋㅋ 잘 자요</td></tr>
+  </table>
+  <div class="box key" style="margin-top:18px"><span class="lbl">핵심</span>여섯 개 중 하나만 골라 보낸다. 다 보내는 게 아니다.</div>
+</section>
+
+<section class="slide">
+  <p class="kicker">NG 단어·표현 블랙리스트</p>
+  <h2 class="head">이 말 하나만 빼도 <b>답장률이 다르다</b></h2>
+  <table style="margin-top:14px">
+    <tr><th style="width:26%">피해야 할 말</th><th>왜 식나</th><th>대체</th></tr>
+    <tr><td>자나요?</td><td>추궁처럼 들림</td><td>"아까 그거 어떻게 됐어요?"</td></tr>
+    <tr><td>뭐해요?</td><td>매번 똑같고 영혼 없음</td><td>"오늘 그쪽 루틴 있어요?"</td></tr>
+    <tr><td>바쁘세요?</td><td>거절할 핑계를 깔아줌</td><td>"토요일 2시 어때요?"</td></tr>
+    <tr><td>답장 좀요</td><td>매달리는 티가 정면으로</td><td>"방금 이거 보다가 생각나서 ㅋㅋ"</td></tr>
+    <tr><td>혹시 시간 되면…</td><td>자신 없음이 전해짐</td><td>"우리 금요일에 보자"</td></tr>
+    <tr><td>진짜 예쁜 것 같아요</td><td>이른 외모 칭찬은 부담</td><td>"말투 특이하네요 ㅋㅋ"</td></tr>
+  </table>
+  <div class="box key" style="margin-top:14px"><span class="lbl">핵심</span>빼는 게 더 강하다. 식는 말 하나 지우는 게 좋은 말 하나 더하는 것보다 효과가 크다.</div>
+</section>
+
+<section class="slide">
+  <p class="kicker">신호 빠른 색인</p>
+  <h2 class="head">한두 개로 단정 말고 <b>방향</b>을 봐라</h2>
+  <table style="margin-top:14px">
+    <tr><th>호감 — 밀어도 됨</th><th>식음 — 멈춤</th><th>미룸 — 한 번 더 확인</th></tr>
+    <tr><td>안 물어본 자기 얘기 먼저</td><td>답이 한 단어로 짧아짐</td><td>"다음에·나중에" 반복</td></tr>
+    <tr><td>답이 점점 빨라진다</td><td>먼저 연락이 사라짐</td><td>날짜 물으면 두루뭉술</td></tr>
+    <tr><td>먼저 질문을 던져 온다</td><td>읽고 한참 뒤 답</td><td>잡았다가 자주 미룸</td></tr>
+    <tr><td>만나자에 날짜 좁혀 옴</td><td>ㅋㅋ·이모티콘 확 줆</td><td>답은 다정한데 만남만 피함</td></tr>
+  </table>
+  <div class="box psych" style="margin-top:14px"><span class="lbl">💡 왜 이렇게 읽나</span>관심이 있으면 시간과 정보를 더 쓴다. 신호는 말의 내용보다 흐름의 방향에 있다.</div>
+</section>
+
+<section class="slide">
+  <p class="kicker">보내기 전 체크리스트</p>
+  <h2 class="head">손이 나가기 전, <b>3초만</b></h2>
+  <div class="kt3" style="margin-top:18px">
+    <div class="col">
+      <p class="tit">① 첫 톡 전</p>
+      <div class="box key" style="text-align:left;font-size:14px;line-height:1.7">☐ 그 사람에게만 할 수 있는 말?<br>☐ "네/ㅋㅋ"로 안 끝날 거리 있나?<br>☐ 내가 누군지 안 헷갈리나?<br>☐ 답 없어도 쿨할 마음 됐나?</div>
+    </div>
+    <div class="col">
+      <p class="tit">② 답장 늦을 때</p>
+      <div class="box key" style="text-align:left;font-size:14px;line-height:1.7">☐ 충분히 기다렸나? (반나절↓ 손떼기)<br>☐ 추궁하는 말 없나?<br>☐ 연속으로 또 보내려는 건 아닌가?<br>☐ 안 와도 그만이란 여유 있나?</div>
+    </div>
+    <div class="col">
+      <p class="tit">③ 약속 꺼내기 전</p>
+      <div class="box key" style="text-align:left;font-size:14px;line-height:1.7">☐ "또 보고 싶다"까지 데워졌나?<br>☐ 막연한 "언제" 말고 날짜 좁혔나?<br>☐ 만날 명분이 대화에 깔렸나?<br>☐ 거절해도 안 깨질 가벼운 톤?</div>
+    </div>
+  </div>
+</section>
+
+<section class="slide center">
+  <span class="tag" style="background:var(--purple)">실습 · 마지막</span>
+  <h2 class="head" style="margin-top:20px">오늘 밤, <b>딱 한 통</b>을 보냅니다</h2>
+  <div class="selfcheck">
+    <p class="sc-lbl">✍ 워크북에 지금 적기</p>
+    <div class="sc-item">타겟에게 오늘 밤~내일 정오 안에 보낼 한 줄</div>
+    <div class="sc-item">보내기 전 '첫 톡 체크리스트 ①'만 확인</div>
+    <div class="sc-item">일주일 뒤, 자가진단 After로 변화 체크</div>
+  </div>
+</section>
+
+<section class="slide center">
+  <p class="serif divider-title">"이것만 따라 해도,<br>당신은 이미 초보가 아니다"</p>
+  <p class="big muted" style="margin-top:20px">완벽하지 않아도 된다. 오늘 배운 걸 한 번 써보는 것부터.</p>
+  <span class="tag" style="background:var(--purple);margin-top:28px">Q &amp; A</span>
+</section>
+
+<section class="slide center">
+  <p class="kicker" style="color:var(--purple)">마지막으로</p>
+  <h2 class="head">막히는 순간이, <b>다시 만날 타이밍</b>입니다</h2>
+  <p class="big muted">오늘 쓴 첫 톡 한 줄을 찍어 공유하거나, 진짜 막히면 언제든 다시 찾아오세요.</p>
+  <div class="box key" style="max-width:600px;margin:16px auto 0;text-align:center;border-left:none;background:var(--tint)">
+    <span class="lbl" style="color:var(--purple)">[ QR · 링크 자리 ]</span>
+    후기·후속 안내 채널 — 강사님이 실제 QR/링크로 교체
+  </div>
+</section>
+
+</div></div>
+<div class="progress"><div class="progress__bar" id="pbar"></div></div>
+<div class="nav"><span id="cur">1</span> / <span id="tot"></span></div>
+<div class="hint">← → 또는 클릭으로 이동</div>
+<script>
+const s=[...document.querySelectorAll('.slide')];let i=0;document.getElementById('tot').textContent=s.length;
+function show(n){s[i].classList.remove('active');i=Math.max(0,Math.min(s.length-1,n));s[i].classList.add('active');document.getElementById('cur').textContent=i+1;document.getElementById('pbar').style.width=((i+1)/s.length*100)+'%';if(s[i].querySelector&&s[i].querySelector('#pkScreen'))pkPlay();}
+function pkPlay(){
+  var scr=document.getElementById('pkScreen');if(!scr)return;
+  var els=['pk-wild','pk-me','pk-flash'].map(function(c){return scr.querySelector('.'+c);});
+  els.forEach(function(el){if(el)el.classList.remove('go');});
+  ['pkg0','pkg1','pkg2','pkg3','pkg4'].forEach(function(id){var d=document.getElementById(id);if(d)d.setAttribute('fill','#e5e5e5');});
+  var t1=document.getElementById('pkt1'),t2=document.getElementById('pkt2'),brk=document.getElementById('pkbrk'),cur=document.getElementById('pkcur'),arw=document.getElementById('pkarw');
+  t1.textContent='';t2.textContent='';brk.textContent='';cur.style.display='';cur.classList.add('blink');arw.classList.remove('on');
+  if(window.__pkT)window.__pkT.forEach(clearTimeout);window.__pkT=[];var T=window.__pkT;
+  void scr.offsetWidth;
+  els.forEach(function(el){if(el)el.classList.add('go');});
+  T.push(setTimeout(function(){var d=document.getElementById('pkg0');if(d)d.setAttribute('fill','#ff4d6d');},1750));
+  T.push(setTimeout(function(){var d=document.getElementById('pkg1');if(d)d.setAttribute('fill','#ff4d6d');},2050));
+  function ty(el,txt,done){var k=0;(function st(){if(k<=txt.length){el.textContent=txt.slice(0,k);k++;T.push(setTimeout(st,55));}else if(done)done();})();}
+  T.push(setTimeout(function(){ty(t1,'앗! 야생의 여자가 나타났다!',function(){brk.innerHTML='<br>';T.push(setTimeout(function(){ty(t2,'예뻐 보인다…',function(){cur.style.display='none';arw.classList.add('on');});},380));});},1750));
+}
+function fit(){const sc=Math.min(innerWidth/1280,innerHeight/720);document.getElementById('deck').style.transform='scale('+sc+')'}
+addEventListener('resize',fit);fit();show(0);
+addEventListener('keydown',e=>{if(['ArrowRight',' ','PageDown'].includes(e.key)){e.preventDefault();show(i+1)}if(['ArrowLeft','PageUp'].includes(e.key))show(i-1)});
+addEventListener('click',e=>{show(i+(e.clientX>innerWidth/2?1:-1))});
+</script>
+</body>
+</html>
