@@ -1,0 +1,21 @@
+# Generated builds and render QA
+build/
+
+# Machine-local secrets
+local/
+gcp-key.json
+*service-account*.json
+
+# Tool and interpreter state
+.claude/worktrees/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# External and historical material retained locally
+references/pdf/*.pdf
+archive/
+
+# OS/editor files
+.DS_Store
+Thumbs.db
