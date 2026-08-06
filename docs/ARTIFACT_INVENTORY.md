@@ -13,16 +13,16 @@
 | 보관물 | `archive/` | 과거 버전, 초안, 중복·오분류 파일 |
 | 비밀정보 | `local/` | 서비스 계정 키 등 로컬 전용 파일 |
 
-## 2. 정식 PDF 기준선
+## 2. 정식 PDF 산출물
 
-아래 값은 폴더 정리 직후의 기존 배포본 기준이다. `CNA_NIGHT.pdf`는 기존 약속 위치에 파일이 없었으므로 새 구조에서 최초 재빌드한다. 최종 재빌드가 끝나면 이 표는 새 해시와 페이지 수로 갱신한다.
+아래 값은 새 구조에서 전체 빌드와 PDF 검증을 마친 최종 배포본 기준이다. 해시는 전달 파일의 동일성을 확인할 때 사용한다.
 
 | ID | 파일 | 페이지 | 바이트 | SHA-256 |
 |---|---|---:|---:|---|
-| `katalk-basic` | `dist/pdf/카톡의정석.pdf` | 210 | 1,510,884 | `e3ffa62eab29c5deefc27b1688de3f236687bca6e915360e1f79303f5fa20166` |
-| `katalk-advanced` | `dist/pdf/카톡의정석_심화편.pdf` | 81 | 600,151 | `186736122d92f5179da338bf01a3f6d6f2b6ec368a5eb650193656d661b5f9ef` |
-| `katalk-summary` | `dist/pdf/카톡의정석_요약본.pdf` | 20 | 213,807 | `c80a0d22e1d474994aa97f2256841967bec3a626c7dcdd9005da0e30552c3200` |
-| `cna-night` | `dist/pdf/CNA_NIGHT.pdf` | 기존 파일 없음 | - | - |
+| `katalk-basic` | `dist/pdf/카톡의정석.pdf` | 210 | 1,510,884 | `9c10d02f02a7ea592c0ff16c0a8800963e6022b24d05ae905a09531a48bc94d6` |
+| `katalk-advanced` | `dist/pdf/카톡의정석_심화편.pdf` | 81 | 600,151 | `62ea43b06f6226204dcda3ce2cacef4cc4c3072846c74b38f371f421b1c1f94d` |
+| `katalk-summary` | `dist/pdf/카톡의정석_요약본.pdf` | 20 | 213,807 | `ade19c3149189429be7b7b1b5248d859195654ae3f33d9db67e9075872c5e312` |
+| `cna-night` | `dist/pdf/CNA_NIGHT.pdf` | 89 | 636,338 | `df5eb5289c142c965ba8c9a4da62d846b25cc9b8bf5796169433cc093192bca9` |
 
 ## 3. 부속 산출물
 
@@ -81,7 +81,7 @@ OCR 결과는 `references/ocr/`에 있으며 원천 PDF를 대체하지 않는�
 ## 6. 빌드·미리보기
 
 - `build/pdf/`: CLI가 생성하는 검증 전 PDF
-- `build/rendered/`: 최종 PDF의 페이지 PNG와 접촉 시트
+- `build/rendered/`: 최종 PDF의 페이지 PNG와 컨택트 시트
 - `build/previews/legacy/`: 과거 미리보기 PDF·PNG·Typst 파일
 - `build/previews/cna-night/`: persona-vibe SVG·PNG
 

@@ -88,6 +88,16 @@ python scripts/project.py verify sample-book-book
 3. 검증 성공 시 `dist/pdf/샘플 교재.pdf`로 승격
 4. 실패 시 기존 `dist/` 파일 유지
 
+전체 페이지 시각 검수에는 Poppler의 `pdftoppm`과 저장소의 컨택트 시트 도구를 사용한다.
+
+```powershell
+New-Item -ItemType Directory -Force build/rendered/sample-book-book
+pdftoppm -png -r 72 "dist/pdf/샘플 교재.pdf" "build/rendered/sample-book-book/page"
+python scripts/pdf_contact_sheets.py build/rendered/sample-book-book
+```
+
+생성된 `contact-sheet-*.png`를 훑은 뒤, 표지와 의심 페이지는 더 높은 해상도로 다시 렌더해 확인한다. 렌더 이미지와 컨택트 시트는 검수용 빌드물이므로 `dist/`에 넣지 않는다.
+
 ## 6. 배포 전 체크리스트
 
 - [ ] 제목·저자·부제가 맞다.
@@ -95,7 +105,7 @@ python scripts/project.py verify sample-book-book
 - [ ] `python scripts/project.py build <id>`가 종료 코드 0이다.
 - [ ] `python scripts/project.py verify <id>`가 페이지 수와 텍스트를 확인한다.
 - [ ] 전체 페이지를 PNG로 렌더했다.
-- [ ] 접촉 시트에서 빈 페이지·잘림·겹침·깨진 글리프가 없다.
+- [ ] 컨택트 시트에서 빈 페이지·잘림·겹침·깨진 글리프가 없다.
 - [ ] 표지, 초반, 중간, 마지막 페이지를 원본 크기로 확인했다.
 - [ ] 최종 PDF가 `dist/pdf/`에 있고 중간물은 `build/`에만 있다.
 - [ ] 참고 PDF나 비밀키가 Git에 포함되지 않았다.

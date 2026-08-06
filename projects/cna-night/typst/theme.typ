@@ -43,9 +43,10 @@
       #text(font: "Pretendard", size: 12pt, weight: 600, fill: rgb("#D8D8DE"))[#subtitle]
     ]
     #v(1fr)
-    #block(inset: (x: 2.2cm), below: 2.2cm)[
+    #block(inset: (x: 2.2cm))[
       #text(size: 9pt, fill: rtm-muted, font: "Pretendard")[#author]
     ]
+    #v(2.2cm)
   ]
 
   // ===== 목차 (라이트) =====
