@@ -3,6 +3,9 @@
 from __future__ import annotations
 
 import json
+import os
+import shutil
+import subprocess
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -70,3 +73,56 @@ def load_deliverables(root: Path = ROOT) -> list[Deliverable]:
             seen.add(item_id)
             items.append(Deliverable(item_id, slug, title, source, output))
     return items
+
+
+def verify_pdf(path: Path) -> tuple[int, int]:
+    """Require a readable, non-empty PDF with representative text."""
+    if not path.is_file() or path.stat().st_size < 100:
+        raise ProjectError(f"missing or empty PDF: {path}")
+    try:
+        from pypdf import PdfReader
+
+        reader = PdfReader(path)
+        page_count = len(reader.pages)
+        sample_indices = (
+            sorted({0, page_count // 2, page_count - 1}) if page_count else []
+        )
+        extracted = "".join(
+            (reader.pages[index].extract_text() or "") for index in sample_indices
+        )
+    except Exception as exc:
+        raise ProjectError(f"cannot read PDF {path}: {exc}") from exc
+    if page_count < 1:
+        raise ProjectError(f"PDF has no pages: {path}")
+    if len(extracted.strip()) < 10:
+        raise ProjectError(f"PDF has insufficient sample text: {path}")
+    return page_count, len(extracted)
+
+
+def build_deliverable(
+    item: Deliverable, root: Path = ROOT, typst: str = "typst"
+) -> Path:
+    """Compile to staging, verify, then atomically promote a PDF."""
+    if not item.source.is_file():
+        raise ProjectError(f"source does not exist: {item.source}")
+    stage = root / "build" / "pdf" / item.output.name
+    stage.parent.mkdir(parents=True, exist_ok=True)
+    command = [
+        typst,
+        "compile",
+        str(item.source),
+        str(stage),
+        "--root",
+        str(root),
+    ]
+    try:
+        subprocess.run(command, cwd=root, check=True)
+    except (OSError, subprocess.CalledProcessError) as exc:
+        raise ProjectError(f"Typst build failed for {item.id}: {exc}") from exc
+
+    verify_pdf(stage)
+    item.output.parent.mkdir(parents=True, exist_ok=True)
+    temporary_target = item.output.with_suffix(item.output.suffix + ".tmp")
+    shutil.copy2(stage, temporary_target)
+    os.replace(temporary_target, item.output)
+    return item.output
