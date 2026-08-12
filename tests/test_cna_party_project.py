@@ -432,9 +432,23 @@ class CnaPartyManuscriptTests(unittest.TestCase):
         self.assertEqual(practical_positions, sorted(practical_positions))
 
         self.assertIn("계속 도전하면 경멸로 들리고 안전감이 낮아진다", chapter)
-        self.assertIn("검증만 계속하면 긴장감이 사라진다", chapter)
+        self.assertIn("인정만 계속하면 긴장감이 사라진다", chapter)
+        self.assertNotIn("검증만 계속하면", chapter)
         self.assertIn("동의를 만들어 내는 장치가 아니다", chapter)
         self.assertIn("다른 사람의 선택을 무효로 하거나", chapter)
+
+        repair_steps = (
+            "갑자기 평가받는 기분인데요?",
+            "제가 방금 사람을 평가하는 틀을 씌웠네요. 그 말은 거둘게요.",
+            "누가 어색해 보이면 제가 뭐라도 정리하면서 먼저 말을 거는 편이에요.",
+            "> **3. 자격 질문**",
+        )
+        repair_positions = [chapter.index(step) for step in repair_steps]
+        self.assertEqual(repair_positions, sorted(repair_positions))
+        self.assertNotIn("정정권은 드릴게요", chapter)
+
+        self.assertIn("필요한 동안 저는 제 일행 쪽에 있을게요", chapter)
+        self.assertNotIn("잠깐 인사하고 와도 괜찮아요", chapter)
 
         hard_boundary = (
             "상대의 판단력이 흐려진 상태, 명시적인 거절, 눈에 보이는 불안이나 고통 중 "
