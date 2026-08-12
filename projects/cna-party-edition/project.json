@@ -1,0 +1,11 @@
+{
+  "slug": "cna-party-edition",
+  "title": "파티의 주도권",
+  "deliverables": [
+    {
+      "id": "cna-party-book",
+      "source": "typst/book.typ",
+      "output": "CNA_파티의_주도권.pdf"
+    }
+  ]
+}
