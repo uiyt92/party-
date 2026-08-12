@@ -77,6 +77,8 @@ class CnaPartyTypstContractTests(unittest.TestCase):
             {"field", "bad", "better", "frame", "mission"},
         )
         self.assertIn("#let render-rich(path)", diagrams)
+        self.assertIn('panic("unknown diagram key: " + key)', diagrams)
+        self.assertIn('panic("unknown callout kind: " + kind)', diagrams)
 
     def test_book_and_theme_expose_required_contract(self):
         book = (PROJECT / "typst" / "book.typ").read_text(encoding="utf-8")

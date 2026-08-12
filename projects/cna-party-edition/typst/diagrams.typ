@@ -178,6 +178,8 @@
         let key = token.slice(10, token.len() - 2)
         if key in DIAGRAMS {
           DIAGRAMS.at(key)
+        } else {
+          panic("unknown diagram key: " + key)
         }
       } else {
         let payload = token.slice(10, token.len() - 2)
@@ -187,6 +189,8 @@
 
         if kind in CALLOUTS {
           CALLOUTS.at(kind)(message)
+        } else {
+          panic("unknown callout kind: " + kind)
         }
       }
     }
