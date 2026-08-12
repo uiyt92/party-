@@ -219,19 +219,58 @@ class CnaPartyManuscriptTests(unittest.TestCase):
         )
 
     def test_positioning_chapter_builds_social_value(self):
+        headings = [
+            "# 분위기를 공급하는 사람이 되어라",
+            "## 특정성에서 빠져나오기",
+            "## 기버는 착한 사람이 아니라 주도하는 사람이다",
+            "## 셀프 어뮤즈",
+            "## 서브 호스트 프레임",
+            "## 거절을 사회적 굳은살로 바꾸기",
+        ]
         self.assert_chapter(
             "02-positioning.md",
             3500,
-            [
-                "# 분위기를 공급하는 사람이 되어라",
-                "## 특정성에서 빠져나오기",
-                "## 기버는 착한 사람이 아니라 주도하는 사람이다",
-                "## 셀프 어뮤즈",
-                "## 서브 호스트 프레임",
-                "## 거절을 사회적 굳은살로 바꾸기",
-            ],
+            headings,
             ["[[DIAGRAM:positioning_loop]]", "[[CALLOUT:frame|", "[[CALLOUT:mission|"],
         )
+
+        chapter = (PROJECT / "manuscript" / "02-positioning.md").read_text(
+            encoding="utf-8"
+        )
+        heading_positions = [chapter.index(heading) for heading in headings]
+        self.assertEqual(heading_positions, sorted(heading_positions))
+
+        self.assertIn(
+            "이 책에서 ‘특정성’은 한 사람을 유일한 기회처럼 여기면서 "
+            "관심과 행동이 그 사람에게 고정되는 상태를 뜻한다.",
+            chapter,
+        )
+        self.assertIn(
+            "[[CALLOUT:frame|당신의 위치는 스스로 주장해서 생기지 않는다. "
+            "다른 사람들의 반응이 반복해서 당신을 중심으로 가리킬 때 생긴다.]]",
+            chapter,
+        )
+        self.assertRegex(
+            chapter,
+            re.escape("사용할 순환은 **관찰 → 공급 → 반응 → 이동**이다.")
+            + r"[^\n]*\n\n"
+            + re.escape("[[DIAGRAM:positioning_loop]]"),
+        )
+
+        for expected in (
+            "서로 모르는 두 사람을 연결한다",
+            "어색한 정적을 수리한다",
+            "상황에 맞는 작은 편의를 제공한다",
+            "서비스 스태프로 포지셔닝된다",
+            "명확한 거절이나 불편한 표정은 더 좋은 기술을 시도하라는 신호가 아니라 "
+            "멈추라는 신호다",
+        ):
+            self.assertIn(expected, chapter)
+
+        mission = re.search(r"\[\[CALLOUT:mission\|([^\n]+)\]\]\s*$", chapter)
+        self.assertIsNotNone(mission)
+        self.assertIn("주요 관심 상대에게 다가가기 전에", mission.group(1))
+        self.assertIn("긍정적인 상호작용 세 번", mission.group(1))
 
     def test_environment_compares_introductions_side_by_side(self):
         chapter = (PROJECT / "manuscript" / "01-environment.md").read_text(
