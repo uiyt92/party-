@@ -48,12 +48,12 @@
     box(width: 100%, fill: blue-soft, radius: 6pt, inset: 9pt, stroke: (top: 3pt + better))[
       #text(size: 9pt, weight: 800, fill: navy)[경쟁자]
       #v(4pt)
-      #text(size: 7.8pt, fill: muted)[누가 관심과 공간을 쓰는가]
+      #text(size: 7.8pt, fill: muted)[관심과 공간의 흐름]
     ],
     box(width: 100%, fill: blue-soft, radius: 6pt, inset: 9pt, stroke: (top: 3pt + lime-dark))[
       #text(size: 9pt, weight: 800, fill: navy)[타깃]
       #v(4pt)
-      #text(size: 7.8pt, fill: muted)[지금 대화가 열려 있는 사람]
+      #text(size: 7.8pt, fill: muted)[지금 대화의 개방도]
     ],
   )
 ]
@@ -164,7 +164,7 @@
 
 #let render-rich(path) = {
   let raw = read(path)
-  let token-pattern = regex("(?m)^[ \t]*\[\[(?:DIAGRAM:[a-z0-9_]+|CALLOUT:[a-z]+\|[^\r\n]*)\]\][ \t]*$")
+  let token-pattern = regex("(?m)^[ \t]*\[\[(?:DIAGRAM:[a-z0-9_]+|CALLOUT:[a-z]+\|[^\r\n]*|PAGEBREAK)\]\][ \t]*$")
   let chunks = raw.split(token-pattern)
   let tokens = raw.matches(token-pattern).map(m => m.text.trim())
 
@@ -174,7 +174,9 @@
     if index < tokens.len() {
       let token = tokens.at(index)
 
-      if token.starts-with("[[DIAGRAM:") {
+      if token == "[[PAGEBREAK]]" {
+        pagebreak(weak: true)
+      } else if token.starts-with("[[DIAGRAM:") {
         let key = token.slice(10, token.len() - 2)
         if key in DIAGRAMS {
           DIAGRAMS.at(key)

@@ -132,6 +132,21 @@ class CnaPartyTypstContractTests(unittest.TestCase):
             },
         )
 
+    def test_cards_and_long_titles_have_stable_page_boundaries(self):
+        book = (PROJECT / "typst" / "book.typ").read_text(encoding="utf-8")
+        theme = (PROJECT / "typst" / "theme.typ").read_text(encoding="utf-8")
+
+        self.assertEqual(theme.count("breakable: false"), 5)
+        for title in (
+            "들어가기 전에 이미 승부는 #linebreak() 시작된다",
+            "참가자가 아니라 분위기의 #linebreak() 공급자가 되어라",
+            "호감과 긴장감을 #linebreak() 의도적으로 설계하라",
+        ):
+            self.assertIn(title, book)
+        self.assertIn(
+            "[호감과 긴장감을 #linebreak() 의도적으로 설계하라]", theme
+        )
+
 
 class CnaPartyManuscriptTests(unittest.TestCase):
     DIAGRAM_KEYS = {
@@ -156,7 +171,8 @@ class CnaPartyManuscriptTests(unittest.TestCase):
     def assert_valid_markers(self, text):
         marker_pattern = re.compile(
             r"(?:\[\[DIAGRAM:([a-z][a-z0-9_]*)\]\]|"
-            r"\[\[CALLOUT:([a-z][a-z0-9_]*)\|([^\[\]\r\n]+)\]\])"
+            r"\[\[CALLOUT:([a-z][a-z0-9_]*)\|([^\[\]\r\n]+)\]\]|"
+            r"(\[\[PAGEBREAK\]\]))"
         )
         marker_lines = [
             line for line in text.splitlines() if "[[" in line or "]]" in line
@@ -167,7 +183,9 @@ class CnaPartyManuscriptTests(unittest.TestCase):
             self.assertEqual(line, line.strip())
             match = marker_pattern.fullmatch(line)
             self.assertIsNotNone(match, f"invalid manuscript marker: {line}")
-            diagram_key, callout_kind, _ = match.groups()
+            diagram_key, callout_kind, _, pagebreak = match.groups()
+            if pagebreak:
+                continue
             if diagram_key:
                 self.assertIn(diagram_key, self.DIAGRAM_KEYS)
             else:
@@ -359,6 +377,7 @@ class CnaPartyManuscriptTests(unittest.TestCase):
         self.assertIsNotNone(mission)
         self.assertIn("개인적인 질문을 하기 전에", mission.group(1))
         self.assertIn("관찰 세 가지", mission.group(1))
+        self.assertNotIn("[[PAGEBREAK]]", chapter)
 
     def test_influence_chapter_keeps_strategy_and_boundaries_together(self):
         headings = [
@@ -413,6 +432,7 @@ class CnaPartyManuscriptTests(unittest.TestCase):
             + r"[^\n]*\n\n"
             + re.escape("[[DIAGRAM:influence_curve]]"),
         )
+        self.assertEqual(chapter.count("[[PAGEBREAK]]"), 1)
 
         sequence = (
             "장난스러운 관찰",

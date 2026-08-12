@@ -125,11 +125,16 @@
   counter(page).update(1)
 
   show heading.where(level: 1): it => {
+    let title = if it.body == [호감과 긴장감을 의도적으로 설계하라] {
+      [호감과 긴장감을 #linebreak() 의도적으로 설계하라]
+    } else {
+      it.body
+    }
     pagebreak(weak: true)
     block(above: 0em, below: 1.6em)[
       #rect(width: 48pt, height: 4pt, fill: lime)
       #v(11pt)
-      #text(size: 24pt, weight: 900, fill: navy, tracking: -0.4pt)[#it.body]
+      #text(size: 24pt, weight: 900, fill: navy, tracking: -0.4pt)[#title]
     ]
   }
   show heading.where(level: 2): it => block(above: 1.9em, below: 0.85em)[
@@ -180,6 +185,7 @@
 
 #let field-note(body) = block(
   width: 100%,
+  breakable: false,
   fill: rgb("#F3F9E8"),
   inset: (x: 14pt, y: 11pt),
   radius: 7pt,
@@ -194,6 +200,7 @@
 
 #let bad-move(body) = block(
   width: 100%,
+  breakable: false,
   fill: bad-soft,
   inset: (x: 14pt, y: 11pt),
   radius: 7pt,
@@ -208,6 +215,7 @@
 
 #let better-move(body) = block(
   width: 100%,
+  breakable: false,
   fill: better-soft,
   inset: (x: 14pt, y: 11pt),
   radius: 7pt,
@@ -222,6 +230,7 @@
 
 #let frame-card(body) = block(
   width: 100%,
+  breakable: false,
   fill: blue-soft,
   inset: (x: 14pt, y: 11pt),
   radius: 7pt,
@@ -236,6 +245,7 @@
 
 #let mission-card(body) = block(
   width: 100%,
+  breakable: false,
   fill: rgb("#F3F9E8"),
   inset: (x: 14pt, y: 11pt),
   radius: 7pt,
