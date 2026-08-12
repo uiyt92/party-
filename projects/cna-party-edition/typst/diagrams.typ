@@ -74,16 +74,16 @@
     dir: ttb,
     spacing: 6pt,
     align(center, box(width: 58%, fill: blue-soft, radius: 5pt, inset: 7pt)[
-      #align(center, text(size: 8.6pt, weight: 750, fill: navy)[감정])
+      #align(center, text(size: 8.6pt, weight: 750, fill: navy)[현재 사실])
     ]),
     align(center, box(width: 70%, fill: blue-soft, radius: 5pt, inset: 7pt)[
-      #align(center, text(size: 8.6pt, weight: 750, fill: navy)[취향])
+      #align(center, text(size: 8.6pt, weight: 750, fill: navy)[선호])
     ]),
     align(center, box(width: 84%, fill: blue-soft, radius: 5pt, inset: 7pt)[
-      #align(center, text(size: 8.6pt, weight: 750, fill: navy)[가치관])
+      #align(center, text(size: 8.6pt, weight: 750, fill: navy)[감정])
     ]),
     align(center, box(width: 100%, fill: lime, radius: 5pt, inset: 7pt)[
-      #align(center, text(size: 8.6pt, weight: 800, fill: navy)[공동 경험])
+      #align(center, text(size: 8.6pt, weight: 800, fill: navy)[개인 경험])
     ]),
   )
 ]

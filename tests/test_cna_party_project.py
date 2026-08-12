@@ -297,8 +297,21 @@ class CnaPartyManuscriptTests(unittest.TestCase):
         chapter = (PROJECT / "manuscript" / "03-rapport.md").read_text(
             encoding="utf-8"
         )
+        diagrams = (PROJECT / "typst" / "diagrams.typ").read_text(
+            encoding="utf-8"
+        )
         heading_positions = [chapter.index(heading) for heading in headings]
         self.assertEqual(heading_positions, sorted(heading_positions))
+
+        rapport_ladder = re.search(
+            r"(?ms)^#let rapport-ladder = .*?(?=^#let influence-curve)",
+            diagrams,
+        )
+        self.assertIsNotNone(rapport_ladder)
+        self.assertEqual(
+            re.findall(r"fill: navy\)\[([^\]]+)\]", rapport_ladder.group(0)),
+            ["현재 사실", "선호", "감정", "개인 경험"],
+        )
 
         self.assertRegex(
             chapter,
@@ -329,6 +342,16 @@ class CnaPartyManuscriptTests(unittest.TestCase):
         self.assertIn("> **SCRIPT**", chapter)
         for beat in ("[상태 읽기]", "[페이싱]", "[감정 질문]", "[자기 공개]", "[종료]"):
             self.assertIn(f"> **{beat}**", chapter)
+        emotional_question = re.search(
+            r"> \*\*\[감정 질문\]\*\* (?P<annotation>[^\n]+)\n>\n"
+            r"> 나: “(?P<question>[^”]+)”",
+            chapter,
+        )
+        self.assertIsNotNone(emotional_question)
+        for expected in ("상태 단서", "지금의 기분"):
+            self.assertIn(expected, emotional_question.group("annotation"))
+        for expected in ("지친", "숨통이 트인"):
+            self.assertIn(expected, emotional_question.group("question"))
         self.assertIn("반응이 낮을 때의 종료 분기", chapter)
         self.assertIn("설득해서 뒤집지 않는다", chapter)
 
