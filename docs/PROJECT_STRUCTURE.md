@@ -6,7 +6,8 @@
 .
 ├── projects/                 # 활성 제품 소스
 │   ├── katalk-standard/
-│   └── cna-night/
+│   ├── cna-night/
+│   └── cna-party-edition/
 ├── templates/                # 공용 템플릿·신규 프로젝트 스타터
 ├── scripts/                  # 표준 CLI·OCR·과거 도구
 ├── tests/                    # Python 단위 테스트
@@ -41,6 +42,17 @@
 
 CNA NIGHT는 `book.typ`이 Markdown 원고를 직접 읽는다. 따라서 원고가 콘텐츠 정본이고 Typst 파일은 구성·디자인 정본이다.
 
+### CNA Party Edition
+
+| 역할 | 경로 |
+|---|---|
+| 빌드 엔트리 | `projects/cna-party-edition/typst/book.typ` |
+| 테마 | `projects/cna-party-edition/typst/theme.typ` |
+| 도식·토큰 렌더러 | `projects/cna-party-edition/typst/diagrams.typ` |
+| 원고 정본 | `projects/cna-party-edition/manuscript/` |
+
+강의 슬라이드는 참고자료이며, 독립 교재의 콘텐츠 정본은 장별 Markdown 원고다.
+
 ## 3. 빌드 흐름
 
 ```text
@@ -64,7 +76,7 @@ dist/pdf/ 정식 PDF
 
 ## 4. 배포물 분류
 
-- `dist/pdf/`: 정식 교재 PDF 네 종
+- `dist/pdf/`: 정식 교재 PDF 다섯 종
 - `dist/slides/`: 강의 슬라이드, 스크립트, HTML 의존 이미지
 - `dist/handouts/`: 사전과제와 워크북
 - `dist/packages/coaching/`: 코칭 패키지용 독립 산출물
@@ -73,13 +85,13 @@ dist/pdf/ 정식 PDF
 
 ## 5. 보존·제외 정책
 
-- `references/pdf/`: 외부 또는 경쟁 교재 PDF. 로컬 보존, Git 제외.
+- `references/pdf/`: 외부 또는 경쟁 교재 PDF와 로컬 원본 강의 슬라이드 `references/pdf/[CNA] Party Edition.pdf`. 로컬 보존, Git 제외.
 - `references/ocr/`: OCR 결과. 검색·검토에 사용하며 소스 정본은 아님.
 - `archive/legacy-output/`: 이전 브랜드 PDF와 잘못 포장된 중복 파일.
 - `archive/drafts/`: 통합 전 초안.
 - `archive/ai-runs/`: 과거 AI 작업 결과.
 - `local/secrets/`: API 인증정보. 항상 Git 제외.
-- `.claude/worktrees/`: 도구가 관리하는 로컬 작업트리. 프로젝트 산출물이 아님.
+- `.worktrees/`: 도구가 관리하는 로컬 작업트리. 프로젝트 산출물이 아님.
 
 ## 6. Git 경계
 

@@ -751,5 +751,33 @@ class CnaPartyArtifactTests(unittest.TestCase):
         self.assertGreaterEqual(len(all_text), 15000)
 
 
+class CnaPartyDocumentationTests(unittest.TestCase):
+    def test_release_docs_register_the_fifth_book_and_its_sources(self):
+        readme = (ROOT / "README.md").read_text(encoding="utf-8")
+        inventory = (ROOT / "docs" / "ARTIFACT_INVENTORY.md").read_text(
+            encoding="utf-8"
+        )
+        structure = (ROOT / "docs" / "PROJECT_STRUCTURE.md").read_text(
+            encoding="utf-8"
+        )
+        guide = (ROOT / "CLAUDE.md").read_text(encoding="utf-8")
+
+        release_row = (
+            "| `cna-party-book` | `dist/pdf/CNA_파티의_주도권.pdf` | "
+            "`projects/cna-party-edition/typst/book.typ` |"
+        )
+        self.assertIn(release_row, readme)
+        self.assertIn(
+            "| `cna-party-book` | `dist/pdf/CNA_파티의_주도권.pdf` | 41 |",
+            inventory,
+        )
+        self.assertIn("### CNA Party Edition", structure)
+        self.assertIn("정식 교재 PDF 다섯 종", structure)
+        for document in (readme, inventory, structure, guide):
+            self.assertIn("projects/cna-party-edition/manuscript/", document)
+        self.assertIn("정식 배포 PDF는 `dist/pdf/`의 다섯 파일", guide)
+        self.assertIn("`cna-party-book`", guide)
+
+
 if __name__ == "__main__":
     unittest.main()

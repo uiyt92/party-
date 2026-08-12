@@ -1,6 +1,6 @@
 # Typst 교재 출판 프로젝트
 
-『카톡의 정석』 계열과 『CNA NIGHT』를 한 저장소에서 제작·검증·배포하는 Typst 프로젝트입니다. 소스, 최종 산출물, 빌드 중간물, 외부 참고자료, 과거 작업물을 서로 다른 디렉터리로 관리합니다.
+『카톡의 정석』 계열, 『CNA NIGHT』, 『CNA Party Edition』을 한 저장소에서 제작·검증·배포하는 Typst 프로젝트입니다. 소스, 최종 산출물, 빌드 중간물, 외부 참고자료, 과거 작업물을 서로 다른 디렉터리로 관리합니다.
 
 ## 정식 PDF 산출물
 
@@ -10,6 +10,9 @@
 | `katalk-advanced` | `dist/pdf/카톡의정석_심화편.pdf` | `projects/katalk-standard/typst/advanced.typ` |
 | `katalk-summary` | `dist/pdf/카톡의정석_요약본.pdf` | `projects/katalk-standard/typst/summary.typ` |
 | `cna-night` | `dist/pdf/CNA_NIGHT.pdf` | `projects/cna-night/typst/book.typ` |
+| `cna-party-book` | `dist/pdf/CNA_파티의_주도권.pdf` | `projects/cna-party-edition/typst/book.typ` |
+
+『파티의 주도권』은 파티 준비부터 첫 대화와 번호 교환까지를 다루는 독립 교재입니다.
 
 ## 빠른 시작
 
@@ -40,11 +43,14 @@ python scripts/project.py build sample-book-book
 - [NEW_PROJECT_GUIDE.md](docs/NEW_PROJECT_GUIDE.md) - 새 프로젝트 시작 및 배포 절차
 - [설계 문서](docs/superpowers/specs/2026-08-06-typst-publishing-reorganization-design.md)
 - [구현 계획](docs/superpowers/plans/2026-08-06-typst-publishing-reorganization.md)
+- [CNA Party Edition 설계 문서](docs/superpowers/specs/2026-08-12-cna-party-book-design.md)
+- [CNA Party Edition 구현 계획](docs/superpowers/plans/2026-08-12-cna-party-book.md)
 
 ## 중요한 규칙
 
 - Katalk 3종은 `projects/katalk-standard/typst/`의 Typst 파일이 조판 정본입니다. Markdown 원고를 자동 변환해 덮어쓰지 않습니다.
 - CNA NIGHT는 `manuscript/`의 Markdown을 빌드 시 직접 읽습니다.
+- CNA Party Edition은 `projects/cna-party-edition/manuscript/`의 장별 Markdown이 콘텐츠 정본이고, `projects/cna-party-edition/typst/`가 구성·디자인 정본입니다.
 - `references/pdf/`, `archive/`, `build/`, `local/`은 각각 외부자료, 보관자료, 생성물, 비밀정보입니다.
 - `local/secrets/gcp-key.json`과 기타 인증정보는 Git에 올리지 않습니다.
 - 과거 `md_to_typ.py`는 `scripts/legacy/`에 보관되며 기본 빌드에서는 사용하지 않습니다.

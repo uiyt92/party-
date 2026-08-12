@@ -1,6 +1,6 @@
 # 산출물 및 빌드물 목록
 
-측정일: 2026-08-06
+측정일: 2026-08-12
 
 ## 1. 분류 기준
 
@@ -23,6 +23,9 @@
 | `katalk-advanced` | `dist/pdf/카톡의정석_심화편.pdf` | 81 | 600,151 | `62ea43b06f6226204dcda3ce2cacef4cc4c3072846c74b38f371f421b1c1f94d` |
 | `katalk-summary` | `dist/pdf/카톡의정석_요약본.pdf` | 20 | 213,807 | `ade19c3149189429be7b7b1b5248d859195654ae3f33d9db67e9075872c5e312` |
 | `cna-night` | `dist/pdf/CNA_NIGHT.pdf` | 89 | 636,338 | `df5eb5289c142c965ba8c9a4da62d846b25cc9b8bf5796169433cc093192bca9` |
+| `cna-party-book` | `dist/pdf/CNA_파티의_주도권.pdf` | 41 | 365,262 | `3e47e04ee1d1aa626266e130d3e5cf0659cea87f0a7ab2b5a880ac55f3596499` |
+
+『파티의 주도권』은 `projects/cna-party-edition/manuscript/`의 장별 Markdown이 콘텐츠 정본이고, `projects/cna-party-edition/typst/`가 구성·디자인 정본이다. 참고 슬라이드는 재집필을 위한 로컬 자료이며 독립 교재의 정본이 아니다.
 
 ## 3. 부속 산출물
 
@@ -58,6 +61,7 @@
 | `references/pdf/카톡101.pdf` | 132 | 62,054,991 | 사례·OCR 원천 |
 | `references/pdf/테레사_CONTACT.pdf` | 1,527 | 22,132,730 | 구성·갭 분석 참고자료 |
 | `references/pdf/FASTER_SEX - 복사본.pdf` | 49 | 356,854 | CNA NIGHT 재구성 참고자료 |
+| `references/pdf/[CNA] Party Edition.pdf` | 44 | 1,581,135 | CNA Party Edition 원본 강의 슬라이드, 16:9·로컬·Git 제외 |
 
 OCR 결과는 `references/ocr/`에 있으며 원천 PDF를 대체하지 않는다. 참고 PDF는 대용량·외부자료이므로 Git에서 제외한다.
 
