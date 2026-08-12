@@ -541,7 +541,7 @@ class CnaPartyManuscriptTests(unittest.TestCase):
             "함께 갈 장소",
             "공유한 관심사",
             "장난의 다음 편",
-            "확신 있는 독자의 직접 제안",
+            "맥락이 분명할 때의 직접 제안",
             "초보자를 위한 부드러운 제안",
         )
         script_labels = []
@@ -575,17 +575,48 @@ class CnaPartyManuscriptTests(unittest.TestCase):
             self.assertIn(refusal_guard, number_chapter)
         self.assertIn("교환 → 마무리 한 줄 → 이동", number_chapter)
         self.assertIn("번호가 위로 상품이 된다", number_chapter)
-        for excluded_scope in (
-            "카카오톡",
-            "DM",
-            "디엠",
-            "데이트 일정",
-            "후속 연락",
-            "팔로업",
-            "성적 에스컬레이션",
+
+        exit_section = number_chapter[
+            number_chapter.index("## 먼저 떠나는 사람이 여운을 만든다") :
+        ]
+        for mutual_exit_guard in (
+            "상대가 자발적으로",
+            "진짜 새로운 질문이나 대화 주제",
+            "자연스럽게 이어가도 좋다",
+            "현재 대화의 흐름이 완결됐을 때만",
+            "벌주는 행동",
+            "관심을 거두는 연출",
+            "불안하게 만드는 전술",
         ):
-            self.assertNotIn(excluded_scope, number_chapter)
-            self.assertNotIn(excluded_scope, checklist)
+            self.assertIn(mutual_exit_guard, exit_section)
+        self.assertNotIn("상대가 먼저 새 질문을 꺼내면 짧게 답", number_chapter)
+
+        self.assertRegex(
+            number_chapter,
+            r"이 책의 실전 범위는 여기까지다[^\n]*번호 교환[^\n]*"
+            r"깔끔하게 현장을 떠난다",
+        )
+        self.assertIn(
+            "이 카드는 연락처를 교환하고 현장을 정리하는 데서 멈춘다.",
+            checklist,
+        )
+        operational_follow_up = (
+            r"(?im)^> \*\*(?:SCRIPT|예시)[^\n]*"
+            r"(?:카카오톡|카톡|DM|디엠|후속 연락|데이트|성적 에스컬레이션)",
+            r"(?im)^- \[ \][^\n]*"
+            r"(?:카카오톡|카톡|DM|디엠|후속 연락|데이트|만남 일정|스킨십)",
+            r"(?:카카오톡|카톡|DM|디엠)[^\n]{0,50}"
+            r"(?:보내라|보낸다|보내세요|작성하라|써라)",
+            r"(?:데이트|만남)[^\n]{0,30}(?:일정|시간|장소)[^\n]{0,30}"
+            r"(?:정하라|정한다|잡아라|잡는다|제안하라)",
+            r"(?:연락|메시지)[^\n]{0,30}(?:주기|간격|몇 시간|다음 날)"
+            r"[^\n]{0,30}(?:하라|한다|보내라|보낸다)",
+            r"(?:성적 에스컬레이션|스킨십)[^\n]{0,40}"
+            r"(?:시도하라|시도한다|진행하라|진행한다|단계)",
+        )
+        closing_text = number_chapter + "\n" + checklist
+        for pattern in operational_follow_up:
+            self.assertNotRegex(closing_text, pattern)
 
         mission = re.search(
             r"\[\[CALLOUT:mission\|([^\n]+)\]\]\s*$", number_chapter
@@ -643,6 +674,8 @@ class CnaPartyManuscriptTests(unittest.TestCase):
             ),
             1,
         )
+        self.assertIn("체크가 가장 많이 비는", checklist)
+        self.assertNotIn("동그라미가 가장 많이 비는", checklist)
 
     def test_environment_compares_introductions_side_by_side(self):
         chapter = (PROJECT / "manuscript" / "01-environment.md").read_text(
