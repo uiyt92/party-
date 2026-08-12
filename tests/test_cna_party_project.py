@@ -173,6 +173,14 @@ class CnaPartyManuscriptTests(unittest.TestCase):
             ),
         )
 
+    def test_environment_compares_introductions_side_by_side(self):
+        chapter = (PROJECT / "manuscript" / "01-environment.md").read_text(
+            encoding="utf-8"
+        )
+
+        self.assertIn("| BAD MOVE | BETTER MOVE |", chapter)
+        self.assertIn("| --- | --- |", chapter)
+
 
 if __name__ == "__main__":
     unittest.main()
