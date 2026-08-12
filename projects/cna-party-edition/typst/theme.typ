@@ -23,12 +23,12 @@
   set document(title: title, author: author)
   set text(
     font: "Pretendard",
-    size: 10.2pt,
+    size: 9.8pt,
     fill: ink,
     lang: "ko",
     hyphenate: false,
   )
-  set par(justify: true, leading: 1.35em, spacing: 1.55em)
+  set par(justify: true, leading: 1.25em, spacing: 0.45em)
 
   // Cover
   page(
@@ -41,7 +41,7 @@
   )[
     #align(left)[
       #box(fill: navy, inset: (x: 9pt, y: 5pt), radius: 3pt)[
-        #text(size: 8pt, weight: 700, fill: white, tracking: 1.1pt)[#upper(series)]
+        #text(size: 8pt, weight: 700, fill: white)[#upper(series)]
       ]
     ]
     #v(1fr)
@@ -108,7 +108,7 @@
   // Body pages
   set page(
     paper: "a5",
-    margin: (x: 1.85cm, top: 2.05cm, bottom: 1.7cm),
+    margin: (x: 1.7cm, top: 1.75cm, bottom: 1.5cm),
     fill: paper,
     numbering: "1",
     number-align: center,

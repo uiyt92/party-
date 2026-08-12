@@ -715,5 +715,21 @@ class CnaPartyManuscriptTests(unittest.TestCase):
         self.assertNotIn("대화하기 전, 선택한 타깃의", chapter)
 
 
+class CnaPartyArtifactTests(unittest.TestCase):
+    def test_distribution_pdf_is_release_ready(self):
+        from pypdf import PdfReader
+
+        path = ROOT / "dist" / "pdf" / "CNA_파티의_주도권.pdf"
+        self.assertTrue(path.is_file())
+        reader = PdfReader(str(path))
+        self.assertGreaterEqual(len(reader.pages), 35)
+        self.assertLessEqual(len(reader.pages), 45)
+        cover_text = reader.pages[0].extract_text() or ""
+        self.assertIn("파티의 주도권", cover_text)
+        self.assertIn("CNA", cover_text)
+        all_text = "".join(page.extract_text() or "" for page in reader.pages)
+        self.assertGreaterEqual(len(all_text), 15000)
+
+
 if __name__ == "__main__":
     unittest.main()

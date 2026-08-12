@@ -28,4 +28,8 @@
 #render-rich("../manuscript/05-number-exchange.md")
 
 #part-divider("FIELD CARD", "다음 파티를 위한 실행 카드")
-#render-rich("../manuscript/06-checklist.md")
+#[
+  #set text(size: 8.8pt)
+  #set par(leading: 1.18em, spacing: 0.25em)
+  #render-rich("../manuscript/06-checklist.md")
+]
