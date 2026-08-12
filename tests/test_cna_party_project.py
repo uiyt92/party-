@@ -52,11 +52,10 @@ class CnaPartyTypstContractTests(unittest.TestCase):
 
     def test_theme_exposes_only_the_supported_public_api(self):
         theme = (PROJECT / "typst" / "theme.typ").read_text(encoding="utf-8")
-        declared_names = re.findall(r"(?m)^#let ([\w-]+)", theme)
-        public_names = {name for name in declared_names if not name.startswith("_")}
+        top_level_names = set(re.findall(r"(?m)^#let ([\w-]+)", theme))
 
         self.assertEqual(
-            public_names,
+            top_level_names,
             {
                 "lime",
                 "lime-dark",

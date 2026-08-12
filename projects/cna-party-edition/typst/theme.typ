@@ -1,7 +1,5 @@
 // CNA Party Edition — bright A5 theme
 
-#let _rule = line
-
 // Public color tokens
 #let lime = rgb("#A8E63A")
 #let lime-dark = rgb("#527A12")
@@ -15,8 +13,6 @@
 #let better = rgb("#167D73")
 #let better-soft = rgb("#EEF9F7")
 #let blue-soft = rgb("#F0F5FA")
-#let _lime-soft = rgb("#F3F9E8")
-
 #let book(
   title: "",
   subtitle: "",
@@ -51,7 +47,7 @@
     #v(1fr)
     #text(size: 31pt, weight: 900, fill: navy, tracking: -0.7pt)[#title]
     #v(14pt)
-    #_rule(length: 72pt, stroke: 4pt + lime)
+    #rect(width: 72pt, height: 4pt, fill: lime)
     #v(14pt)
     #text(size: 11.2pt, weight: 500, fill: muted)[#subtitle]
     #v(1fr)
@@ -72,7 +68,7 @@
     #v(7pt)
     #text(size: 9.2pt, fill: muted)[#subtitle]
     #v(18pt)
-    #_rule(length: 42pt, stroke: 3pt + lime)
+    #rect(width: 42pt, height: 3pt, fill: lime)
     #v(18pt)
     #text(size: 9.2pt, weight: 700, fill: navy)[초판 2026년 · #author]
     #v(12pt)
@@ -99,7 +95,7 @@
     #v(5pt)
     #text(size: 23pt, weight: 900, fill: navy)[목차]
     #v(8pt)
-    #_rule(length: 52pt, stroke: 4pt + lime)
+    #rect(width: 52pt, height: 4pt, fill: lime)
     #v(22pt)
     #show outline.entry: it => {
       set text(size: 9.5pt, weight: 600, fill: ink)
@@ -131,7 +127,7 @@
   show heading.where(level: 1): it => {
     pagebreak(weak: true)
     block(above: 0em, below: 1.6em)[
-      #_rule(length: 48pt, stroke: 4pt + lime)
+      #rect(width: 48pt, height: 4pt, fill: lime)
       #v(11pt)
       #text(size: 24pt, weight: 900, fill: navy, tracking: -0.4pt)[#it.body]
     ]
@@ -176,28 +172,78 @@
       #v(16pt)
       #text(size: 24pt, weight: 900, fill: white, tracking: -0.3pt)[#title]
       #v(16pt)
-      #_rule(length: 52pt, stroke: 4pt + lime)
+      #rect(width: 52pt, height: 4pt, fill: lime)
     ]
     #v(1fr)
   ]
 }
 
-#let _card(label, accent, fill-color, body) = block(
+#let field-note(body) = block(
   width: 100%,
-  fill: fill-color,
+  fill: rgb("#F3F9E8"),
   inset: (x: 14pt, y: 11pt),
   radius: 7pt,
-  stroke: (left: 4pt + accent),
+  stroke: (left: 4pt + lime-dark),
   above: 1.2em,
   below: 1.2em,
 )[
-  #text(size: 8.2pt, weight: 800, fill: accent, tracking: 1.4pt)[#label]
+  #text(size: 8.2pt, weight: 800, fill: lime-dark, tracking: 1.4pt)[FIELD NOTE]
   #v(6pt)
   #text(size: 9.2pt, fill: ink)[#body]
 ]
 
-#let field-note(body) = _card("FIELD NOTE", lime-dark, _lime-soft, body)
-#let bad-move(body) = _card("BAD MOVE", bad, bad-soft, body)
-#let better-move(body) = _card("BETTER MOVE", better, better-soft, body)
-#let frame-card(body) = _card("FRAME", navy, blue-soft, body)
-#let mission-card(body) = _card("MISSION", lime-dark, _lime-soft, body)
+#let bad-move(body) = block(
+  width: 100%,
+  fill: bad-soft,
+  inset: (x: 14pt, y: 11pt),
+  radius: 7pt,
+  stroke: (left: 4pt + bad),
+  above: 1.2em,
+  below: 1.2em,
+)[
+  #text(size: 8.2pt, weight: 800, fill: bad, tracking: 1.4pt)[BAD MOVE]
+  #v(6pt)
+  #text(size: 9.2pt, fill: ink)[#body]
+]
+
+#let better-move(body) = block(
+  width: 100%,
+  fill: better-soft,
+  inset: (x: 14pt, y: 11pt),
+  radius: 7pt,
+  stroke: (left: 4pt + better),
+  above: 1.2em,
+  below: 1.2em,
+)[
+  #text(size: 8.2pt, weight: 800, fill: better, tracking: 1.4pt)[BETTER MOVE]
+  #v(6pt)
+  #text(size: 9.2pt, fill: ink)[#body]
+]
+
+#let frame-card(body) = block(
+  width: 100%,
+  fill: blue-soft,
+  inset: (x: 14pt, y: 11pt),
+  radius: 7pt,
+  stroke: (left: 4pt + navy),
+  above: 1.2em,
+  below: 1.2em,
+)[
+  #text(size: 8.2pt, weight: 800, fill: navy, tracking: 1.4pt)[FRAME]
+  #v(6pt)
+  #text(size: 9.2pt, fill: ink)[#body]
+]
+
+#let mission-card(body) = block(
+  width: 100%,
+  fill: rgb("#F3F9E8"),
+  inset: (x: 14pt, y: 11pt),
+  radius: 7pt,
+  stroke: (left: 4pt + lime-dark),
+  above: 1.2em,
+  below: 1.2em,
+)[
+  #text(size: 8.2pt, weight: 800, fill: lime-dark, tracking: 1.4pt)[MISSION]
+  #v(6pt)
+  #text(size: 9.2pt, fill: ink)[#body]
+]
