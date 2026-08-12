@@ -30,26 +30,7 @@ class CnaPartyTypstContractTests(unittest.TestCase):
     def test_diagram_renderer_supports_required_visuals_and_cards(self):
         diagrams = (PROJECT / "typst" / "diagrams.typ").read_text(encoding="utf-8")
 
-        for expected in (
-            "party_map:",
-            "positioning_loop:",
-            "rapport_ladder:",
-            "influence_curve:",
-            "number_window:",
-            "level_test:",
-            "field:",
-            "bad:",
-            "better:",
-            "frame:",
-            "mission:",
-            "#let render-rich(path)",
-        ):
-            self.assertIn(expected, diagrams)
-
-    def test_diagrams_expose_only_the_supported_public_api(self):
-        diagrams = (PROJECT / "typst" / "diagrams.typ").read_text(encoding="utf-8")
         top_level_names = set(re.findall(r"(?m)^#let ([\w-]+)", diagrams))
-
         self.assertEqual(
             top_level_names,
             {
@@ -66,6 +47,36 @@ class CnaPartyTypstContractTests(unittest.TestCase):
                 "render-rich",
             },
         )
+
+        def map_keys(name):
+            match = re.search(
+                rf"(?ms)^#let {name} = \(\s*(.*?)^\)",
+                diagrams,
+            )
+            self.assertIsNotNone(match, f"missing {name} map")
+            return set(
+                re.findall(
+                    r"(?m)^\s*([a-z][a-z0-9_]*):\s*[^\n,]+,\s*$",
+                    match.group(1),
+                )
+            )
+
+        self.assertEqual(
+            map_keys("DIAGRAMS"),
+            {
+                "party_map",
+                "positioning_loop",
+                "rapport_ladder",
+                "influence_curve",
+                "number_window",
+                "level_test",
+            },
+        )
+        self.assertEqual(
+            map_keys("CALLOUTS"),
+            {"field", "bad", "better", "frame", "mission"},
+        )
+        self.assertIn("#let render-rich(path)", diagrams)
 
     def test_book_and_theme_expose_required_contract(self):
         book = (PROJECT / "typst" / "book.typ").read_text(encoding="utf-8")
