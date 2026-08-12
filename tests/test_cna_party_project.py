@@ -133,5 +133,46 @@ class CnaPartyTypstContractTests(unittest.TestCase):
         )
 
 
+class CnaPartyManuscriptTests(unittest.TestCase):
+    def assert_chapter(self, filename, minimum_chars, headings, tokens):
+        chapter = (PROJECT / "manuscript" / filename).read_text(encoding="utf-8")
+
+        self.assertGreaterEqual(len(chapter), minimum_chars)
+        for heading in headings:
+            self.assertIn(heading, chapter)
+        for token in tokens:
+            self.assertIn(token, chapter)
+
+    def test_prologue_and_environment_are_self_contained(self):
+        self.assert_chapter(
+            "00-prologue.md",
+            1600,
+            (
+                "# 파티는 말보다 먼저 시작된다",
+                "## 초보자와 무성과자가 같은 곳에서 무너지는 이유",
+                "## 파티는 동적 포지셔닝 게임이다",
+                "## 이 책을 사용하는 법",
+            ),
+            ("[[DIAGRAM:level_test]]", "[[CALLOUT:field|"),
+        )
+        self.assert_chapter(
+            "01-environment.md",
+            3200,
+            (
+                "# 공간을 먼저 읽어라",
+                "## 자리 배치는 대화보다 솔직하다",
+                "## 경쟁자를 분석하는 기준",
+                "## 타깃의 상태를 읽는 법",
+                "## 자기소개는 정보를 말하는 시간이 아니다",
+            ),
+            (
+                "[[DIAGRAM:party_map]]",
+                "[[CALLOUT:bad|",
+                "[[CALLOUT:better|",
+                "[[CALLOUT:mission|",
+            ),
+        )
+
+
 if __name__ == "__main__":
     unittest.main()
