@@ -360,6 +360,93 @@ class CnaPartyManuscriptTests(unittest.TestCase):
         self.assertIn("개인적인 질문을 하기 전에", mission.group(1))
         self.assertIn("관찰 세 가지", mission.group(1))
 
+    def test_influence_chapter_keeps_strategy_and_boundaries_together(self):
+        headings = [
+            "# 호감과 긴장감을 의도적으로 설계하라",
+            "## 희소성은 바쁜 척이 아니다",
+            "## 프레임을 먼저 제시하는 사람이 해석을 만든다",
+            "## 자격 부여",
+            "## 가벼움 뒤에 반전을 배치하라",
+            "## 미래 투사는 약속이 아니라 장면이다",
+            "## 긴장감을 회수하는 법",
+        ]
+        self.assert_chapter(
+            "04-influence.md",
+            4800,
+            headings,
+            [
+                "[[DIAGRAM:influence_curve]]",
+                "[[CALLOUT:frame|",
+                "[[CALLOUT:bad|",
+                "[[CALLOUT:better|",
+                "[[CALLOUT:mission|",
+            ],
+        )
+
+        chapter = (PROJECT / "manuscript" / "04-influence.md").read_text(
+            encoding="utf-8"
+        )
+        heading_positions = [chapter.index(heading) for heading in headings]
+        self.assertEqual(heading_positions, sorted(heading_positions))
+
+        exact_frame = (
+            "[[CALLOUT:frame|호감은 많이 주는 사람이 이기는 게임이 아니다. 상대가 "
+            "당신의 관심을 얻기 위해 조금씩 투자하게 만드는 구조가 중요하다.]]"
+        )
+        self.assertEqual(chapter.count(exact_frame), 1)
+        for lever in ("해석", "주의", "투자", "타이밍"):
+            self.assertIn(lever, chapter)
+
+        for scarcity_guard in (
+            "선택적으로 주의를 쓰고 실제로 떠날 의향",
+            "바쁜 척",
+            "일정을 지어내는 것",
+            "벌주듯 관심을 거두는 것",
+        ):
+            self.assertIn(scarcity_guard, chapter)
+        for qualification_guard in ("외모 칭찬", "태도·선택·기준"):
+            self.assertIn(qualification_guard, chapter)
+
+        self.assertRegex(
+            chapter,
+            re.escape("영향력은 **통제된 상승 리듬**으로 만든다.")
+            + r"[^\n]*\n\n"
+            + re.escape("[[DIAGRAM:influence_curve]]"),
+        )
+
+        sequence = (
+            "장난스러운 관찰",
+            "기준/프레임",
+            "자격 질문",
+            "획득한 인정",
+            "반전",
+            "함께하는 장면",
+        )
+        sequence_positions = [chapter.index(beat) for beat in sequence]
+        self.assertEqual(sequence_positions, sorted(sequence_positions))
+        practical_beats = [
+            f"> **{number}. {beat}**"
+            for number, beat in enumerate(sequence, start=1)
+        ]
+        practical_positions = [chapter.index(beat) for beat in practical_beats]
+        self.assertEqual(practical_positions, sorted(practical_positions))
+
+        self.assertIn("계속 도전하면 경멸로 들리고 안전감이 낮아진다", chapter)
+        self.assertIn("검증만 계속하면 긴장감이 사라진다", chapter)
+        self.assertIn("동의를 만들어 내는 장치가 아니다", chapter)
+        self.assertIn("다른 사람의 선택을 무효로 하거나", chapter)
+
+        hard_boundary = (
+            "상대의 판단력이 흐려진 상태, 명시적인 거절, 눈에 보이는 불안이나 고통 중 "
+            "하나라도 확인되면 모든 기술은 즉시 끝난다."
+        )
+        self.assertEqual(chapter.count(hard_boundary), 1)
+
+        mission = re.search(r"\[\[CALLOUT:mission\|([^\n]+)\]\]\s*$", chapter)
+        self.assertIsNotNone(mission)
+        for expected in ("자격 질문 하나", "침묵", "밀어붙이지"):
+            self.assertIn(expected, mission.group(1))
+
     def test_environment_compares_introductions_side_by_side(self):
         chapter = (PROJECT / "manuscript" / "01-environment.md").read_text(
             encoding="utf-8"
