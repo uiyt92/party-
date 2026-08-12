@@ -27,6 +27,46 @@ class CnaPartyManifestTests(unittest.TestCase):
 
 
 class CnaPartyTypstContractTests(unittest.TestCase):
+    def test_diagram_renderer_supports_required_visuals_and_cards(self):
+        diagrams = (PROJECT / "typst" / "diagrams.typ").read_text(encoding="utf-8")
+
+        for expected in (
+            "party_map:",
+            "positioning_loop:",
+            "rapport_ladder:",
+            "influence_curve:",
+            "number_window:",
+            "level_test:",
+            "field:",
+            "bad:",
+            "better:",
+            "frame:",
+            "mission:",
+            "#let render-rich(path)",
+        ):
+            self.assertIn(expected, diagrams)
+
+    def test_diagrams_expose_only_the_supported_public_api(self):
+        diagrams = (PROJECT / "typst" / "diagrams.typ").read_text(encoding="utf-8")
+        top_level_names = set(re.findall(r"(?m)^#let ([\w-]+)", diagrams))
+
+        self.assertEqual(
+            top_level_names,
+            {
+                "diagram-frame",
+                "step",
+                "party-map",
+                "positioning-loop",
+                "rapport-ladder",
+                "influence-curve",
+                "number-window",
+                "level-test",
+                "DIAGRAMS",
+                "CALLOUTS",
+                "render-rich",
+            },
+        )
+
     def test_book_and_theme_expose_required_contract(self):
         book = (PROJECT / "typst" / "book.typ").read_text(encoding="utf-8")
         theme = (PROJECT / "typst" / "theme.typ").read_text(encoding="utf-8")
