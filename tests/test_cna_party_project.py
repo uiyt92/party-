@@ -218,6 +218,21 @@ class CnaPartyManuscriptTests(unittest.TestCase):
             ),
         )
 
+    def test_positioning_chapter_builds_social_value(self):
+        self.assert_chapter(
+            "02-positioning.md",
+            3500,
+            [
+                "# 분위기를 공급하는 사람이 되어라",
+                "## 특정성에서 빠져나오기",
+                "## 기버는 착한 사람이 아니라 주도하는 사람이다",
+                "## 셀프 어뮤즈",
+                "## 서브 호스트 프레임",
+                "## 거절을 사회적 굳은살로 바꾸기",
+            ],
+            ["[[DIAGRAM:positioning_loop]]", "[[CALLOUT:frame|", "[[CALLOUT:mission|"],
+        )
+
     def test_environment_compares_introductions_side_by_side(self):
         chapter = (PROJECT / "manuscript" / "01-environment.md").read_text(
             encoding="utf-8"
