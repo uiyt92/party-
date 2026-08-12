@@ -134,6 +134,16 @@ class CnaPartyTypstContractTests(unittest.TestCase):
 
 
 class CnaPartyManuscriptTests(unittest.TestCase):
+    DIAGRAM_KEYS = {
+        "party_map",
+        "positioning_loop",
+        "rapport_ladder",
+        "influence_curve",
+        "number_window",
+        "level_test",
+    }
+    CALLOUT_KINDS = {"field", "bad", "better", "frame", "mission"}
+
     def assert_chapter(self, filename, minimum_chars, headings, tokens):
         chapter = (PROJECT / "manuscript" / filename).read_text(encoding="utf-8")
 
@@ -142,6 +152,40 @@ class CnaPartyManuscriptTests(unittest.TestCase):
             self.assertIn(heading, chapter)
         for token in tokens:
             self.assertIn(token, chapter)
+
+    def assert_valid_markers(self, text):
+        marker_pattern = re.compile(
+            r"(?:\[\[DIAGRAM:([a-z][a-z0-9_]*)\]\]|"
+            r"\[\[CALLOUT:([a-z][a-z0-9_]*)\|([^\[\]\r\n]+)\]\])"
+        )
+        marker_lines = [
+            line for line in text.splitlines() if "[[" in line or "]]" in line
+        ]
+
+        self.assertTrue(marker_lines)
+        for line in marker_lines:
+            self.assertEqual(line, line.strip())
+            match = marker_pattern.fullmatch(line)
+            self.assertIsNotNone(match, f"invalid manuscript marker: {line}")
+            diagram_key, callout_kind, _ = match.groups()
+            if diagram_key:
+                self.assertIn(diagram_key, self.DIAGRAM_KEYS)
+            else:
+                self.assertIn(callout_kind, self.CALLOUT_KINDS)
+
+    def introduction_rows(self, text):
+        lines = text.splitlines()
+        header_index = lines.index("| BAD MOVE | BETTER MOVE |")
+        self.assertEqual(lines[header_index + 1], "| --- | --- |")
+
+        rows = []
+        for line in lines[header_index + 2 :]:
+            if not line.startswith("|"):
+                break
+            cells = [cell.strip() for cell in line.strip("|").split("|")]
+            self.assertEqual(len(cells), 2)
+            rows.append(cells)
+        return rows
 
     def test_prologue_and_environment_are_self_contained(self):
         self.assert_chapter(
@@ -163,6 +207,7 @@ class CnaPartyManuscriptTests(unittest.TestCase):
                 "## 자리 배치는 대화보다 솔직하다",
                 "## 경쟁자를 분석하는 기준",
                 "## 타깃의 상태를 읽는 법",
+                "## 외모는 입장권일 뿐이다",
                 "## 자기소개는 정보를 말하는 시간이 아니다",
             ),
             (
@@ -178,8 +223,37 @@ class CnaPartyManuscriptTests(unittest.TestCase):
             encoding="utf-8"
         )
 
-        self.assertIn("| BAD MOVE | BETTER MOVE |", chapter)
-        self.assertIn("| --- | --- |", chapter)
+        rows = self.introduction_rows(chapter)
+        self.assertEqual(len(rows), 4)
+        for bad_move, better_move in rows:
+            self.assertGreaterEqual(len(bad_move.strip(' "')), 8)
+            self.assertGreaterEqual(len(better_move.strip(' "')), 12)
+            self.assertGreater(len(better_move), len(bad_move))
+
+    def test_manuscript_markers_are_closed_standalone_and_known(self):
+        for chapter_path in sorted((PROJECT / "manuscript").glob("*.md")):
+            with self.subTest(chapter=chapter_path.name):
+                self.assert_valid_markers(chapter_path.read_text(encoding="utf-8"))
+
+        malformed_samples = (
+            "[[DIAGRAM:party_map]",
+            "intro [[DIAGRAM:party_map]]",
+            "[[DIAGRAM:unknown]]",
+            "[[CALLOUT:unknown|message]]",
+            "[[CALLOUT:bad|broken ] message]]",
+        )
+        for sample in malformed_samples:
+            with self.subTest(sample=sample), self.assertRaises(AssertionError):
+                self.assert_valid_markers(sample)
+
+    def test_environment_mission_keeps_live_observation_discreet(self):
+        chapter = (PROJECT / "manuscript" / "01-environment.md").read_text(
+            encoding="utf-8"
+        )
+
+        for expected in ("휴대폰", "종이에", "구역만", "머릿속", "파티가 끝난 뒤"):
+            self.assertIn(expected, chapter)
+        self.assertNotIn("대화하기 전, 선택한 타깃의", chapter)
 
 
 if __name__ == "__main__":
