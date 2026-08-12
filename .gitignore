@@ -8,6 +8,7 @@ gcp-key.json
 
 # Tool and interpreter state
 .claude/worktrees/
+.worktrees/
 __pycache__/
 *.py[cod]
 .pytest_cache/
