@@ -1,6 +1,6 @@
 // CNA Party Edition — bright A5 theme
 
-#let rule = line
+#let _rule = line
 
 // Public color tokens
 #let lime = rgb("#A8E63A")
@@ -15,7 +15,7 @@
 #let better = rgb("#167D73")
 #let better-soft = rgb("#EEF9F7")
 #let blue-soft = rgb("#F0F5FA")
-#let lime-soft = rgb("#F3F9E8")
+#let _lime-soft = rgb("#F3F9E8")
 
 #let book(
   title: "",
@@ -51,7 +51,7 @@
     #v(1fr)
     #text(size: 31pt, weight: 900, fill: navy, tracking: -0.7pt)[#title]
     #v(14pt)
-    #rule(length: 72pt, stroke: 4pt + lime)
+    #_rule(length: 72pt, stroke: 4pt + lime)
     #v(14pt)
     #text(size: 11.2pt, weight: 500, fill: muted)[#subtitle]
     #v(1fr)
@@ -72,7 +72,7 @@
     #v(7pt)
     #text(size: 9.2pt, fill: muted)[#subtitle]
     #v(18pt)
-    #rule(length: 42pt, stroke: 3pt + lime)
+    #_rule(length: 42pt, stroke: 3pt + lime)
     #v(18pt)
     #text(size: 9.2pt, weight: 700, fill: navy)[초판 2026년 · #author]
     #v(12pt)
@@ -99,7 +99,7 @@
     #v(5pt)
     #text(size: 23pt, weight: 900, fill: navy)[목차]
     #v(8pt)
-    #rule(length: 52pt, stroke: 4pt + lime)
+    #_rule(length: 52pt, stroke: 4pt + lime)
     #v(22pt)
     #show outline.entry: it => {
       set text(size: 9.5pt, weight: 600, fill: ink)
@@ -131,7 +131,7 @@
   show heading.where(level: 1): it => {
     pagebreak(weak: true)
     block(above: 0em, below: 1.6em)[
-      #rule(length: 48pt, stroke: 4pt + lime)
+      #_rule(length: 48pt, stroke: 4pt + lime)
       #v(11pt)
       #text(size: 24pt, weight: 900, fill: navy, tracking: -0.4pt)[#it.body]
     ]
@@ -176,13 +176,13 @@
       #v(16pt)
       #text(size: 24pt, weight: 900, fill: white, tracking: -0.3pt)[#title]
       #v(16pt)
-      #rule(length: 52pt, stroke: 4pt + lime)
+      #_rule(length: 52pt, stroke: 4pt + lime)
     ]
     #v(1fr)
   ]
 }
 
-#let card(label, accent, fill-color, body) = block(
+#let _card(label, accent, fill-color, body) = block(
   width: 100%,
   fill: fill-color,
   inset: (x: 14pt, y: 11pt),
@@ -196,8 +196,8 @@
   #text(size: 9.2pt, fill: ink)[#body]
 ]
 
-#let field-note(body) = card("FIELD NOTE", lime-dark, lime-soft, body)
-#let bad-move(body) = card("BAD MOVE", bad, bad-soft, body)
-#let better-move(body) = card("BETTER MOVE", better, better-soft, body)
-#let frame-card(body) = card("FRAME", navy, blue-soft, body)
-#let mission-card(body) = card("MISSION", lime-dark, lime-soft, body)
+#let field-note(body) = _card("FIELD NOTE", lime-dark, _lime-soft, body)
+#let bad-move(body) = _card("BAD MOVE", bad, bad-soft, body)
+#let better-move(body) = _card("BETTER MOVE", better, better-soft, body)
+#let frame-card(body) = _card("FRAME", navy, blue-soft, body)
+#let mission-card(body) = _card("MISSION", lime-dark, _lime-soft, body)
