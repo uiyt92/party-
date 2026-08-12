@@ -6,10 +6,12 @@
 
 ```powershell
 python scripts/project.py list
-python scripts/project.py build all
-python scripts/project.py verify
+python scripts/project.py build cna-party-book
+python scripts/project.py verify all
 python -m unittest discover -s tests -v
 ```
+
+일상 작업은 변경한 산출물 ID만 빌드하고 `verify all`로 다섯 종을 검증한다. `python scripts/project.py build all`은 모든 정식 PDF의 배포 바이트를 의도적으로 새로 만들 때만 실행하며, 이후 `docs/ARTIFACT_INVENTORY.md`의 페이지 수·바이트·SHA-256도 함께 갱신한다.
 
 개별 빌드 ID는 `katalk-basic`, `katalk-advanced`, `katalk-summary`, `cna-night`, `cna-party-book`이다.
 
@@ -38,8 +40,8 @@ Katalk Markdown은 편집용 원고다. `scripts/legacy/md_to_typ.py`로 현재 
 
 1. 콘텐츠를 수정하는 작업과 폴더·빌드 구조를 수정하는 작업을 섞지 않는다.
 2. 새 CLI 동작은 실패 테스트를 먼저 작성한다.
-3. PDF는 `scripts/project.py build`로 스테이징·검증 후 배포한다.
-4. 최종 전달 전 다섯 PDF를 전부 열고 페이지 수, 텍스트, 렌더링을 확인한다.
+3. PDF는 `scripts/project.py build <changed-id>`로 변경한 산출물만 스테이징·검증 후 배포한다. `build all`은 전체 배포 바이트를 의도적으로 갱신할 때만 사용한다.
+4. 최종 전달 전 `scripts/project.py verify all`을 실행하고 다섯 PDF를 전부 열어 페이지 수, 텍스트, 렌더링을 확인한다. 재빌드한 PDF가 있다면 인벤토리 메타데이터도 갱신한다.
 5. `local/secrets/gcp-key.json`의 내용은 출력·문서화·커밋하지 않는다.
 
 과거 프로젝트 가이드는 `docs/research/legacy-project-guide.md`, 상세 변경 이력은 `docs/research/reviews/변경이력.md`에 보존되어 있다.

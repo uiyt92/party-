@@ -21,11 +21,17 @@
 ```powershell
 python -m pip install -r requirements.txt
 python scripts/project.py list
-python scripts/project.py build all
-python scripts/project.py verify
+python scripts/project.py build cna-party-book
+python scripts/project.py verify all
 ```
 
-`build`는 먼저 `build/pdf/`에 PDF를 만들고 구조 검증을 통과한 파일만 `dist/pdf/`에 반영합니다. 실패하면 기존 배포본은 유지됩니다.
+일상 작업에서는 변경한 산출물 ID만 빌드하고, 이어서 `verify all`로 정식 PDF 다섯 종을 모두 확인합니다. 위 명령의 `cna-party-book`은 실제 예시이며 다른 교재를 수정했다면 해당 ID로 바꿉니다. `build`는 먼저 `build/pdf/`에 PDF를 만들고 구조 검증을 통과한 파일만 `dist/pdf/`에 반영합니다. 실패하면 기존 배포본은 유지됩니다.
+
+```powershell
+python scripts/project.py build all
+```
+
+`build all`은 모든 정식 PDF의 배포 바이트를 의도적으로 새로 만들 때만 사용합니다. 실행했다면 페이지 수·바이트·SHA-256을 다시 측정해 `docs/ARTIFACT_INVENTORY.md`를 같은 변경에서 갱신합니다.
 
 ## 새 교재 만들기
 

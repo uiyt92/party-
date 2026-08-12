@@ -778,6 +778,22 @@ class CnaPartyDocumentationTests(unittest.TestCase):
         self.assertIn("정식 배포 PDF는 `dist/pdf/`의 다섯 파일", guide)
         self.assertIn("`cna-party-book`", guide)
 
+        for workflow_doc in (readme, guide):
+            self.assertIn("python scripts/project.py build cna-party-book", workflow_doc)
+            self.assertIn("python scripts/project.py verify all", workflow_doc)
+            self.assertIn("의도적으로", workflow_doc)
+            self.assertIn("build all", workflow_doc)
+        for policy in (
+            "현재 커밋된 배포 바이트",
+            "생성 메타데이터와 타임스탬프",
+            "같아도 SHA-256이 달라질 수 있다",
+            "페이지 수, 바이트, SHA-256",
+            "같은 변경에서 이 목록도 갱신",
+            "python scripts/project.py build cna-party-book",
+            "python scripts/project.py verify all",
+        ):
+            self.assertIn(policy, inventory)
+
 
 if __name__ == "__main__":
     unittest.main()
