@@ -473,6 +473,177 @@ class CnaPartyManuscriptTests(unittest.TestCase):
         for expected in ("자격 질문 하나", "침묵", "밀어붙이지"):
             self.assertIn(expected, mission.group(1))
 
+    def test_closing_chapters_end_at_number_exchange(self):
+        number_headings = [
+            "# 고점에서 번호를 교환하라",
+            "## 번호보다 먼저 명분을 만든다",
+            "## 교환 창이 열렸다는 신호",
+            "## 짧게 제안하고 설명하지 않는다",
+            "## 거절을 처리하는 가장 좋은 방식",
+            "## 먼저 떠나는 사람이 여운을 만든다",
+        ]
+        checklist_headings = [
+            "# 다음 파티를 위한 실행 카드",
+            "## 입장 전",
+            "## 첫 10분",
+            "## 첫 대화",
+            "## 번호 교환",
+            "## 집에 돌아온 뒤 복기",
+        ]
+        self.assert_chapter(
+            "05-number-exchange.md",
+            2600,
+            number_headings,
+            [
+                "[[DIAGRAM:number_window]]",
+                "[[CALLOUT:bad|",
+                "[[CALLOUT:better|",
+                "[[CALLOUT:mission|",
+            ],
+        )
+        self.assert_chapter(
+            "06-checklist.md",
+            1200,
+            checklist_headings,
+            ["[[DIAGRAM:level_test]]", "[[CALLOUT:field|"],
+        )
+
+        number_chapter = (PROJECT / "manuscript" / "05-number-exchange.md").read_text(
+            encoding="utf-8"
+        )
+        checklist = (PROJECT / "manuscript" / "06-checklist.md").read_text(
+            encoding="utf-8"
+        )
+        self.assertEqual(
+            [number_chapter.index(heading) for heading in number_headings],
+            sorted(number_chapter.index(heading) for heading in number_headings),
+        )
+        self.assertEqual(
+            [checklist.index(heading) for heading in checklist_headings],
+            sorted(checklist.index(heading) for heading in checklist_headings),
+        )
+
+        self.assertRegex(
+            number_chapter,
+            r"세 조건은[^\n]*상호 투자[^\n]*공유 맥락[^\n]*"
+            r"다음 단계의 이유[^\n]*\n\n"
+            + re.escape("[[DIAGRAM:number_window]]"),
+        )
+        for signal_heading in ("### 초록 신호", "### 애매한 신호"):
+            self.assertIn(signal_heading, number_chapter)
+        for green_signal in ("질문을 돌려준다", "대화를 다시 이어 온다", "공유한 소재"):
+            self.assertIn(green_signal, number_chapter)
+        for ambiguous_signal in ("예의상 웃음", "가까이 서 있음", "시선이 자주 마주침"):
+            self.assertIn(ambiguous_signal, number_chapter)
+        self.assertIn("어떤 신호도 동의를 보장하지 않는다", number_chapter)
+
+        script_roles = (
+            "함께 갈 장소",
+            "공유한 관심사",
+            "장난의 다음 편",
+            "확신 있는 독자의 직접 제안",
+            "초보자를 위한 부드러운 제안",
+        )
+        script_labels = []
+        for number, role in enumerate(script_roles, start=1):
+            match = re.search(
+                rf"(?m)^> \*\*SCRIPT {number}[^\n]*{re.escape(role)}\*\*$",
+                number_chapter,
+            )
+            self.assertIsNotNone(match, role)
+            script_labels.append(match.start())
+        self.assertEqual(
+            script_labels,
+            sorted(script_labels),
+        )
+
+        bad = re.search(r"\[\[CALLOUT:bad\|([^\n]+)\]\]", number_chapter)
+        better = re.search(r"\[\[CALLOUT:better\|([^\n]+)\]\]", number_chapter)
+        self.assertIsNotNone(bad)
+        self.assertIsNotNone(better)
+        for failure in ("장황하게 설명", "애원", "거절 뒤 협상"):
+            self.assertIn(failure, bad.group(1))
+        for improvement in ("한 문장", "선택권", "멈춘다"):
+            self.assertIn(improvement, better.group(1))
+
+        for refusal_guard in (
+            "왜 안 되는지 묻지 않는다",
+            "협상하지 않는다",
+            "시선을 방 전체로 돌린다",
+            "벌주지 않는다",
+        ):
+            self.assertIn(refusal_guard, number_chapter)
+        self.assertIn("교환 → 마무리 한 줄 → 이동", number_chapter)
+        self.assertIn("번호가 위로 상품이 된다", number_chapter)
+        for excluded_scope in (
+            "카카오톡",
+            "DM",
+            "디엠",
+            "데이트 일정",
+            "후속 연락",
+            "팔로업",
+            "성적 에스컬레이션",
+        ):
+            self.assertNotIn(excluded_scope, number_chapter)
+            self.assertNotIn(excluded_scope, checklist)
+
+        mission = re.search(
+            r"\[\[CALLOUT:mission\|([^\n]+)\]\]\s*$", number_chapter
+        )
+        self.assertIsNotNone(mission)
+        for expected in ("이어갈 이유를 한 문장", "말한 뒤에만", "번호 교환"):
+            self.assertIn(expected, mission.group(1))
+
+        for section_index, heading in enumerate(checklist_headings[1:], start=1):
+            start = checklist.index(heading) + len(heading)
+            if section_index + 1 < len(checklist_headings):
+                end = checklist.index(checklist_headings[section_index + 1])
+            else:
+                end = len(checklist)
+            self.assertIn("- [ ]", checklist[start:end], heading)
+
+        for required_item in (
+            "복장",
+            "동선",
+            "세 번의 낮은 부담 상호작용",
+            "사회적 중심",
+            "상태 단서",
+            "페이싱",
+            "감정 단서",
+            "자기 공개",
+            "기준",
+            "자격 부여",
+            "반전",
+            "긴장 해제",
+            "상호 투자",
+            "공유 맥락",
+            "다음 이유",
+            "짧게 요청",
+        ):
+            self.assertIn(required_item, checklist)
+        self.assertIn("| 관찰 | 내가 한 행동 | 상대 반응 | 다음 실험 |", checklist)
+
+        level_positions = []
+        for number, level in enumerate(
+            ("진입", "대화", "포지션", "프레임", "전환"), start=1
+        ):
+            match = re.search(
+                rf"(?m)^- \[ \] \*\*레벨 {number}[^\n]*{level}\*\*", checklist
+            )
+            self.assertIsNotNone(match, level)
+            level_positions.append(match.start())
+        self.assertEqual(
+            level_positions,
+            sorted(level_positions),
+        )
+        self.assertEqual(
+            checklist.count(
+                "[[CALLOUT:field|한 번의 번호보다 중요한 것은 다음 파티에서도 "
+                "반복할 수 있는 행동을 남기는 것이다.]]"
+            ),
+            1,
+        )
+
     def test_environment_compares_introductions_side_by_side(self):
         chapter = (PROJECT / "manuscript" / "01-environment.md").read_text(
             encoding="utf-8"
