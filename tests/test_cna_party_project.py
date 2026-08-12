@@ -272,6 +272,71 @@ class CnaPartyManuscriptTests(unittest.TestCase):
         self.assertIn("주요 관심 상대에게 다가가기 전에", mission.group(1))
         self.assertIn("긍정적인 상호작용 세 번", mission.group(1))
 
+    def test_rapport_chapter_turns_observation_into_conversation(self):
+        headings = [
+            "# 상대의 주파수 안으로 들어가라",
+            "## 말보다 먼저 상태를 읽는다",
+            "## 페이싱은 흉내가 아니다",
+            "## 감정에서 경험까지 내려가는 네 층",
+            "## 스몰토크는 역추적이다",
+            "## 5감을 6감으로 바꾸는 법",
+            "## 첫 대화 전체 예시",
+        ]
+        self.assert_chapter(
+            "03-rapport.md",
+            4800,
+            headings,
+            [
+                "[[DIAGRAM:rapport_ladder]]",
+                "[[CALLOUT:bad|",
+                "[[CALLOUT:better|",
+                "[[CALLOUT:mission|",
+            ],
+        )
+
+        chapter = (PROJECT / "manuscript" / "03-rapport.md").read_text(
+            encoding="utf-8"
+        )
+        heading_positions = [chapter.index(heading) for heading in headings]
+        self.assertEqual(heading_positions, sorted(heading_positions))
+
+        self.assertRegex(
+            chapter,
+            re.escape(
+                "네 층은 **현재 사실 → 선호 → 감정 → 개인 경험** 순서로 내려간다."
+            )
+            + r"[^\n]*\n\n"
+            + re.escape("[[DIAGRAM:rapport_ladder]]"),
+        )
+        for cue in ("몸의 방향", "반응 지연", "호흡", "목소리 크기", "눈", "친구를 확인"):
+            self.assertIn(cue, chapter)
+        for state in ("고에너지", "조심스러운 상태", "피곤한 상태", "사회적으로 포화된 상태"):
+            self.assertIn(state, chapter)
+        for warning in ("동작을 기계적으로 따라 하는 것", "페이싱이 아니다", "조종당하는 느낌"):
+            self.assertIn(warning, chapter)
+
+        bad = re.search(r"\[\[CALLOUT:bad\|([^\n]+)\]\]", chapter)
+        better = re.search(r"\[\[CALLOUT:better\|([^\n]+)\]\]", chapter)
+        self.assertIsNotNone(bad)
+        self.assertIsNotNone(better)
+        for expected in ("사실", "연속 질문", "면접"):
+            self.assertIn(expected, bad.group(1))
+        for expected in ("감정 단서 하나", "따라간", "내 이야기"):
+            self.assertIn(expected, better.group(1))
+
+        for example in ("빛의 예", "음악의 예", "밀도의 예"):
+            self.assertIn(example, chapter)
+        self.assertIn("> **SCRIPT**", chapter)
+        for beat in ("[상태 읽기]", "[페이싱]", "[감정 질문]", "[자기 공개]", "[종료]"):
+            self.assertIn(f"> **{beat}**", chapter)
+        self.assertIn("반응이 낮을 때의 종료 분기", chapter)
+        self.assertIn("설득해서 뒤집지 않는다", chapter)
+
+        mission = re.search(r"\[\[CALLOUT:mission\|([^\n]+)\]\]\s*$", chapter)
+        self.assertIsNotNone(mission)
+        self.assertIn("개인적인 질문을 하기 전에", mission.group(1))
+        self.assertIn("관찰 세 가지", mission.group(1))
+
     def test_environment_compares_introductions_side_by_side(self):
         chapter = (PROJECT / "manuscript" / "01-environment.md").read_text(
             encoding="utf-8"
