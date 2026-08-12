@@ -26,7 +26,7 @@
 Run:
 
 ```powershell
-& 'C:\Program Files\PostgreSQL\17\pgAdmin 4\python\python.exe' -m unittest tests.test_cna_party_project.CnaPartyProjectTest.test_prologue_and_environment_are_self_contained -v
+& 'C:\Users\SuperNatural1\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe' -m unittest tests.test_cna_party_project.CnaPartyManuscriptTests.test_prologue_and_environment_are_self_contained -v
 ```
 
 Expected: 기존 원고에서 `OK`.
@@ -78,8 +78,8 @@ Expected: 기존 원고에서 `OK`.
 Run:
 
 ```powershell
-& 'C:\Program Files\PostgreSQL\17\pgAdmin 4\python\python.exe' -m unittest tests.test_cna_party_project.CnaPartyProjectTest.test_prologue_and_environment_are_self_contained -v
-& 'C:\Program Files\PostgreSQL\17\pgAdmin 4\python\python.exe' -m unittest discover -s tests -v
+& 'C:\Users\SuperNatural1\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe' -m unittest tests.test_cna_party_project.CnaPartyManuscriptTests.test_prologue_and_environment_are_self_contained -v
+& 'C:\Users\SuperNatural1\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe' -m unittest discover -s tests -v
 ```
 
 Expected: 프롤로그 검사를 포함한 전체 테스트가 `OK`.
@@ -89,8 +89,8 @@ Expected: 프롤로그 검사를 포함한 전체 테스트가 `OK`.
 Run:
 
 ```powershell
-& 'C:\Program Files\PostgreSQL\17\pgAdmin 4\python\python.exe' scripts/project.py build cna-party-book
-& 'C:\Program Files\PostgreSQL\17\pgAdmin 4\python\python.exe' scripts/project.py verify cna-party-book
+& 'C:\Users\SuperNatural1\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe' scripts/project.py build cna-party-book
+& 'C:\Users\SuperNatural1\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe' scripts/project.py verify cna-party-book
 ```
 
 Expected: 빌드와 검증이 성공하고 PDF가 30~45쪽 범위에 남는다.
