@@ -440,12 +440,24 @@ class CnaPartyManuscriptTests(unittest.TestCase):
         repair_steps = (
             "갑자기 평가받는 기분인데요?",
             "제가 방금 사람을 평가하는 틀을 씌웠네요. 그 말은 거둘게요.",
-            "누가 어색해 보이면 제가 뭐라도 정리하면서 먼저 말을 거는 편이에요.",
+            "누가 어색해 보이면 제가 뭐라도 정리하면서 말을 걸 계기를 만드는 편이에요.",
             "> **3. 자격 질문**",
+            "얼마나 지켜본 뒤 말을 거는 편이에요?",
+            "조금 기다려 봐요.",
         )
         repair_positions = [chapter.index(step) for step in repair_steps]
         self.assertEqual(repair_positions, sorted(repair_positions))
         self.assertNotIn("정정권은 드릴게요", chapter)
+
+        for explanation in (
+            "첫 프레임 시도는 상대를 불편하게 했다",
+            "화자는 이를 즉시 인정하고 거두었다",
+            "배려와 경계의 주제는 상대가 자발적으로 다시 열고 나서야 이어 갔다",
+        ):
+            self.assertIn(explanation, chapter)
+        self.assertNotIn(
+            "프레임은 대화를 ‘배려를 보는 시간’으로 바꿨다", chapter
+        )
 
         self.assertIn("필요한 동안 저는 제 일행 쪽에 있을게요", chapter)
         self.assertNotIn("잠깐 인사하고 와도 괜찮아요", chapter)
