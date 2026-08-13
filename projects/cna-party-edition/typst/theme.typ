@@ -23,12 +23,13 @@
   set document(title: title, author: author)
   set text(
     font: "Pretendard",
-    size: 9.8pt,
+    size: 10.2pt,
     fill: ink,
     lang: "ko",
     hyphenate: false,
+    tracking: 0.04pt,
   )
-  set par(justify: true, leading: 0.72em, spacing: 0.72em)
+  set par(justify: true, leading: 0.74em, spacing: 1.28em)
 
   // Cover
   page(

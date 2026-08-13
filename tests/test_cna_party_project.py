@@ -152,7 +152,11 @@ class CnaPartyTypstContractTests(unittest.TestCase):
         theme = (PROJECT / "typst" / "theme.typ").read_text(encoding="utf-8")
 
         self.assertIn(
-            "set par(justify: true, leading: 0.72em, spacing: 0.72em)", theme
+            "size: 10.2pt,\n    fill: ink,\n    lang: \"ko\",\n    hyphenate: false,\n    tracking: 0.04pt,",
+            theme,
+        )
+        self.assertIn(
+            "set par(justify: true, leading: 0.74em, spacing: 1.28em)", theme
         )
 
     def test_numbered_dialogue_quotes_stay_atomic(self):
