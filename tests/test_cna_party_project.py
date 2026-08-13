@@ -640,7 +640,7 @@ class CnaPartyManuscriptTests(unittest.TestCase):
             "## 교환 창이 열렸다는 신호",
             "## 짧게 제안하고 설명하지 않는다",
             "## 거절을 처리하는 가장 좋은 방식",
-            "## 먼저 떠나는 사람이 여운을 만든다",
+            "## 교환 뒤에는 진행으로 돌아간다",
         ]
         checklist_headings = [
             "# 다음 파티를 위한 실행 카드",
@@ -726,27 +726,35 @@ class CnaPartyManuscriptTests(unittest.TestCase):
         for improvement in ("한 문장", "선택권", "멈춘다"):
             self.assertIn(improvement, better.group(1))
 
+        for exchange_window in (
+            "게임 직후",
+            "자리 교체 직전",
+            "음료를 받는 쉬는 시간",
+            "행사 종료 전",
+        ):
+            self.assertIn(exchange_window, number_chapter)
         for refusal_guard in (
             "왜 안 되는지 묻지 않는다",
             "협상하지 않는다",
-            "시선을 방 전체로 돌린다",
+            "현재 진행으로 돌아간다",
             "벌주지 않는다",
         ):
             self.assertIn(refusal_guard, number_chapter)
-        self.assertIn("교환 → 마무리 한 줄 → 이동", number_chapter)
+        self.assertIn("교환 → 마무리 한 줄 → 진행 복귀", number_chapter)
+        self.assertNotIn("교환 → 마무리 한 줄 → 이동", number_chapter)
+        self.assertNotIn("친구들한테도 인사하고 올게요", number_chapter)
         self.assertIn("번호가 위로 상품이 된다", number_chapter)
 
         exit_section = number_chapter[
-            number_chapter.index("## 먼저 떠나는 사람이 여운을 만든다") :
+            number_chapter.index("## 교환 뒤에는 진행으로 돌아간다") :
         ]
         for mutual_exit_guard in (
             "상대가 자발적으로",
             "진짜 새로운 질문이나 대화 주제",
             "자연스럽게 이어가도 좋다",
-            "현재 대화의 흐름이 완결됐을 때만",
             "벌주는 행동",
-            "관심을 거두는 연출",
-            "불안하게 만드는 전술",
+            "기계적인 퇴장",
+            "철수 전술",
         ):
             self.assertIn(mutual_exit_guard, exit_section)
         self.assertNotIn("상대가 먼저 새 질문을 꺼내면 짧게 답", number_chapter)
@@ -754,7 +762,7 @@ class CnaPartyManuscriptTests(unittest.TestCase):
         self.assertRegex(
             number_chapter,
             r"이 책의 실전 범위는 여기까지다[^\n]*번호 교환[^\n]*"
-            r"깔끔하게 현장을 떠난다",
+            r"현재 진행으로 돌아간다",
         )
         self.assertIn(
             "이 카드는 연락처를 교환하고 현장을 정리하는 데서 멈춘다.",
@@ -795,9 +803,10 @@ class CnaPartyManuscriptTests(unittest.TestCase):
 
         for required_item in (
             "복장",
-            "동선",
-            "세 번의 낮은 부담 상호작용",
-            "사회적 중심",
+            "현재 조에 기여",
+            "운영자의 자리 교체",
+            "게임 접촉이 상호적",
+            "어느 전환에서 만났는가",
             "상태 단서",
             "페이싱",
             "감정 단서",
@@ -812,7 +821,16 @@ class CnaPartyManuscriptTests(unittest.TestCase):
             "짧게 요청",
         ):
             self.assertIn(required_item, checklist)
-        self.assertIn("| 관찰 | 내가 한 행동 | 상대 반응 | 다음 실험 |", checklist)
+        self.assertIn(
+            "| 만난 전환 | 현재 조에 기여한 행동 | 게임 접촉이 상호적이었는가 | 다음 실험 |",
+            checklist,
+        )
+        for old_phrase in (
+            "방의 지도를 그리고 사회적 중심",
+            "관찰 → 공급 → 반응 → 이동",
+            "마무리 한 줄을 남기고 이동한다",
+        ):
+            self.assertNotIn(old_phrase, checklist)
 
         level_positions = []
         for number, level in enumerate(
@@ -836,6 +854,36 @@ class CnaPartyManuscriptTests(unittest.TestCase):
         )
         self.assertIn("체크가 가장 많이 비는", checklist)
         self.assertNotIn("동그라미가 가장 많이 비는", checklist)
+
+    def test_all_chapters_follow_the_assigned_group_event_model(self):
+        chapters = {
+            path.name: path.read_text(encoding="utf-8")
+            for path in sorted((PROJECT / "manuscript").glob("*.md"))
+        }
+        expected_by_chapter = {
+            "00-prologue.md": ("정해진 자리", "현재 조", "자리 교체", "조별 게임"),
+            "01-environment.md": ("현재 조", "교체 방향", "게임 흐름"),
+            "02-positioning.md": ("관찰 → 기여 → 반응 → 전환", "운영자의 자리 교체"),
+            "03-rapport.md": ("새 조", "게임 직후", "조 전체의 흐름"),
+            "04-influence.md": ("조 전체", "자리 교체", "매달리지"),
+            "05-number-exchange.md": ("게임 직후", "자리 교체 직전", "쉬는 시간"),
+            "06-checklist.md": ("현재 조에 기여", "게임 접촉이 상호적"),
+        }
+        for filename, markers in expected_by_chapter.items():
+            for marker in markers:
+                self.assertIn(marker, chapters[filename], f"{filename}: {marker}")
+
+        all_text = "\n".join(chapters.values())
+        for forbidden in (
+            "마음에 드는 사람을 찾아 곧장 걷지 말자",
+            "방을 천천히 한 바퀴 바라본다",
+            "나 저쪽에 인사 하나만 하고 다시 볼게",
+            "관찰 → 공급 → 반응 → 이동",
+            "주요 관심 상대에게 다가가기 전에",
+            "친구들한테도 인사하고 올게요",
+            "교환 → 마무리 한 줄 → 이동",
+        ):
+            self.assertNotIn(forbidden, all_text)
 
     def test_environment_compares_introductions_side_by_side(self):
         chapter = (PROJECT / "manuscript" / "01-environment.md").read_text(
