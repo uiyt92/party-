@@ -431,7 +431,14 @@ class CnaPartyManuscriptTests(unittest.TestCase):
             + r"[^\n]*\n\n"
             + re.escape("[[DIAGRAM:rapport_ladder]]"),
         )
-        for cue in ("몸의 방향", "반응 지연", "호흡", "목소리 크기", "눈", "친구를 확인"):
+        for cue in (
+            "몸의 방향",
+            "반응 지연",
+            "호흡",
+            "목소리 크기",
+            "눈",
+            "조 전체의 흐름을 확인",
+        ):
             self.assertIn(cue, chapter)
         for state in ("고에너지", "조심스러운 상태", "피곤한 상태", "사회적으로 포화된 상태"):
             self.assertIn(state, chapter)
@@ -479,26 +486,34 @@ class CnaPartyManuscriptTests(unittest.TestCase):
             encoding="utf-8"
         )
 
-        for expected in ("새 조", "조별 게임", "게임 직후", "말할 차례"):
+        for expected in ("새 조", "조별 게임", "게임 직후"):
             self.assertIn(expected, rapport)
         for expected in ("조 전체", "자리 교체", "매달리지"):
             self.assertIn(expected, influence)
         for boundary in (
-            "상대도 손을 내밀었을 때",
+            "게임 규칙 안에서 상대도 손을 내밀거나 분명히 함께 동작할 때만",
+            "규칙상 동작이어도 상대가 참여하지 않으면 생략한다",
             "몸을 피하거나 멈추면",
             "호감의 증거",
             "접촉을 반복하지 않는다",
             "멀리서",
             "상태를 단정하지 않는다",
-            "다른 조원에게 말할 차례",
             "다음 자리 교체",
+            "다른 조원이 말을 시작하면 질문을 멈추고 조 전체의 흐름으로 돌아가 듣는다",
+            "더 묻지 않고 다른 조원의 이야기를 듣는다",
         ):
             self.assertIn(boundary, rapport)
+        self.assertLess(rapport.index("저는 지연이에요"), rapport.index("지연 씨"))
         self.assertIn("압박을 주는 카운트다운으로 사용하지 않는다", influence)
+        self.assertIn("다음 게임도 같은 조가 된다면", influence)
         for forbidden in (
             "답할 수 있는 거리에서 옆 공간을 비워 둔 채 시작한다",
             "나 친구들한테도 인사하고 올게요. 조금 있다가 동선 겹치면 다시 봐요",
             "필요한 동안 저는 제 일행 쪽에 있을게요",
+            "규칙이 요구하거나",
+            "말할 차례를 넘길게요",
+            "다른 조원에게 말할 차례가 오면 그 흐름을 넘기고",
+            "다음 조별 게임에서도",
         ):
             self.assertNotIn(forbidden, rapport + "\n" + influence)
 
