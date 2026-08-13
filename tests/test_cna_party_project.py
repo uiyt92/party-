@@ -1,6 +1,7 @@
 import json
 import re
 import unittest
+from hashlib import sha256
 from pathlib import Path
 
 
@@ -1034,10 +1035,24 @@ class CnaPartyArtifactTests(unittest.TestCase):
         self.assertIn("CNA", cover_text)
         all_text = "".join(page.extract_text() or "" for page in reader.pages)
         self.assertGreaterEqual(len(all_text), 15000)
+        for expected in (
+            "정해진 자리",
+            "자리 교체",
+            "조별 게임",
+            "잘못된 선택",
+            "좋은 선택",
+            "대화 예시",
+            "실전 과제",
+        ):
+            self.assertIn(expected, all_text)
+        for legacy in ("BAD MOVE", "BETTER MOVE", "SCRIPT", "MISSION"):
+            self.assertNotIn(legacy, all_text)
 
 
 class CnaPartyDocumentationTests(unittest.TestCase):
     def test_release_docs_register_the_fifth_book_and_its_sources(self):
+        from pypdf import PdfReader
+
         readme = (ROOT / "README.md").read_text(encoding="utf-8")
         inventory = (ROOT / "docs" / "ARTIFACT_INVENTORY.md").read_text(
             encoding="utf-8"
@@ -1052,10 +1067,13 @@ class CnaPartyDocumentationTests(unittest.TestCase):
             "`projects/cna-party-edition/typst/book.typ` |"
         )
         self.assertIn(release_row, readme)
-        self.assertIn(
-            "| `cna-party-book` | `dist/pdf/CNA_파티의_주도권.pdf` | 41 |",
-            inventory,
+        pdf_path = ROOT / "dist" / "pdf" / "CNA_파티의_주도권.pdf"
+        inventory_row = (
+            "| `cna-party-book` | `dist/pdf/CNA_파티의_주도권.pdf` | "
+            f"{len(PdfReader(pdf_path).pages)} | {pdf_path.stat().st_size:,} | "
+            f"`{sha256(pdf_path.read_bytes()).hexdigest()}` |"
         )
+        self.assertIn(inventory_row, inventory)
         self.assertIn("### CNA Party Edition", structure)
         self.assertIn("정식 교재 PDF 다섯 종", structure)
         for document in (readme, inventory, structure, guide):

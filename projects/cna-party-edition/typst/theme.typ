@@ -28,7 +28,7 @@
     lang: "ko",
     hyphenate: false,
   )
-  set par(justify: true, leading: 1.25em, spacing: 0.45em)
+  set par(justify: true, leading: 1.25em, spacing: 0.3em)
 
   // Cover
   page(
@@ -137,7 +137,7 @@
       #text(size: 24pt, weight: 900, fill: navy, tracking: -0.4pt)[#title]
     ]
   }
-  show heading.where(level: 2): it => block(above: 1.9em, below: 0.85em)[
+  show heading.where(level: 2): it => block(above: 1.55em, below: 0.65em)[
     #text(size: 14pt, weight: 800, fill: navy)[#it.body]
   ]
 
@@ -147,8 +147,8 @@
     inset: (x: 14pt, y: 11pt),
     radius: 5pt,
     stroke: (left: 3pt + navy),
-    above: 1.3em,
-    below: 1.3em,
+    above: 0.9em,
+    below: 0.9em,
   )[#it.body]
 
   show table.cell.where(y: 0): set text(fill: white, weight: 700, size: 9.2pt)
@@ -190,8 +190,8 @@
   inset: (x: 14pt, y: 11pt),
   radius: 7pt,
   stroke: (left: 4pt + lime-dark),
-  above: 1.2em,
-  below: 1.2em,
+  above: 0.9em,
+  below: 0.9em,
 )[
   #text(size: 8.2pt, weight: 800, fill: lime-dark, tracking: 1.4pt)[FIELD NOTE]
   #v(6pt)
@@ -250,8 +250,8 @@
   inset: (x: 14pt, y: 11pt),
   radius: 7pt,
   stroke: (left: 4pt + lime-dark),
-  above: 1.2em,
-  below: 1.2em,
+  above: 0.9em,
+  below: 0.9em,
 )[
   #text(size: 8.2pt, weight: 800, fill: lime-dark, tracking: 0.4pt)[실전 과제]
   #v(6pt)
