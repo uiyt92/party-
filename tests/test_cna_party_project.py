@@ -899,6 +899,9 @@ class CnaPartyManuscriptTests(unittest.TestCase):
             path.read_text(encoding="utf-8")
             for path in sorted((PROJECT / "manuscript").glob("*.md"))
         )
+        prologue = (PROJECT / "manuscript" / "00-prologue.md").read_text(
+            encoding="utf-8"
+        )
         theme = (PROJECT / "typst" / "theme.typ").read_text(encoding="utf-8")
 
         for legacy_label in ("BAD MOVE", "BETTER MOVE", "SCRIPT", "MISSION"):
@@ -907,6 +910,15 @@ class CnaPartyManuscriptTests(unittest.TestCase):
 
         for visible_label in ("잘못된 선택", "좋은 선택", "대화 예시", "실전 과제"):
             self.assertIn(visible_label, manuscript)
+            self.assertIn(f"**{visible_label}**", prologue)
+
+        for natural_explanation in (
+            "말을 어느 정도 길이로, 얼마나 가볍게 건네면 되는지 보여 주는 참고 문장이다",
+            "읽은 내용을 현장에서 작은 행동으로 옮겨 보는 부분이다",
+        ):
+            self.assertIn(natural_explanation, prologue)
+        for repetitive_explanation in ("보여 주는 예시다", "옮기는 과제다"):
+            self.assertNotIn(repetitive_explanation, prologue)
 
         card_headings = {
             "bad-move": "잘못된 선택",
