@@ -691,7 +691,12 @@ class CnaPartyManuscriptTests(unittest.TestCase):
         )
         for signal_heading in ("### 초록 신호", "### 애매한 신호"):
             self.assertIn(signal_heading, number_chapter)
-        for green_signal in ("질문을 돌려준다", "대화를 다시 이어 온다", "공유한 소재"):
+        for green_signal in (
+            "질문을 돌려준다",
+            "조 전체의 차례가 지난 뒤",
+            "게임 차례가 끝난 뒤",
+            "공유한 소재",
+        ):
             self.assertIn(green_signal, number_chapter)
         for ambiguous_signal in ("예의상 웃음", "가까이 서 있음", "시선이 자주 마주침"):
             self.assertIn(ambiguous_signal, number_chapter)
@@ -733,6 +738,16 @@ class CnaPartyManuscriptTests(unittest.TestCase):
             "행사 종료 전",
         ):
             self.assertIn(exchange_window, number_chapter)
+        self.assertIn(
+            "전환은 만나는 조합을 바꾸며, 같은 사람을 다시 만날 수도 있고 아닐 수도 있다",
+            number_chapter,
+        )
+        for guaranteed_or_free_movement_signal in (
+            "운영자가 만든 전환 안에서 다시 만난다",
+            "누군가 끼어들어도",
+            "몸을 돌려 떠날 수 있는 순간에도",
+        ):
+            self.assertNotIn(guaranteed_or_free_movement_signal, number_chapter)
         for refusal_guard in (
             "왜 안 되는지 묻지 않는다",
             "협상하지 않는다",
@@ -749,8 +764,7 @@ class CnaPartyManuscriptTests(unittest.TestCase):
             number_chapter.index("## 교환 뒤에는 진행으로 돌아간다") :
         ]
         for mutual_exit_guard in (
-            "상대가 자발적으로",
-            "진짜 새로운 질문이나 대화 주제",
+            "상대가 자연스럽게 새 질문이나 주제를 꺼내면",
             "자연스럽게 이어가도 좋다",
             "벌주는 행동",
             "기계적인 퇴장",
@@ -758,6 +772,16 @@ class CnaPartyManuscriptTests(unittest.TestCase):
         ):
             self.assertIn(mutual_exit_guard, exit_section)
         self.assertNotIn("상대가 먼저 새 질문을 꺼내면 짧게 답", number_chapter)
+        self.assertIn(
+            "나: “알겠어요. 말해 줘서 고마워요.”",
+            number_chapter,
+        )
+        self.assertNotIn("남은 시간 즐겁게 보내요", number_chapter)
+        self.assertIn(
+            "상대가 자연스럽게 새 질문이나 주제를 꺼내면",
+            exit_section,
+        )
+        self.assertNotIn("진짜 새로운 질문", exit_section)
 
         self.assertRegex(
             number_chapter,
@@ -831,6 +855,21 @@ class CnaPartyManuscriptTests(unittest.TestCase):
             "마무리 한 줄을 남기고 이동한다",
         ):
             self.assertNotIn(old_phrase, checklist)
+
+        game_section = checklist[
+            checklist.index("### 게임 안에서 확인할 것") : checklist.index("## 번호 교환")
+        ]
+        for contact_guard in (
+            "상대도 손을 내밀거나 분명히 함께 동작할 때만",
+            "상대가 참여하지 않으면 접촉을 생략한다",
+        ):
+            self.assertIn(contact_guard, game_section)
+        for absence_of_refusal_basis in (
+            "멈추라는 신호도 없었다",
+            "거절하지 않으면",
+            "피하지 않으면",
+        ):
+            self.assertNotIn(absence_of_refusal_basis, game_section)
 
         level_positions = []
         for number, level in enumerate(
