@@ -471,6 +471,37 @@ class CnaPartyManuscriptTests(unittest.TestCase):
         self.assertIn("관찰 세 가지", mission.group(1))
         self.assertNotIn("[[PAGEBREAK]]", chapter)
 
+    def test_rapport_and_influence_use_rotation_windows(self):
+        rapport = (PROJECT / "manuscript" / "03-rapport.md").read_text(
+            encoding="utf-8"
+        )
+        influence = (PROJECT / "manuscript" / "04-influence.md").read_text(
+            encoding="utf-8"
+        )
+
+        for expected in ("새 조", "조별 게임", "게임 직후", "말할 차례"):
+            self.assertIn(expected, rapport)
+        for expected in ("조 전체", "자리 교체", "매달리지"):
+            self.assertIn(expected, influence)
+        for boundary in (
+            "상대도 손을 내밀었을 때",
+            "몸을 피하거나 멈추면",
+            "호감의 증거",
+            "접촉을 반복하지 않는다",
+            "멀리서",
+            "상태를 단정하지 않는다",
+            "다른 조원에게 말할 차례",
+            "다음 자리 교체",
+        ):
+            self.assertIn(boundary, rapport)
+        self.assertIn("압박을 주는 카운트다운으로 사용하지 않는다", influence)
+        for forbidden in (
+            "답할 수 있는 거리에서 옆 공간을 비워 둔 채 시작한다",
+            "나 친구들한테도 인사하고 올게요. 조금 있다가 동선 겹치면 다시 봐요",
+            "필요한 동안 저는 제 일행 쪽에 있을게요",
+        ):
+            self.assertNotIn(forbidden, rapport + "\n" + influence)
+
     def test_influence_chapter_keeps_strategy_and_boundaries_together(self):
         headings = [
             "# 호감과 긴장감을 의도적으로 설계하라",
@@ -509,7 +540,7 @@ class CnaPartyManuscriptTests(unittest.TestCase):
             self.assertIn(lever, chapter)
 
         for scarcity_guard in (
-            "선택적으로 주의를 쓰고 실제로 떠날 의향",
+            "선택적으로 주의를 쓰고 한 사람을 독점하지 않을 의향",
             "바쁜 척",
             "일정을 지어내는 것",
             "벌주듯 관심을 거두는 것",
@@ -571,7 +602,8 @@ class CnaPartyManuscriptTests(unittest.TestCase):
             "프레임은 대화를 ‘배려를 보는 시간’으로 바꿨다", chapter
         )
 
-        self.assertIn("필요한 동안 저는 제 일행 쪽에 있을게요", chapter)
+        self.assertNotIn("필요한 동안 저는 제 일행 쪽에 있을게요", chapter)
+        self.assertIn("자리 교체가 안내되면", chapter)
         self.assertNotIn("잠깐 인사하고 와도 괜찮아요", chapter)
 
         hard_boundary = (
