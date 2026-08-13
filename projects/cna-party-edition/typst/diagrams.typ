@@ -36,24 +36,24 @@
   ],
 )
 
-#let party-map = diagram-frame("PARTY MAP")[
+#let party-map = diagram-frame("GROUP FLOW")[
   #grid(
     columns: (1fr, 1fr, 1fr),
     gutter: 7pt,
     box(width: 100%, fill: blue-soft, radius: 6pt, inset: 9pt, stroke: (top: 3pt + navy))[
-      #text(size: 9pt, weight: 800, fill: navy)[환경]
+      #text(size: 9pt, weight: 800, fill: navy)[현재 조]
       #v(4pt)
-      #text(size: 7.8pt, fill: muted)[동선 · 소음 · 체류 시간]
+      #text(size: 7.8pt, fill: muted)[말의 분배 · 참여 정도]
     ],
     box(width: 100%, fill: blue-soft, radius: 6pt, inset: 9pt, stroke: (top: 3pt + better))[
-      #text(size: 9pt, weight: 800, fill: navy)[경쟁자]
+      #text(size: 9pt, weight: 800, fill: navy)[다음 전환]
       #v(4pt)
-      #text(size: 7.8pt, fill: muted)[관심과 공간의 흐름]
+      #text(size: 7.8pt, fill: muted)[교체 방향 · 새 조 구성]
     ],
     box(width: 100%, fill: blue-soft, radius: 6pt, inset: 9pt, stroke: (top: 3pt + lime-dark))[
-      #text(size: 9pt, weight: 800, fill: navy)[타깃]
+      #text(size: 9pt, weight: 800, fill: navy)[열린 접점]
       #v(4pt)
-      #text(size: 7.8pt, fill: muted)[지금 대화의 개방도]
+      #text(size: 7.8pt, fill: muted)[게임 직후 · 쉬는 시간]
     ],
   )
 ]

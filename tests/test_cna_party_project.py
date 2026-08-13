@@ -211,7 +211,7 @@ class CnaPartyManuscriptTests(unittest.TestCase):
             1600,
             (
                 "# 파티는 말보다 먼저 시작된다",
-                "## 초보자와 무성과자가 같은 곳에서 무너지는 이유",
+                "## 파티에서 연애를 하기 어려운 이유",
                 "## 파티는 동적 포지셔닝 게임이다",
                 "## 이 책을 사용하는 법",
             ),
@@ -235,6 +235,29 @@ class CnaPartyManuscriptTests(unittest.TestCase):
                 "[[CALLOUT:mission|",
             ),
         )
+
+    def test_opening_uses_assigned_groups_and_host_led_rotation(self):
+        prologue = (PROJECT / "manuscript" / "00-prologue.md").read_text(
+            encoding="utf-8"
+        )
+        environment = (PROJECT / "manuscript" / "01-environment.md").read_text(
+            encoding="utf-8"
+        )
+        diagrams = (PROJECT / "typst" / "diagrams.typ").read_text(encoding="utf-8")
+
+        for expected in ("정해진 자리", "현재 조", "자리 교체", "조별 게임"):
+            self.assertIn(expected, prologue + "\n" + environment)
+        for expected in ("현재 조", "교체 방향", "게임 흐름"):
+            self.assertIn(expected, environment)
+        for expected in ("현재 조", "다음 전환", "열린 접점"):
+            self.assertIn(expected, diagrams)
+
+        for forbidden in (
+            "지금 다가가도 될까?",
+            "마음에 드는 사람을 찾아 곧장 걷지 말자",
+            "방을 천천히 한 바퀴 바라본다",
+        ):
+            self.assertNotIn(forbidden, prologue + "\n" + environment)
 
     def test_positioning_chapter_builds_social_value(self):
         headings = [
@@ -730,9 +753,17 @@ class CnaPartyManuscriptTests(unittest.TestCase):
             encoding="utf-8"
         )
 
-        for expected in ("휴대폰", "종이에", "구역만", "머릿속", "파티가 끝난 뒤"):
+        for expected in (
+            "휴대폰",
+            "현재 조",
+            "교체 방향",
+            "게임 흐름",
+            "머릿속",
+            "파티가 끝난 뒤",
+        ):
             self.assertIn(expected, chapter)
         self.assertNotIn("대화하기 전, 선택한 타깃의", chapter)
+        self.assertNotIn("종이에 방의 배치와 구역만", chapter)
 
 
 class CnaPartyArtifactTests(unittest.TestCase):
