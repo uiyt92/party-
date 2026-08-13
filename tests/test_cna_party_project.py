@@ -193,7 +193,7 @@ class CnaPartyManuscriptTests(unittest.TestCase):
 
     def introduction_rows(self, text):
         lines = text.splitlines()
-        header_index = lines.index("| BAD MOVE | BETTER MOVE |")
+        header_index = lines.index("| 잘못된 선택 | 좋은 선택 |")
         self.assertEqual(lines[header_index + 1], "| --- | --- |")
 
         rows = []
@@ -456,7 +456,7 @@ class CnaPartyManuscriptTests(unittest.TestCase):
 
         for example in ("빛의 예", "음악의 예", "밀도의 예"):
             self.assertIn(example, chapter)
-        self.assertIn("> **SCRIPT**", chapter)
+        self.assertIn("> **대화 예시**", chapter)
         for beat in ("[상태 읽기]", "[페이싱]", "[감정 질문]", "[자기 공개]", "[종료]"):
             self.assertIn(f"> **{beat}**", chapter)
         emotional_question = re.search(
@@ -712,7 +712,7 @@ class CnaPartyManuscriptTests(unittest.TestCase):
         script_labels = []
         for number, role in enumerate(script_roles, start=1):
             match = re.search(
-                rf"(?m)^> \*\*SCRIPT {number}[^\n]*{re.escape(role)}\*\*$",
+                rf"(?m)^> \*\*대화 예시 {number}[^\n]*{re.escape(role)}\*\*$",
                 number_chapter,
             )
             self.assertIsNotNone(match, role)
@@ -792,7 +792,7 @@ class CnaPartyManuscriptTests(unittest.TestCase):
             checklist,
         )
         operational_follow_up = (
-            r"(?im)^> \*\*(?:SCRIPT|예시)[^\n]*"
+            r"(?im)^> \*\*(?:대화 예시|예시)[^\n]*"
             r"(?:카카오톡|카톡|DM|디엠|후속 연락|데이트|성적 에스컬레이션)",
             r"(?im)^- \[ \][^\n]*"
             r"(?:카카오톡|카톡|DM|디엠|후속 연락|데이트|만남 일정|스킨십)",
@@ -893,6 +893,33 @@ class CnaPartyManuscriptTests(unittest.TestCase):
         )
         self.assertIn("체크가 가장 많이 비는", checklist)
         self.assertNotIn("동그라미가 가장 많이 비는", checklist)
+
+    def test_visible_learning_labels_are_korean(self):
+        manuscript = "\n".join(
+            path.read_text(encoding="utf-8")
+            for path in sorted((PROJECT / "manuscript").glob("*.md"))
+        )
+        theme = (PROJECT / "typst" / "theme.typ").read_text(encoding="utf-8")
+
+        for legacy_label in ("BAD MOVE", "BETTER MOVE", "SCRIPT", "MISSION"):
+            self.assertNotIn(legacy_label, manuscript)
+            self.assertNotIn(legacy_label, theme)
+
+        for visible_label in ("잘못된 선택", "좋은 선택", "대화 예시", "실전 과제"):
+            self.assertIn(visible_label, manuscript)
+
+        card_headings = {
+            "bad-move": "잘못된 선택",
+            "better-move": "좋은 선택",
+            "mission-card": "실전 과제",
+        }
+        for function_name, visible_label in card_headings.items():
+            card = re.search(
+                rf"(?ms)^#let {re.escape(function_name)}\(body\).*?(?=^#let |\Z)",
+                theme,
+            )
+            self.assertIsNotNone(card, function_name)
+            self.assertIn(f"tracking: 0.4pt)[{visible_label}]", card.group(0))
 
     def test_all_chapters_follow_the_assigned_group_event_model(self):
         chapters = {

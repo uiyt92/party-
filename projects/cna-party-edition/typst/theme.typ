@@ -208,7 +208,7 @@
   above: 1.2em,
   below: 1.2em,
 )[
-  #text(size: 8.2pt, weight: 800, fill: bad, tracking: 1.4pt)[BAD MOVE]
+  #text(size: 8.2pt, weight: 800, fill: bad, tracking: 0.4pt)[잘못된 선택]
   #v(6pt)
   #text(size: 9.2pt, fill: ink)[#body]
 ]
@@ -223,7 +223,7 @@
   above: 1.2em,
   below: 1.2em,
 )[
-  #text(size: 8.2pt, weight: 800, fill: better, tracking: 1.4pt)[BETTER MOVE]
+  #text(size: 8.2pt, weight: 800, fill: better, tracking: 0.4pt)[좋은 선택]
   #v(6pt)
   #text(size: 9.2pt, fill: ink)[#body]
 ]
@@ -253,7 +253,7 @@
   above: 1.2em,
   below: 1.2em,
 )[
-  #text(size: 8.2pt, weight: 800, fill: lime-dark, tracking: 1.4pt)[MISSION]
+  #text(size: 8.2pt, weight: 800, fill: lime-dark, tracking: 0.4pt)[실전 과제]
   #v(6pt)
   #text(size: 9.2pt, fill: ink)[#body]
 ]
