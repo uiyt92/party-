@@ -345,6 +345,38 @@ class CnaPartyManuscriptTests(unittest.TestCase):
         ):
             self.assertIn(expected, chapter)
 
+        giver_start = chapter.index("## 기버는")
+        giver_end = chapter.index("## 셀프 어뮤즈")
+        giver = chapter[giver_start:giver_end]
+        subhost_start = chapter.index("## 서브 호스트 프레임")
+        subhost_end = chapter.index("## 거절을")
+        subhost = chapter[subhost_start:subhost_end]
+        refusal_start = chapter.index("## 거절을")
+        refusal = chapter[refusal_start:]
+
+        self.assertIn("소개한 뒤 말을 줄이고 둘의 대화를 듣는다", giver)
+        for expected in (
+            "말이 적던 사람이 참여했는가",
+            "말할 차례가 고르게 돌았는가",
+            "개입을 멈춘 뒤에도 대화가 편하게 이어졌는가",
+            "말할 차례를 넘긴 뒤에도",
+        ):
+            self.assertIn(expected, subhost)
+        self.assertIn("질문이나 개입을 멈추고", refusal)
+        self.assertIn("다른 조원에게 말할 차례를 넘긴다", refusal)
+
+        for forbidden in (
+            "한 걸음 물러나",
+            "몸을 반걸음 뒤로",
+            "한발 물러난 뒤",
+            "자리를 비운다",
+            "다음 자리로 이동",
+            "저쪽에 다녀온다",
+            "사회적 증거",
+            "더 오래 기억된다",
+        ):
+            self.assertNotIn(forbidden, chapter)
+
         mission = re.search(r"\[\[CALLOUT:mission\|([^\n]+)\]\]\s*$", chapter)
         self.assertIsNotNone(mission)
         for expected in ("현재 조", "긍정적인 상호작용 세 번", "다음 전환"):
