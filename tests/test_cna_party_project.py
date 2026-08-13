@@ -245,9 +245,24 @@ class CnaPartyManuscriptTests(unittest.TestCase):
         )
         diagrams = (PROJECT / "typst" / "diagrams.typ").read_text(encoding="utf-8")
 
-        for expected in ("정해진 자리", "현재 조", "자리 교체", "조별 게임"):
-            self.assertIn(expected, prologue + "\n" + environment)
-        for expected in ("현재 조", "교체 방향", "게임 흐름"):
+        for expected in (
+            "정해진 자리",
+            "현재 조",
+            "자리 교체",
+            "조별 게임",
+            "여러 사람이 정해진 방향으로 자리를 옮기고",
+            "함께 앉는 조합이 바뀐다",
+            "다른 조원에게 말할 차례",
+            "현재 조의 흐름부터 읽어 보자",
+        ):
+            self.assertIn(expected, prologue)
+        for expected in (
+            "현재 조",
+            "교체 방향",
+            "게임 흐름",
+            "여러 사람이 정해진 순서대로 자리를 옮기며",
+            "테이블 조합이 바뀐다",
+        ):
             self.assertIn(expected, environment)
         for expected in ("현재 조", "다음 전환", "열린 접점"):
             self.assertIn(expected, diagrams)
@@ -258,6 +273,14 @@ class CnaPartyManuscriptTests(unittest.TestCase):
             "방을 천천히 한 바퀴 바라본다",
         ):
             self.assertNotIn(forbidden, prologue + "\n" + environment)
+        for forbidden in (
+            "쉴 새 없이 움직인다",
+            "아는 사람 곁을 좀처럼 떠나지 못하는가",
+            "방부터 살펴보자",
+            "조가 통째로 바뀌고",
+            "조 전체가 이동하고",
+        ):
+            self.assertNotIn(forbidden, prologue)
 
     def test_positioning_chapter_builds_social_value(self):
         headings = [
@@ -764,6 +787,17 @@ class CnaPartyManuscriptTests(unittest.TestCase):
             self.assertIn(expected, chapter)
         self.assertNotIn("대화하기 전, 선택한 타깃의", chapter)
         self.assertNotIn("종이에 방의 배치와 구역만", chapter)
+        mission_match = re.search(r"\[\[CALLOUT:mission\|([^\n]+)\]\]\s*$", chapter)
+        self.assertIsNotNone(mission_match)
+        mission_body = mission_match.group(1)
+        for expected in ("자기 행동", "어느 전환", "상대 반응"):
+            self.assertIn(expected, mission_body)
+        self.assertNotIn("사람별 기록", mission_body)
+
+        for expected in ("자연스럽게 다시 마주쳤을 때만", "이동 중이면 보내 준다"):
+            self.assertIn(expected, chapter)
+        self.assertNotIn("접점은 충분히 생긴다", chapter)
+        self.assertNotIn("음료나 화장실을 다녀온 뒤에도 상대가 대화를 이어 가는지 확인", chapter)
 
 
 class CnaPartyArtifactTests(unittest.TestCase):
