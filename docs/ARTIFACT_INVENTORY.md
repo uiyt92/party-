@@ -1,6 +1,6 @@
 # 산출물 및 빌드물 목록
 
-측정일: 2026-08-12
+측정일: 2026-08-13
 
 ## 1. 분류 기준
 
@@ -32,7 +32,7 @@ python scripts/project.py verify all
 | `katalk-advanced` | `dist/pdf/카톡의정석_심화편.pdf` | 81 | 600,151 | `62ea43b06f6226204dcda3ce2cacef4cc4c3072846c74b38f371f421b1c1f94d` |
 | `katalk-summary` | `dist/pdf/카톡의정석_요약본.pdf` | 20 | 213,807 | `ade19c3149189429be7b7b1b5248d859195654ae3f33d9db67e9075872c5e312` |
 | `cna-night` | `dist/pdf/CNA_NIGHT.pdf` | 89 | 636,338 | `df5eb5289c142c965ba8c9a4da62d846b25cc9b8bf5796169433cc093192bca9` |
-| `cna-party-book` | `dist/pdf/CNA_파티의_주도권.pdf` | 44 | 382,851 | `bcce489d41ce6727a254305bb3c458bc05b6a226a16ed3a670fc80e891c6faaf` |
+| `cna-party-book` | `dist/pdf/CNA_파티의_주도권.pdf` | 45 | 385,582 | `7faabaa0561d0193521b3c5099f89544283c8886284169ad95d5e339c22b25d8` |
 
 『파티의 주도권』은 `projects/cna-party-edition/manuscript/`의 장별 Markdown이 콘텐츠 정본이고, `projects/cna-party-edition/typst/`가 구성·디자인 정본이다. 참고 슬라이드는 재집필을 위한 로컬 자료이며 독립 교재의 정본이 아니다.
 

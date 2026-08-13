@@ -28,7 +28,7 @@
     lang: "ko",
     hyphenate: false,
   )
-  set par(justify: true, leading: 1.25em, spacing: 0.3em)
+  set par(justify: true, leading: 1.25em, spacing: 0.45em)
 
   // Cover
   page(
@@ -139,6 +139,9 @@
   }
   show heading.where(level: 2): it => block(above: 1.55em, below: 0.65em)[
     #text(size: 14pt, weight: 800, fill: navy)[#it.body]
+  ]
+  show heading.where(level: 3): it => block(above: 1em, below: 0.45em)[
+    #text(size: 10.5pt, weight: 800, fill: navy)[#it.body]
   ]
 
   show quote.where(block: true): it => block(

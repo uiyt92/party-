@@ -148,6 +148,25 @@ class CnaPartyTypstContractTests(unittest.TestCase):
             "[호감과 긴장감을 #linebreak() 의도적으로 설계하라]", theme
         )
 
+    def test_body_paragraphs_keep_readable_rhythm(self):
+        theme = (PROJECT / "typst" / "theme.typ").read_text(encoding="utf-8")
+
+        self.assertIn(
+            "set par(justify: true, leading: 1.25em, spacing: 0.45em)", theme
+        )
+
+    def test_level_test_uses_the_host_led_transition_model(self):
+        diagrams = (PROJECT / "typst" / "diagrams.typ").read_text(
+            encoding="utf-8"
+        )
+        level_test = re.search(
+            r"(?ms)^#let level-test = .*?(?=^#let DIAGRAMS)", diagrams
+        )
+
+        self.assertIsNotNone(level_test)
+        self.assertIn("운영자의 안내에 맞춰 전환한다", level_test.group(0))
+        self.assertNotIn("다음 장면으로 짧게 이동한다", level_test.group(0))
+
 
 class CnaPartyManuscriptTests(unittest.TestCase):
     DIAGRAM_KEYS = {
@@ -648,6 +667,8 @@ class CnaPartyManuscriptTests(unittest.TestCase):
             "## 입장 전",
             "## 첫 10분",
             "## 첫 대화",
+            "### 영향 설계",
+            "### 게임 안에서 확인할 것",
             "## 번호 교환",
             "## 집에 돌아온 뒤 복기",
         ]
@@ -683,6 +704,17 @@ class CnaPartyManuscriptTests(unittest.TestCase):
             [checklist.index(heading) for heading in checklist_headings],
             sorted(checklist.index(heading) for heading in checklist_headings),
         )
+        for stage_heading in ("### 영향 설계", "### 게임 안에서 확인할 것"):
+            heading_line = re.search(
+                rf"(?m)^{re.escape(stage_heading)}\s*$", checklist
+            )
+            self.assertIsNotNone(heading_line, stage_heading)
+            next_list = checklist.find("- [ ]", heading_line.end())
+            next_heading = checklist.find("\n##", heading_line.end())
+            self.assertGreater(next_list, heading_line.end(), stage_heading)
+            self.assertTrue(
+                next_heading == -1 or next_list < next_heading, stage_heading
+            )
 
         self.assertRegex(
             number_chapter,
@@ -845,7 +877,15 @@ class CnaPartyManuscriptTests(unittest.TestCase):
             "짧게 요청",
         ):
             self.assertIn(required_item, checklist)
-        self.assertIn(
+        self.assertIn("| 복기 항목 | 기록 |", checklist)
+        for debrief_row in (
+            "| 만난 전환 | 자리 교체 뒤 새 조에 합류했을 때 |",
+            "| 현재 조에 기여한 행동 | 게임 규칙을 확인하고 말이 끊긴 사람에게 질문 하나를 건넸다 |",
+            "| 게임 접촉이 상호적이었는가 | 해당 없음 — 이 장면에서는 접촉하지 않았다 |",
+            "| 다음 실험 | 다음에도 이름을 먼저 기억해 부르기 |",
+        ):
+            self.assertIn(debrief_row, checklist)
+        self.assertNotIn(
             "| 만난 전환 | 현재 조에 기여한 행동 | 게임 접촉이 상호적이었는가 | 다음 실험 |",
             checklist,
         )
@@ -1015,8 +1055,13 @@ class CnaPartyManuscriptTests(unittest.TestCase):
             self.assertIn(expected, mission_body)
         self.assertNotIn("사람별 기록", mission_body)
 
-        for expected in ("자연스럽게 다시 마주쳤을 때만", "이동 중이면 보내 준다"):
+        for expected in (
+            "진행자가 알린 쉬는 시간이나 자리 교체 중 우연히 다시 마주치면",
+            "어디론가 가는 중이면 붙잡지 않고 보내 준다",
+        ):
             self.assertIn(expected, chapter)
+        self.assertNotIn("쉬는 시간에는 이미 나눈 대화를 자연스럽게 다시 마주쳤을 때만", chapter)
+        self.assertNotIn("상대가 이동 중이면 보내 준다", chapter)
         self.assertNotIn("접점은 충분히 생긴다", chapter)
         self.assertNotIn("음료나 화장실을 다녀온 뒤에도 상대가 대화를 이어 가는지 확인", chapter)
 
