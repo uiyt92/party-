@@ -693,7 +693,7 @@ class CnaPartyManuscriptTests(unittest.TestCase):
             self.assertIn(signal_heading, number_chapter)
         for green_signal in (
             "질문을 돌려준다",
-            "조 전체의 차례가 지난 뒤",
+            "조 전체의 이야기가 한 차례 오간 뒤",
             "게임 차례가 끝난 뒤",
             "공유한 소재",
         ):
@@ -764,8 +764,7 @@ class CnaPartyManuscriptTests(unittest.TestCase):
             number_chapter.index("## 교환 뒤에는 진행으로 돌아간다") :
         ]
         for mutual_exit_guard in (
-            "상대가 자연스럽게 새 질문이나 주제를 꺼내면",
-            "자연스럽게 이어가도 좋다",
+            "상대가 새 질문이나 주제를 꺼내면 그대로 이어가도 좋다",
             "벌주는 행동",
             "기계적인 퇴장",
             "철수 전술",
@@ -778,7 +777,7 @@ class CnaPartyManuscriptTests(unittest.TestCase):
         )
         self.assertNotIn("남은 시간 즐겁게 보내요", number_chapter)
         self.assertIn(
-            "상대가 자연스럽게 새 질문이나 주제를 꺼내면",
+            "상대가 새 질문이나 주제를 꺼내면 그대로 이어가도 좋다",
             exit_section,
         )
         self.assertNotIn("진짜 새로운 질문", exit_section)
@@ -849,6 +848,7 @@ class CnaPartyManuscriptTests(unittest.TestCase):
             "| 만난 전환 | 현재 조에 기여한 행동 | 게임 접촉이 상호적이었는가 | 다음 실험 |",
             checklist,
         )
+        self.assertIn("해당 없음 — 이 장면에서는 접촉하지 않았다", checklist)
         for old_phrase in (
             "방의 지도를 그리고 사회적 중심",
             "관찰 → 공급 → 반응 → 이동",
@@ -869,7 +869,7 @@ class CnaPartyManuscriptTests(unittest.TestCase):
             "거절하지 않으면",
             "피하지 않으면",
         ):
-            self.assertNotIn(absence_of_refusal_basis, game_section)
+            self.assertNotIn(absence_of_refusal_basis, checklist)
 
         level_positions = []
         for number, level in enumerate(
