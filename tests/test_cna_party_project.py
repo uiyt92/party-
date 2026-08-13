@@ -152,8 +152,44 @@ class CnaPartyTypstContractTests(unittest.TestCase):
         theme = (PROJECT / "typst" / "theme.typ").read_text(encoding="utf-8")
 
         self.assertIn(
-            "set par(justify: true, leading: 1.25em, spacing: 0.45em)", theme
+            "set par(justify: true, leading: 0.72em, spacing: 0.72em)", theme
         )
+
+    def test_numbered_dialogue_quotes_stay_atomic(self):
+        theme = (PROJECT / "typst" / "theme.typ").read_text(encoding="utf-8")
+        quote_renderer = re.search(
+            r"(?ms)^  show quote\.where\(block: true\):.*?(?=^  show table)", theme
+        )
+
+        self.assertIsNotNone(quote_renderer)
+        self.assertIn("let is-numbered-dialogue", quote_renderer.group(0))
+        self.assertIn("breakable: not is-numbered-dialogue", quote_renderer.group(0))
+
+    def test_chapter_end_missions_keep_their_context(self):
+        diagrams = (PROJECT / "typst" / "diagrams.typ").read_text(
+            encoding="utf-8"
+        )
+
+        self.assertIn("KEEP_WITH_NEXT_START", diagrams)
+        self.assertIn("KEEP_WITH_NEXT_END", diagrams)
+        self.assertIn("render-kept-pair", diagrams)
+        self.assertIn("block(breakable: false)", diagrams)
+        self.assertIn("render-token-stream", diagrams)
+
+        number_chapter = (
+            PROJECT / "manuscript" / "05-number-exchange.md"
+        ).read_text(encoding="utf-8")
+        self.assertEqual(number_chapter.count("[[KEEP_WITH_NEXT_START]]"), 1)
+        self.assertEqual(number_chapter.count("[[KEEP_WITH_NEXT_END]]"), 1)
+        kept_tail = re.search(
+            r"(?m)^\[\[KEEP_WITH_NEXT_START\]\]\s*\n"
+            r"([^\n]+)\n\n"
+            r"(\[\[CALLOUT:mission\|[^\n]+\]\])\s*\n"
+            r"\[\[KEEP_WITH_NEXT_END\]\]\s*$",
+            number_chapter,
+        )
+        self.assertIsNotNone(kept_tail)
+        self.assertLess(len(kept_tail.group(1)), 500)
 
     def test_level_test_uses_the_host_led_transition_model(self):
         diagrams = (PROJECT / "typst" / "diagrams.typ").read_text(
@@ -192,7 +228,8 @@ class CnaPartyManuscriptTests(unittest.TestCase):
         marker_pattern = re.compile(
             r"(?:\[\[DIAGRAM:([a-z][a-z0-9_]*)\]\]|"
             r"\[\[CALLOUT:([a-z][a-z0-9_]*)\|([^\[\]\r\n]+)\]\]|"
-            r"(\[\[PAGEBREAK\]\]))"
+            r"(\[\[PAGEBREAK\]\])|"
+            r"\[\[(KEEP_WITH_NEXT_(?:START|END))\]\])"
         )
         marker_lines = [
             line for line in text.splitlines() if "[[" in line or "]]" in line
@@ -203,8 +240,8 @@ class CnaPartyManuscriptTests(unittest.TestCase):
             self.assertEqual(line, line.strip())
             match = marker_pattern.fullmatch(line)
             self.assertIsNotNone(match, f"invalid manuscript marker: {line}")
-            diagram_key, callout_kind, _, pagebreak = match.groups()
-            if pagebreak:
+            diagram_key, callout_kind, _, pagebreak, keep_marker = match.groups()
+            if pagebreak or keep_marker:
                 continue
             if diagram_key:
                 self.assertIn(diagram_key, self.DIAGRAM_KEYS)
@@ -843,7 +880,9 @@ class CnaPartyManuscriptTests(unittest.TestCase):
             self.assertNotRegex(closing_text, pattern)
 
         mission = re.search(
-            r"\[\[CALLOUT:mission\|([^\n]+)\]\]\s*$", number_chapter
+            r"\[\[CALLOUT:mission\|([^\n]+)\]\]\s*"
+            r"\[\[KEEP_WITH_NEXT_END\]\]\s*$",
+            number_chapter,
         )
         self.assertIsNotNone(mission)
         for expected in ("이어갈 이유를 한 문장", "말한 뒤에만", "번호 교환"):

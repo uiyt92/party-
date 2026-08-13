@@ -28,7 +28,7 @@
     lang: "ko",
     hyphenate: false,
   )
-  set par(justify: true, leading: 1.25em, spacing: 0.45em)
+  set par(justify: true, leading: 0.72em, spacing: 0.72em)
 
   // Cover
   page(
@@ -144,15 +144,19 @@
     #text(size: 10.5pt, weight: 800, fill: navy)[#it.body]
   ]
 
-  show quote.where(block: true): it => block(
-    width: 100%,
-    fill: blue-soft,
-    inset: (x: 14pt, y: 11pt),
-    radius: 5pt,
-    stroke: (left: 3pt + navy),
-    above: 0.9em,
-    below: 0.9em,
-  )[#it.body]
+  show quote.where(block: true): it => {
+    let is-numbered-dialogue = repr(it.body).contains("대화 예시 ")
+    block(
+      width: 100%,
+      breakable: not is-numbered-dialogue,
+      fill: blue-soft,
+      inset: (x: 14pt, y: 11pt),
+      radius: 5pt,
+      stroke: (left: 3pt + navy),
+      above: 0.9em,
+      below: 0.9em,
+    )[#it.body]
+  }
 
   show table.cell.where(y: 0): set text(fill: white, weight: 700, size: 9.2pt)
   set table(
