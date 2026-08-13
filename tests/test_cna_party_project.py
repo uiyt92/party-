@@ -301,6 +301,7 @@ class CnaPartyManuscriptTests(unittest.TestCase):
         chapter = (PROJECT / "manuscript" / "02-positioning.md").read_text(
             encoding="utf-8"
         )
+        diagrams = (PROJECT / "typst" / "diagrams.typ").read_text(encoding="utf-8")
         heading_positions = [chapter.index(heading) for heading in headings]
         self.assertEqual(heading_positions, sorted(heading_positions))
 
@@ -316,10 +317,23 @@ class CnaPartyManuscriptTests(unittest.TestCase):
         )
         self.assertRegex(
             chapter,
-            re.escape("사용할 순환은 **관찰 → 공급 → 반응 → 이동**이다.")
+            re.escape("사용할 순환은 **관찰 → 기여 → 반응 → 전환**이다.")
             + r"[^\n]*\n\n"
             + re.escape("[[DIAGRAM:positioning_loop]]"),
         )
+        for context in ("현재 조", "운영자의 자리 교체", "게임 종료"):
+            self.assertIn(context, chapter)
+        self.assertNotIn("관찰 → 공급 → 반응 → 이동", chapter)
+        self.assertNotIn("나 저쪽에 인사 하나만 하고 다시 볼게", chapter)
+
+        positioning_loop = re.search(
+            r"(?ms)^#let positioning-loop = .*?(?=^#let rapport-ladder)", diagrams
+        )
+        self.assertIsNotNone(positioning_loop)
+        for expected in ("관찰", "기여", "반응", "전환"):
+            self.assertIn(expected, positioning_loop.group(0))
+        for legacy in ('"공급"', '"이동"'):
+            self.assertNotIn(legacy, positioning_loop.group(0))
 
         for expected in (
             "서로 모르는 두 사람을 연결한다",
@@ -333,8 +347,8 @@ class CnaPartyManuscriptTests(unittest.TestCase):
 
         mission = re.search(r"\[\[CALLOUT:mission\|([^\n]+)\]\]\s*$", chapter)
         self.assertIsNotNone(mission)
-        self.assertIn("주요 관심 상대에게 다가가기 전에", mission.group(1))
-        self.assertIn("긍정적인 상호작용 세 번", mission.group(1))
+        for expected in ("현재 조", "긍정적인 상호작용 세 번", "다음 전환"):
+            self.assertIn(expected, mission.group(1))
 
     def test_rapport_chapter_turns_observation_into_conversation(self):
         headings = [
