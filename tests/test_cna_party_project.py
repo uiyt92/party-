@@ -283,9 +283,9 @@ class CnaPartyManuscriptTests(unittest.TestCase):
             3200,
             (
                 "# 공간을 먼저 읽어라",
-                "## 자리 배치는 대화보다 솔직하다",
+                "## 자리 배치를 답답하게 느끼지 말자",
                 "## 경쟁자를 분석하는 기준",
-                "## 타깃의 상태를 읽는 법",
+                "## 내가 마음에 드는 사람의 상태를 읽는 법",
                 "## 외모는 입장권일 뿐이다",
                 "## 자기소개는 정보를 말하는 시간이 아니다",
             ),
@@ -321,10 +321,23 @@ class CnaPartyManuscriptTests(unittest.TestCase):
             "현재 조",
             "교체 방향",
             "게임 흐름",
+            "자리 배치를 장애물로 생각하지 말자",
+            "보통 파티에서는 게임을 자기 조끼리만 시키지 않는다",
+            "다른 테이블과 교류할 수 있는 시간",
+            "가까운 조에 마음에 드는 사람이 있다면",
+            "살짝 눈을 맞추는 것",
             "여러 사람이 정해진 순서대로 자리를 옮기며",
             "테이블 조합이 바뀐다",
         ):
             self.assertIn(expected, environment)
+        for forbidden in (
+            "## 자리 배치는 대화보다 솔직하다",
+            "처음에는 세 개의 렌즈만 쓴다",
+            "둘째는 **다음 전환**이다",
+            "파티는 사회적 지능",
+            "이 지도는 통제 계획이 아니다",
+        ):
+            self.assertNotIn(forbidden, environment)
         for expected in ("현재 조", "다음 전환", "열린 접점"):
             self.assertIn(expected, diagrams)
 
@@ -366,6 +379,17 @@ class CnaPartyManuscriptTests(unittest.TestCase):
         heading_positions = [chapter.index(heading) for heading in headings]
         self.assertEqual(heading_positions, sorted(heading_positions))
 
+        for expected in (
+            "사람들은 당신이 자신을 소개하기 전부터 무의식적으로 이 차이를 읽는다",
+            "목표는 인기 있는 사람인 척하는 것이 아니다",
+            "유창한 말솜씨",
+            "주변 사람을 즐겁게 만드는 사람",
+            "잘생긴 사람",
+            "주위 사람들을 챙겨 주고 편안하게 해 주는 사람",
+            "같이 있으면 긴장이 낮아지고 말하기 쉬워진다는 신호",
+        ):
+            self.assertIn(expected, chapter)
+
         self.assertIn(
             "이 책에서 ‘특정성’은 한 사람을 유일한 기회처럼 여기면서 "
             "관심과 행동이 그 사람에게 고정되는 상태를 뜻한다.",
@@ -400,11 +424,22 @@ class CnaPartyManuscriptTests(unittest.TestCase):
             "서로 모르는 두 사람을 연결한다",
             "어색한 정적을 수리한다",
             "상황에 맞는 작은 편의를 제공한다",
+            "사람들을 편안하게 해 주라고 했다",
+            "그 자리를 주도하는 것은 명백히 피곤한 일이다",
+            "그 피곤한 일을 먼저 감당하는 사람이 조의 기준을 만든다",
+            "어색함을 낮추고 말할 차례를 만들어 주는 사람",
+            "사람들이 다시 기대는 중심",
+            "사람들이 기대한다는 것은 호감을 사는 행동 중 하나다",
+            "말을 꺼내도 안전하다",
+            "작은 안심이 반복되면서 방향을 잡는다",
+            "외모, 말솜씨, 농담도 호감으로 번역된다",
+            "아래에 나와 있는 세 가지 행동만 하더라도 충분히 그런 존재가 될 수 있다",
             "서비스 스태프로 포지셔닝된다",
             "명확한 거절이나 불편한 표정은 더 좋은 기술을 시도하라는 신호가 아니라 "
             "멈추라는 신호다",
         ):
             self.assertIn(expected, chapter)
+        self.assertNotIn("미세 행동", chapter)
 
         giver_start = chapter.index("## 기버는")
         giver_end = chapter.index("## 셀프 어뮤즈")
@@ -416,6 +451,27 @@ class CnaPartyManuscriptTests(unittest.TestCase):
         refusal = chapter[refusal_start:]
 
         self.assertIn("소개한 뒤 말을 줄이고 둘의 대화를 듣는다", giver)
+        self_amuse_start = chapter.index("## 셀프 어뮤즈")
+        self_amuse_end = chapter.index("## 서브 호스트 프레임")
+        self_amuse = chapter[self_amuse_start:self_amuse_end]
+        for expected in (
+            "게임 생각보다 진심으로 하게 되네요",
+            "누군가 웃으며 내 말을 받아주면, 한마디 더 던진다",
+            "반응이 약하면 미소 짓고 다른 주제로 넘어간다",
+            "내 기분을 남의 반응에 맡기지 않고",
+            "내 재미를 남에게 강제로 먹이지도 않는 것이다",
+            "혼자서도 즐겁고 편안한 사람은 반응을 구걸하지 않는다",
+            "지금 웃겨야 해",
+            "사람들의 반응에 눈치를 살핀다",
+            "호응이 없더라도 자신의 리듬을 잃지 않는 것이다",
+        ):
+            self.assertIn(expected, self_amuse)
+        for forbidden in (
+            "이 테이블만 유난히 디저트 전략회의 분위기네요",
+            "박수의 크기",
+            "눈이 사람들의 승인을 확인하고",
+        ):
+            self.assertNotIn(forbidden, self_amuse)
         for expected in (
             "말이 적던 사람이 참여했는가",
             "말할 차례가 고르게 돌았는가",
@@ -425,6 +481,33 @@ class CnaPartyManuscriptTests(unittest.TestCase):
             self.assertIn(expected, subhost)
         self.assertIn("질문이나 개입을 멈추고", refusal)
         self.assertIn("다른 조원에게 말할 차례를 넘긴다", refusal)
+        for expected in (
+            "합석을 제안했는데 “저희끼리 이야기 중이에요”라는 말을 들을 수 있고",
+            "“아, 편하게 이야기하세요”라고 말한 뒤",
+        ):
+            self.assertIn(expected, refusal)
+        for old_wording in (
+            "소개를 제안했는데",
+            "저희끼리 얘기 중이에요",
+            "편하게 얘기하세요",
+        ):
+            self.assertNotIn(old_wording, refusal)
+        self.assertIn(
+            "아무리 내가 좋은 마음으로 사람들에게 말을 걸고, 분위기를 바꿔 보려고 해도 "
+            "모두에게 환영받지는 못한다",
+            refusal,
+        )
+        self.assertNotIn("모든 개입이 환영받지는 않는다", refusal)
+        for expected in (
+            "파티 경험은 많지만 별다른 성과가 없는 사람",
+            "오래 말한 것이 곧 좋은 흐름은 아니다",
+            "진행자가 자리 교체를 안내하거나",
+            "게임이 끝나 다음 순서로 넘어가야 하는데도",
+            "어색하게 붙잡지 않고 자연스럽게 마무리했는지",
+        ):
+            self.assertIn(expected, refusal)
+        for confusing_term in ("운영자 주도 전환", "전환을 편안하게 맞았는가"):
+            self.assertNotIn(confusing_term, refusal)
 
         for forbidden in (
             "한 걸음 물러나",
@@ -446,7 +529,7 @@ class CnaPartyManuscriptTests(unittest.TestCase):
     def test_rapport_chapter_turns_observation_into_conversation(self):
         headings = [
             "# 상대의 주파수 안으로 들어가라",
-            "## 말보다 먼저 상태를 읽는다",
+            "## 말을 걸기 전과 후에 볼 것",
             "## 페이싱은 흉내가 아니다",
             "## 감정에서 경험까지 내려가는 네 층",
             "## 스몰토크는 역추적이다",
@@ -493,14 +576,29 @@ class CnaPartyManuscriptTests(unittest.TestCase):
             + re.escape("[[DIAGRAM:rapport_ladder]]"),
         )
         for cue in (
-            "몸의 방향",
-            "반응 지연",
-            "호흡",
-            "목소리 크기",
-            "눈",
-            "조 전체의 흐름을 확인",
+            "말을 걸기 전에는 목소리와 시선만 본다",
+            "여러 사람이 함께 듣는 열린 대화",
+            "조 전체에 먼저 말을 건다",
+            "말을 건 뒤에는 첫 반응을 본다",
+            "말을 보태거나 질문을 돌려주면",
+            "짧게 대답한 뒤 시선이 돌아가면",
+            "눈이 마주쳤다고 호감이 있다는 뜻은 아니다",
+            "아까 게임 이야기예요?",
+            "편하게 이야기하세요",
+            "목소리와 시선 확인 → 첫 반응 확인 → 감정 단서 추적 → 짧은 자기 공개",
         ):
             self.assertIn(cue, chapter)
+        for overcomplicated_cue in (
+            "반응 지연",
+            "호흡",
+            "여섯 단서",
+            "몸이 대화 쪽으로 열려 있는가",
+            "세 가지 중 두 가지",
+            "두 가지 이상이 닫혀",
+            "## 말보다 먼저 상태를 읽는다",
+            "세 단서 관찰",
+        ):
+            self.assertNotIn(overcomplicated_cue, chapter)
         for state in ("고에너지", "조심스러운 상태", "피곤한 상태", "사회적으로 포화된 상태"):
             self.assertIn(state, chapter)
         for warning in ("동작을 기계적으로 따라 하는 것", "페이싱이 아니다", "조종당하는 느낌"):
@@ -518,7 +616,7 @@ class CnaPartyManuscriptTests(unittest.TestCase):
         for example in ("빛의 예", "음악의 예", "밀도의 예"):
             self.assertIn(example, chapter)
         self.assertIn("> **대화 예시**", chapter)
-        for beat in ("[상태 읽기]", "[페이싱]", "[감정 질문]", "[자기 공개]", "[종료]"):
+        for beat in ("[첫 반응 확인]", "[페이싱]", "[감정 질문]", "[자기 공개]", "[종료]"):
             self.assertIn(f"> **{beat}**", chapter)
         emotional_question = re.search(
             r"> \*\*\[감정 질문\]\*\* (?P<annotation>[^\n]+)\n>\n"
@@ -535,8 +633,9 @@ class CnaPartyManuscriptTests(unittest.TestCase):
 
         mission = re.search(r"\[\[CALLOUT:mission\|([^\n]+)\]\]\s*$", chapter)
         self.assertIsNotNone(mission)
-        self.assertIn("개인적인 질문을 하기 전에", mission.group(1))
-        self.assertIn("관찰 세 가지", mission.group(1))
+        for expected in ("말을 걸기 전에", "목소리와 시선", "조 전체", "첫 반응"):
+            self.assertIn(expected, mission.group(1))
+        self.assertNotIn("관찰 세 가지", mission.group(1))
         self.assertNotIn("[[PAGEBREAK]]", chapter)
 
     def test_rapport_and_influence_use_rotation_windows(self):
@@ -1052,6 +1151,18 @@ class CnaPartyManuscriptTests(unittest.TestCase):
             encoding="utf-8"
         )
 
+        for expected in (
+            "파티에서 사람들을 친해지게 만들기 위해 자주 쓰는 주제가 자기소개다",
+            "자기소개에서 정보만 말하면 어떻게 될까",
+            "사람은 정보보다 감정이 붙은 장면을 더 오래 기억한다",
+            "직업과 취미는 재료이고, 기억에 남는 것은 그 재료에 붙은 감정이다",
+            "이런 식으로 이야기한다고 해서 내가 원하는 사람과 잘된다는 보장은 없다",
+            "기억에 오래 남을수록 유리하다",
+            "자리 교체나 쉬는 시간, 다음 게임에서 다시 말을 걸 명분이 생긴다",
+            "결국 어떻게 될지는 모른다",
+        ):
+            self.assertIn(expected, chapter)
+
         rows = self.introduction_rows(chapter)
         self.assertEqual(len(rows), 4)
         for bad_move, better_move in rows:
@@ -1101,8 +1212,24 @@ class CnaPartyManuscriptTests(unittest.TestCase):
         for expected in (
             "진행자가 알린 쉬는 시간이나 자리 교체 중 우연히 다시 마주치면",
             "어디론가 가는 중이면 붙잡지 않고 보내 준다",
+            "특성 전이",
+            "말수가 적은 사람은 차분하고 진중한 사람으로",
+            "활달하고 분위기를 풀어 주는 사람으로",
+            "남을 깎아내리는 말은 그 사람보다 말한 사람의 인상을 먼저 낮춘다",
+            "파티에 가면 마음에 드는 사람이 한 명쯤은 있기 마련이다",
+            "다른 기회를 없애는 것뿐만 아니라, 내 상태에도 영향을 준다",
+            "같은 조가 되거나 게임을 함께하거나 쉬는 시간에 직접 이야기하기 전까지는",
+            "그저 한 참가자로 생각하는 편이 좋다",
+            "첫 번째로 볼 것은 대화에 참여하는 방식이다",
+            "일단 편안함을 주는 것이 먼저다",
+            "외모는 현실적으로 상대를 판단할 때 가장 먼저 보이는 도구다",
+            "성격, 예의, 배려, 친절함",
+            "본인이 꾸밀 수 있는 만큼 꾸미는 것도 중요하다",
+            "외모가 전부는 아니라는 말이다",
         ):
             self.assertIn(expected, chapter)
+        self.assertNotIn("## 타깃의 상태를 읽는 법", chapter)
+        self.assertNotIn("타깃의 상태를 진단", chapter)
         self.assertNotIn("쉬는 시간에는 이미 나눈 대화를 자연스럽게 다시 마주쳤을 때만", chapter)
         self.assertNotIn("상대가 이동 중이면 보내 준다", chapter)
         self.assertNotIn("접점은 충분히 생긴다", chapter)
