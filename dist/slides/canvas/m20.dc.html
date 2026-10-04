@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>1강 값이 떨어지는 쪽과 지켜지는 쪽</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="deck.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@700;900&amp;display=swap">
+<style>
+@font-face{font-family:Pretendard;font-weight:400;font-style:normal;font-display:swap;src:url("/_blob/0dd2fd2dfcd812cfa17d0ab84b31f754") format("opentype")}
+@font-face{font-family:Pretendard;font-weight:500;font-style:normal;font-display:swap;src:url("/_blob/84df6a4029518f97773813a87dd42ba5") format("opentype")}
+@font-face{font-family:Pretendard;font-weight:600;font-style:normal;font-display:swap;src:url("/_blob/a2807e4db2f8ed7093867c0c895830b5") format("opentype")}
+@font-face{font-family:Pretendard;font-weight:700;font-style:normal;font-display:swap;src:url("/_blob/34cdae3a549bff62d38689ccd48f7fba") format("opentype")}
+@font-face{font-family:Pretendard;font-weight:800;font-style:normal;font-display:swap;src:url("/_blob/19ec2d04c4af9fb76d7cc578500ee903") format("opentype")}
+@font-face{font-family:Pretendard;font-weight:900;font-style:normal;font-display:swap;src:url("/_blob/33ea4f2e0427eff8d2bf03fdccc00fcb") format("opentype")}
+body{margin:0}
+</style>
+</helmet>
+<section class="slide L" style="width: 1280px; height: 720px">
+  <p class="L-kick">값</p>
+  <h2 class="L-h">보내는 톡에 따라 <b>값</b>이 달라진다</h2>
+  <div class="L-cards">
+    <div class="L-card bad"><p class="t">✕ 매달리면</p><p class="d">연달아 보내고, 재촉하고,<br>애쓴 티가 난다<br><span style="color:var(--red)">→ "쉬운 사람"</span></p></div>
+    <div class="L-card good"><p class="t">✓ 여유를 지키면</p><p class="d">한 박자 늦게, 담백하게,<br>안 와도 그만<br><span style="color:var(--blue)">→ "아쉬울 것 없는 사람"</span></p></div>
+  </div>
+</section>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>
